@@ -399,8 +399,10 @@ def long_to_wide(df, groupvars, values, colindex=None):
     
     groupvars = string or list of variables which signify unique observations in the output dataset
     values = string or list of variables which contain the values which need to be transposed
-    colindex = variable containing extension for column name in the output dataset. If not specified, just uses the
-               count of the row within the group.
+    colindex = string of column or list of strings of columns containing extension for column name
+               in the output dataset. If not specified, just uses the
+               count of the row within the group. If a list is provided, each column value will be appended
+               in order separated by _
     
     NOTE: Don't have any variables named key or idx
     
@@ -434,10 +436,20 @@ def long_to_wide(df, groupvars, values, colindex=None):
     if isinstance(values,str):
         values = [values]
     assert isinstance(values, list)
+    
+    #Fixes for colindex
     #Use count of the row within the group for column index if not specified
     if colindex == None:
         df['__idx__'] = df.groupby(groupvars).cumcount()
         colindex = '__idx__'
+    #If multiple columns are provided for colindex, combine and drop old cols
+    if isinstance(colindex, list):
+        df['__idx__'] = ''
+        for col in colindex:
+            df['__idx__'] = df['__idx__'] + '_' + df[col].astype(str)
+            df.drop(col, axis=1, inplace=True)
+        colindex = '__idx__'
+        
     
     df['__key__'] = df[groupvars[0]].astype(str) #create key variable
     if len(groupvars) > 1: #if there are multiple groupvars, combine into one key
