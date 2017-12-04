@@ -728,15 +728,13 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET'):
     fac: int (1, 3, 4), factor model to run
     retvar: str, name of column containing returns
     """
-    assert fac in (1, 3, 4)
+    assert abret_fac in (1, 3, 5)
     factors = ['mktrf']
-    if fac >= 3:
+    if abret_fac >= 3:
         factors += ['smb','hml']
-    if fac == 4:
-        factors += ['umd']
+    if abret_fac == 5:
+        factors += ['rmw','cma']
         
-#     factor_loadings = reg_by(df, 'RET', factors, groupvar)
-#     outdf = df.merge(factor_loadings, how='left', on=groupvar) #merge back to sample
     outdf = reg_by(df, retvar, factors, groupvar, merge=True)
     outdf['AB' + retvar] = outdf[retvar] - sum([outdf[fac] * outdf['coef_' + fac] for fac in factors]) #create abnormal returns
     return outdf
