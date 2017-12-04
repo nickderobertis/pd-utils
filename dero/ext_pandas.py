@@ -802,7 +802,7 @@ def state_abbrev(df, col, toabbrev=False):
     
     return df
 
-def create_not_trade_days(tradedays_path= r'C:\Users\derobertisna.UFAD\Desktop\Data\Other SAS\tradedays.sas7bdat'):
+def create_not_trade_days(tradedays_path= r'E:\Data\Other SAS\tradedays.sas7bdat'):
     df = dero.load_sas(tradedays_path)
     trading_days = pd.to_datetime(df['date']).tolist()
     all_days = pd.date_range(start=trading_days[0],end=trading_days[-1]).tolist()
@@ -815,7 +815,7 @@ def create_not_trade_days(tradedays_path= r'C:\Users\derobertisna.UFAD\Desktop\D
         f.write('date\n')
         f.write('\n'.join([day.date().isoformat() for day in notrade_days]))
         
-def tradedays(notradedays_path=r'C:\Users\derobertisna.UFAD\Desktop\Data\Other SAS\not tradedays.csv'):
+def tradedays(notradedays_path=r'E:\Data\Other SAS\not tradedays.csv'):
     notrade_days = pd.read_csv(notradedays_path)['date'].tolist()
     return CustomBusinessDay(holidays=notrade_days)
 
