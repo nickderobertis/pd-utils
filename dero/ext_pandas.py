@@ -728,11 +728,11 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET'):
     fac: int (1, 3, 4), factor model to run
     retvar: str, name of column containing returns
     """
-    assert abret_fac in (1, 3, 5)
+    assert fac in (1, 3, 5)
     factors = ['mktrf']
-    if abret_fac >= 3:
+    if fac >= 3:
         factors += ['smb','hml']
-    if abret_fac == 5:
+    if fac == 5:
         factors += ['rmw','cma']
         
     outdf = reg_by(df, retvar, factors, groupvar, merge=True)
