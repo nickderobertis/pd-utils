@@ -816,7 +816,7 @@ def create_not_trade_days(tradedays_path= r'E:\Data\Other SAS\tradedays.sas7bdat
         f.write('\n'.join([day.date().isoformat() for day in notrade_days]))
         
 def tradedays(notradedays_path=r'E:\Data\Other SAS\not tradedays.csv'):
-    notrade_days = pd.read_csv(notradedays_path)['date'].tolist()
+    notrade_days = pd.read_csv(notradedays_path, parse_dates=['date'])['date'].tolist()
     return CustomBusinessDay(holidays=notrade_days)
 
 def select_rows_by_condition_on_columns(df, cols, condition='== 1', logic='or'):
