@@ -803,7 +803,7 @@ def state_abbrev(df, col, toabbrev=False):
     return df
 
 def create_not_trade_days(tradedays_path= r'E:\Data\Other SAS\tradedays.sas7bdat'):
-    df = dero.load_sas(tradedays_path)
+    df = load_sas(tradedays_path)
     trading_days = pd.to_datetime(df['date']).tolist()
     all_days = pd.date_range(start=trading_days[0],end=trading_days[-1]).tolist()
     notrade_days = [day for day in all_days if day not in trading_days]
