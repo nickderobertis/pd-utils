@@ -10,8 +10,8 @@ import timeit
 import time, datetime
 import re
 
-from .ext_time import estimate_time
-from .core import OrderedSet
+from dero.ext_time import estimate_time
+from dero.core import OrderedSet
 
 def _to_list_if_str(var):
     if isinstance(var, str):
