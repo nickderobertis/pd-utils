@@ -684,8 +684,11 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True):
         groupvar = '__key_regby__'
         drop_group = True
 
-    # Select dataframe of only y and x vars and groupvar, drop any missing, and convert to numeric
-    yx_df = df.loc[:, xvars + [yvar, groupvar]].dropna().apply(pd.to_numeric, errors='ignore')
+    # Select dataframe of only y and x vars and convert to numeric
+    yx_df = df.loc[:, xvars + [yvar]].apply(pd.to_numeric, errors='ignore')
+    # Recombine groupvar and drop missing
+    yx_df = pd.concat([yx_df, df[groupvar]], axis=1).dropna()
+
     
     for group in df[groupvar].unique():
         tempdf = yx_df[yx_df[groupvar] == group] #will fail with nans
