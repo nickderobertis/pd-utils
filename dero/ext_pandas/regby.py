@@ -1,5 +1,6 @@
 import statsmodels.api as sm
 import pandas as pd
+import numpy as np
 from numpy import nan
 
 from .pdutils import split
@@ -31,8 +32,7 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True):
     # Split DataFrame into a list of arrays with each bygroup being one array. Provide an accompanying list of bygroups
     arrs, groups = _get_lists_of_arrays_and_groups(yx_df, yvar, xvars, groupvar)
 
-    result_df = pd.DataFrame()
-
+    results = []
     for i, arr in enumerate(arrs):
         X = arr[:, 1:].astype(float)
 
@@ -44,13 +44,17 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True):
         if arr.shape[0] > len(xvars) + 1:  # if enough observations, run regression
             model = sm.OLS(y, X)
             result = model.fit()
-            this_result = pd.DataFrame(result.params).T
+            this_result = np.append(result.params, groups[i]) # add groupvar
+            this_result = this_result[None, :] # cast 1d array into 2d array
         else:  # not enough obs, return nans
-            this_result = pd.DataFrame(data=[nan for i in range(len(rhs))]).T
+            this_result = np.empty((1, len(rhs) + 1), dtype='O')
+            this_result[:] = nan
+            this_result[0, len(rhs)] = groups[i]
 
-        this_result[groupvar] = groups[i]
-        result_df = result_df.append(this_result)  # Or whatever summary info you want
+        results.append(this_result)
 
+    result_df = pd.DataFrame(np.concatenate(results, axis=0))
+    result_df = result_df.apply(pd.to_numeric, errors='ignore')
     cols = rhs + [groupvar]
     result_df.columns = ['coef_' + col if col not in (groupvar, 'const') else col for col in cols]
 
@@ -58,6 +62,8 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True):
         result_df = df.merge(result_df, how='left', on=groupvar)
     if drop_group:
         result_df.drop(groupvar, axis=1, inplace=True)
+
+
 
     return result_df.reset_index(drop=True)
 
