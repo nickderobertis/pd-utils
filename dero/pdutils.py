@@ -70,6 +70,19 @@ def year_month_from_single_date(date):
     d.update({'Month': date.month})
     return pd.Series(d)
 
+def split(df, keepvars, keyvar='__key_var__'):
+    """
+    Splits a dataframe into a list of arrays based on a key variable
+    """
+    small_df = df[[keyvar] + keepvars]
+    arr = small_df.values
+    splits = []
+    for i in range(arr.shape[0]):
+        if i == 0: continue
+        if arr[i,0] != arr[i-1,0]: #different key
+            splits.append(i)
+    return np.split(arr[:,1:], splits)
+
 
 ############Portfolio Utilities###############
 def _check_portfolio_inputs(*args, **kwargs):

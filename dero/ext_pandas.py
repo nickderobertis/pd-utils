@@ -21,7 +21,7 @@ from .pdutils import window_mapping, year_month_from_single_date, _check_portfol
                      _create_cutoffs_and_sort_into_ports, _split, _sort_arr_list_into_ports_and_return_series, \
                      _to_list_if_str, _expand, _to_series_if_str, _to_name_if_series, \
                      _extract_table_names_from_sql, _get_datetime_cols, \
-                     _select_long_short_ports, _portfolio_difference
+                     _select_long_short_ports, _portfolio_difference, split
 
 from .ext_time import estimate_time
 
@@ -306,21 +306,6 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
         #Collect and output results. A timeout of 1 should be fine because
         #it should wait until completion anyway
         return np.concatenate([r.get(timeout=1) for r in results], axis=0)
-        
-
-    def split(df, cumvars, periodvar):
-        """
-        Splits a dataframe into a list of arrays based on a key variable
-        """
-#         df = df.sort_values(['__key_var__', periodvar])
-        small_df = df[['__key_var__'] + cumvars]
-        arr = small_df.values
-        splits = []
-        for i in range(arr.shape[0]):
-            if i == 0: continue
-            if arr[i,0] != arr[i-1,0]: #different key
-                splits.append(i)
-        return np.split(arr[:,1:], splits)
     
     #####TEMPORARY CODE######
     assert method.lower() != 'zero'
@@ -370,7 +355,7 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
     for col in [df[c].astype(str) for c in byvars]:
         df['__key_var__'] += col
 
-    array_list = split(df, cumvars, periodvar)
+    array_list = split(df, cumvars)
     
 #     container_array = df[cumvars].values
     full_array = _cumulate(array_list)
