@@ -43,36 +43,37 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
 
 def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
-    # All nans, can't do anything but return back nothing
-    # But transform ignores nans in the output and then complains when the sizes don't match.
-    # So instead, put a placeholder of -999.999
-    if pd.isnull(series).all():
+    index = _get_non_nan_value_index(series, str_vars)
+    if index is None:
+        # All nans, can't do anything but return back nothing
+        # But transform ignores nans in the output and then complains when the sizes don't match.
+        # So instead, put a placeholder of -999.999
         return pd.Series([-999.999 for i in range(len(series))])
     # handle numeric
     if series.dtype in (np.float64, np.int64):
         return _fill_data_for_numeric_series(series, fill_function=num_vars)
     # handle strs
     else:
-        return _fill_data_for_str_series(series, first_or_last=str_vars)
+        return _fill_data_for_str_series(series, non_nan_index=index)
 
 
 def _fill_data_for_numeric_series(series, fill_function='mean'):
     return series.fillna(series.agg(fill_function))
 
 
-def _fill_data_for_str_series(series, first_or_last='first'):
-    fill_value = _get_one_non_nan_from_series(series, first_or_last=first_or_last)
+def _fill_data_for_str_series(series, non_nan_index):
+    fill_value = series.loc[non_nan_index]
 
     return series.fillna(fill_value)
 
+def _get_non_nan_value_index(series, first_or_last):
+    if first_or_last == 'first':
+        return series.first_valid_index()
+    elif first_or_last == 'last':
+        return series.last_valid_index()
+    else:
+        raise ValueError("Did not pass 'first' or 'last'")
 
-def _get_one_non_nan_from_series(series, first_or_last='first'):
-    """
-    'first' or 'last' to use first or last value in group to fill
-    """
-    index = _parse_first_or_last_to_index(first_or_last)
-
-    return series[pd.notnull(series)].iloc[index]
 
 def _restore_nans_after_fill(df):
     """
@@ -80,15 +81,6 @@ def _restore_nans_after_fill(df):
     Convert back to nan now
     """
     return df.applymap(lambda x: np.nan if x == -999.999 else x)
-
-def _parse_first_or_last_to_index(first_or_last):
-    if first_or_last == 'first':
-        return 0
-    elif first_or_last == 'last':
-        return -1
-    else:
-        raise ValueError("Did not pass 'first' or 'last'")
-
 
 def _drop_duplicates(df, byvars):
     """
