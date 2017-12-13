@@ -24,7 +24,7 @@ from .pdutils import window_mapping, year_month_from_single_date, _check_portfol
                      _select_long_short_ports, _portfolio_difference, split
 
 from .regby import reg_by
-from .filldata import fill_data_by_groups_and_drop_duplicates, fill_data_by_groups
+from .filldata import fillna_by_groups_and_keep_one_per_group, fillna_by_groups
 from ..ext_time import estimate_time
 
 

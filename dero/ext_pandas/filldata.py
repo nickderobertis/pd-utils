@@ -4,7 +4,7 @@ from functools import partial
 
 from .pdutils import _to_list_if_str
 
-def fill_data_by_groups_and_drop_duplicates(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
+def fillna_by_groups_and_keep_one_per_group(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
     """
 
     """
@@ -12,28 +12,29 @@ def fill_data_by_groups_and_drop_duplicates(df, byvars, exclude_cols=None, str_v
     if exclude_cols:
         exclude_cols = _to_list_if_str(exclude_cols)
 
-    df = fill_data_by_groups(df, byvars, exclude_cols=exclude_cols, str_vars=str_vars, num_vars=num_vars)
+    df = fillna_by_groups(df, byvars, exclude_cols=exclude_cols, str_vars=str_vars, num_vars=num_vars)
     _drop_duplicates(df, byvars)
 
     return df
 
 
-def fill_data_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
+def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
     """
 
     """
     byvars = _to_list_if_str(byvars)
 
     if exclude_cols:
-        cols_to_fill = [col for col in df.columns if col not in exclude_cols]
+        cols_to_fill = [col for col in df.columns if (col not in exclude_cols) and (col not in byvars)]
         concat_vars = byvars + exclude_cols
     else:
-        cols_to_fill = [col for col in df.columns]
+        cols_to_fill = [col for col in df.columns if col not in byvars]
         concat_vars = byvars
 
     _fill_data = partial(_fill_data_for_series, str_vars=str_vars, num_vars=num_vars)
 
     filled = df[byvars + cols_to_fill].groupby(byvars).transform(_fill_data)
+    filled = _restore_nans_after_fill(filled) #_fill_data places -999.999 in place of nans, now convert back
 
     # Filled is of the same dimensions as df but is missing byvars and exclude_cols. Add them back
     filled = pd.concat([df[concat_vars], filled], axis=1)
@@ -42,9 +43,11 @@ def fill_data_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_var
 
 
 def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
-    # All nans, can't do anything but return back nans
+    # All nans, can't do anything but return back nothing
+    # But transform ignores nans in the output and then complains when the sizes don't match.
+    # So instead, put a placeholder of -999.999
     if pd.isnull(series).all():
-        return series
+        return pd.Series([-999.999 for i in range(len(series))])
     # handle numeric
     if series.dtype in (np.float64, np.int64):
         return _fill_data_for_numeric_series(series, fill_function=num_vars)
@@ -71,6 +74,12 @@ def _get_one_non_nan_from_series(series, first_or_last='first'):
 
     return series[pd.notnull(series)].iloc[index]
 
+def _restore_nans_after_fill(df):
+    """
+    -999.999 was used as a missing representation as pandas can not handle nans in transform.
+    Convert back to nan now
+    """
+    return df.applymap(lambda x: np.nan if x == -999.999 else x)
 
 def _parse_first_or_last_to_index(first_or_last):
     if first_or_last == 'first':
