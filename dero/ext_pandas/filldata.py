@@ -6,7 +6,7 @@ from .pdutils import _to_list_if_str
 
 def fillna_by_groups_and_keep_one_per_group(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
     """
-
+    WARNING: do not use if index is important, it will be dropped
     """
     byvars = _to_list_if_str(byvars)
     if exclude_cols:
@@ -20,7 +20,7 @@ def fillna_by_groups_and_keep_one_per_group(df, byvars, exclude_cols=None, str_v
 
 def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='mean'):
     """
-
+    WARNING: do not use if index is important, it will be dropped
     """
     byvars = _to_list_if_str(byvars)
 
@@ -33,14 +33,16 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
     _fill_data = partial(_fill_data_for_series, str_vars=str_vars, num_vars=num_vars)
 
-    filled = df[byvars + cols_to_fill].groupby(byvars).transform(_fill_data)
+    out_dfs = []
+    for group, group_df in df[byvars + cols_to_fill].groupby(byvars):
+        out_dfs.append(group_df.reset_index(drop=True).transform(_fill_data_for_series))
+
+    filled = pd.concat(out_dfs, axis=0).reset_index(drop=True)
+
     filled = _restore_nans_after_fill(filled) #_fill_data places -999.999 in place of nans, now convert back
 
-    # Filled is of the same dimensions as df but is missing byvars and exclude_cols. Add them back
-    filled = pd.concat([df[concat_vars], filled], axis=1)
 
     return filled
-
 
 def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
     index = _get_non_nan_value_index(series, str_vars)
