@@ -817,6 +817,12 @@ def groupby_merge(df, byvars, func_str, *func_args, subset='all', replace=False)
     #Convert subset to list if necessary
     if isinstance(subset, str):
         subset = [subset]
+
+    # Groupby expects to receive a string if there is a single variable
+    if len(subset) == 1:
+        groupby_subset = subset[0]
+    else:
+        groupby_subset = subset
     
     if func_str == 'transform':
         #transform works very differently from other aggregation functions
@@ -835,7 +841,7 @@ def groupby_merge(df, byvars, func_str, *func_args, subset='all', replace=False)
         
         grouped = no_nans.groupby(byvars)
         func = getattr(grouped, func_str) #pull method of groupby class with same name as func_str
-        grouped = func(*func_args)[subset] #apply the class method and select subset columns
+        grouped = func(*func_args)[groupby_subset] #apply the class method and select subset columns
         grouped.columns = [col + '_' + func_str for col in grouped.columns] #rename transformed columns
         
         df.replace('__tempnan__', nan, inplace=True) #fill nan back into dataframe
@@ -854,7 +860,7 @@ def groupby_merge(df, byvars, func_str, *func_args, subset='all', replace=False)
 #         grouped = func(*func_args) #apply the class method
 
 
-        grouped = df.groupby(byvars)[subset]
+        grouped = df.groupby(byvars)[groupby_subset]
         func = getattr(grouped, func_str) #pull method of groupby class with same name as func_str
         grouped = func(*func_args) #apply the class method
         grouped = grouped.reset_index()
