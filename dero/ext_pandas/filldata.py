@@ -53,6 +53,11 @@ def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
         return pd.Series([-999.999 for i in range(len(series))])
     # handle numeric
     if series.dtype in (np.float64, np.int64):
+        if num_vars in ('first', 'last'):
+            # Overwrite index for that of num vars if not using the same value as for str vars
+            if num_vars != str_vars:
+                index = _get_non_nan_value_index(series, num_vars)
+            return _fill_data_for_str_series(series, non_nan_index=index)
         return _fill_data_for_numeric_series(series, fill_function=num_vars)
     # handle strs
     else:
