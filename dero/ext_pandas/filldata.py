@@ -53,7 +53,7 @@ def add_missing_group_rows(df, fill_id_cols):
 
 def drop_missing_group_rows(df, fill_id_cols):
     drop_subset = [col for col in df.columns if col not in fill_id_cols]
-    return df.dropna(subset=drop_subset)
+    return df.dropna(subset=drop_subset, how='all')
 
 def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
     index = _get_non_nan_value_index(series, str_vars)
