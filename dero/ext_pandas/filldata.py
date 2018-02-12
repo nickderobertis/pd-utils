@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from functools import partial
+from itertools import product
 
 from .pdutils import _to_list_if_str
 
@@ -43,6 +44,16 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
 
     return filled
+
+def add_missing_group_rows(df, fill_id_cols):
+    fill_ids = [df[fill_id_col].unique() for fill_id_col in fill_id_cols]
+    index_df = pd.DataFrame([i for i in product(*fill_ids)], columns=fill_id_cols)
+
+    return index_df.merge(df, how='left', on=fill_id_cols)
+
+def drop_missing_group_rows(df, fill_id_cols):
+    drop_subset = [col for col in df.columns if col not in fill_id_cols]
+    return df.dropna(subset=drop_subset)
 
 def _fill_data_for_series(series, str_vars='first', num_vars='mean'):
     index = _get_non_nan_value_index(series, str_vars)
