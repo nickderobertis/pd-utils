@@ -842,7 +842,10 @@ def groupby_merge(df, byvars, func_str, *func_args, subset='all', replace=False)
         grouped = no_nans.groupby(byvars)
         func = getattr(grouped, func_str) #pull method of groupby class with same name as func_str
         grouped = func(*func_args)[groupby_subset] #apply the class method and select subset columns
-        grouped.columns = [col + '_' + func_str for col in grouped.columns] #rename transformed columns
+        if isinstance(grouped, pd.DataFrame):
+            grouped.columns = [col + '_' + func_str for col in grouped.columns] #rename transformed columns
+        elif isinstance(grouped, pd.Series):
+            grouped.index.name = str(grouped.index.name) + '_' + func_str
         
         df.replace('__tempnan__', nan, inplace=True) #fill nan back into dataframe
         
