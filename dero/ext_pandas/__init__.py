@@ -647,7 +647,7 @@ def portfolio_averages(df, groupvar, avgvars, ngroups=10, byvars=None, cutdf=Non
         return avgs, ports
 
 
-def factor_reg_by(df, groupvar, fac=4, retvar='RET'):
+def factor_reg_by(df, groupvar, fac=4, retvar='RET', mp=False):
     """
     Takes a dataframe with RET, mktrf, smb, hml, and umd, and produces abnormal returns by groups.
     
@@ -657,6 +657,10 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET'):
     groupvar: str or list of strs, column names of columns on which to form by groups
     fac: int (1, 3, 4), factor model to run
     retvar: str, name of column containing returns
+
+    Optional Inputs:
+    mp: False to use single processor, True to use all processors, int to use # processors
+
     """
     assert fac in (1, 3, 5)
     factors = ['mktrf']
@@ -665,8 +669,8 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET'):
     if fac == 5:
         factors += ['rmw','cma']
         
-    outdf = reg_by(df, retvar, factors, groupvar, merge=True)
-    outdf['AB' + retvar] = outdf[retvar] - sum([outdf[fac] * outdf['coef_' + fac] for fac in factors]) #create abnormal returns
+    outdf = reg_by(df, retvar, factors, groupvar, merge=True, mp=mp)
+    outdf['AB' + retvar] = outdf[retvar] - sum([outdf[fac] * outdf['coef_' + fac].astype(float) for fac in factors]) #create abnormal returns
     return outdf
 
 def state_abbrev(df, col, toabbrev=False):
