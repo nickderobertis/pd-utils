@@ -35,8 +35,8 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
     _fill_data = partial(_fill_data_for_series, str_vars=str_vars, num_vars=num_vars)
 
     out_dfs = []
-    for group, group_df in df[byvars + cols_to_fill].groupby(byvars):
-        out_dfs.append(group_df.reset_index(drop=True).transform(_fill_data))
+    for group, group_df in df[byvars + cols_to_fill].groupby(byvars, as_index=False):
+        out_dfs.append(group_df.apply(_fill_data, axis=1))
 
     filled = pd.concat(out_dfs, axis=0).reset_index(drop=True)
 
