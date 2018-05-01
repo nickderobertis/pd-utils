@@ -131,7 +131,7 @@ def _split(df, keepvars, force_numeric=False):
 
 
 def _create_cutoffs_arr(arr, percentiles):
-    arr = arr[~np.isnan(arr)]
+    arr = arr[~np.isnan(arr) & ~np.isinf(arr)]
     if arr.size == 0:
         return False
     return [np.percentile(arr, i) for i in percentiles]
@@ -144,7 +144,7 @@ def _sort_arr_into_ports(arr, cutoffs):
 
 
 def _portfolio_match(elem, port_cutoffs):
-    if np.isnan(elem): return 0
+    if np.isnan(elem) or np.isinf(elem): return 0
     return [index + 1 for index, bot, top in port_cutoffs \
             if elem >= bot and elem <= top][0]
     
