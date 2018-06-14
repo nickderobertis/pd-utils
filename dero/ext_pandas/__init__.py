@@ -647,7 +647,7 @@ def portfolio_averages(df, groupvar, avgvars, ngroups=10, byvars=None, cutdf=Non
         return avgs, ports
 
 
-def factor_reg_by(df, groupvar, fac=4, retvar='RET', mp=False):
+def factor_reg_by(df, groupvar, fac=4, retvar='RET', mp=False, stderr=False):
     """
     Takes a dataframe with RET, mktrf, smb, hml, and umd, and produces abnormal returns by groups.
     
@@ -656,7 +656,8 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET', mp=False):
         and a return variable
     groupvar: str or list of strs, column names of columns on which to form by groups
     fac: int (1, 3, 4), factor model to run
-    retvar: str, name of column containing returns
+    retvar: str, name of column containing returns. risk free rate will be subtracted from this column
+    stderr: bool, True to include standard errors of coefficients
 
     Optional Inputs:
     mp: False to use single processor, True to use all processors, int to use # processors
@@ -668,9 +669,17 @@ def factor_reg_by(df, groupvar, fac=4, retvar='RET', mp=False):
         factors += ['smb','hml']
     if fac == 5:
         factors += ['rmw','cma']
+
+    # Create returns in excess of risk free rate
+    excess_var ='_' + retvar + '_minus_rf'
+    df[excess_var] = df[retvar] - df['rf']
         
-    outdf = reg_by(df, retvar, factors, groupvar, merge=True, mp=mp)
+    outdf = reg_by(df, excess_var, factors, groupvar, merge=True, mp=mp, stderr=stderr)
     outdf['AB' + retvar] = outdf[retvar] - sum([outdf[fac] * outdf['coef_' + fac].astype(float) for fac in factors]) #create abnormal returns
+
+    # Cleanup excess returns
+    outdf.drop(excess_var, axis=1, inplace=True)
+
     return outdf
 
 def state_abbrev(df, col, toabbrev=False):
