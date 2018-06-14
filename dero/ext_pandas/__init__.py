@@ -858,7 +858,7 @@ def groupby_merge(df, byvars, func_str, *func_args, subset='all', replace=False)
         if isinstance(grouped, pd.DataFrame):
             grouped.columns = [col + '_' + func_str for col in grouped.columns] #rename transformed columns
         elif isinstance(grouped, pd.Series):
-            grouped.index.name = str(grouped.index.name) + '_' + func_str
+            grouped.name = str(grouped.name) + '_' + func_str
         
         df.replace('__tempnan__', nan, inplace=True) #fill nan back into dataframe
         
