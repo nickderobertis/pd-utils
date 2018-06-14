@@ -17,6 +17,10 @@ from pandasql import PandaSQL
 from pandastable import Table
 from sas7bdat import SAS7BDAT
 
+from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, nearest_workday, \
+    USMartinLutherKingJr, USPresidentsDay, GoodFriday, USMemorialDay, \
+    USLaborDay, USThanksgivingDay
+
 from .pdutils import window_mapping, year_month_from_single_date, _check_portfolio_inputs, _assert_byvars_list, \
                      _create_cutoffs_and_sort_into_ports, _split, _sort_arr_list_into_ports_and_return_series, \
                      _to_list_if_str, _expand, _to_series_if_str, _to_name_if_series, \
@@ -743,22 +747,22 @@ def state_abbrev(df, col, toabbrev=False):
     
     return df
 
-def create_not_trade_days(tradedays_path= r'E:\Data\Other SAS\tradedays.sas7bdat'):
-    df = load_sas(tradedays_path)
-    trading_days = pd.to_datetime(df['date']).tolist()
-    all_days = pd.date_range(start=trading_days[0],end=trading_days[-1]).tolist()
-    notrade_days = [day for day in all_days if day not in trading_days]
-    
-    outdir = os.path.dirname(tradedays_path)
-    outpath = os.path.join(outdir, 'not tradedays.csv')
-    
-    with open(outpath, 'w') as f:
-        f.write('date\n')
-        f.write('\n'.join([day.date().isoformat() for day in notrade_days]))
+class USTradingCalendar(AbstractHolidayCalendar):
+    rules = [
+        Holiday('NewYearsDay', month=1, day=1, observance=nearest_workday),
+        USMartinLutherKingJr,
+        USPresidentsDay,
+        GoodFriday,
+        USMemorialDay,
+        Holiday('USIndependenceDay', month=7, day=4, observance=nearest_workday),
+        USLaborDay,
+        USThanksgivingDay,
+        Holiday('Christmas', month=12, day=25, observance=nearest_workday)
+    ]
         
-def tradedays(notradedays_path=r'E:\Data\Other SAS\not tradedays.csv'):
-    notrade_days = pd.read_csv(notradedays_path, parse_dates=['date'])['date'].tolist()
-    return CustomBusinessDay(holidays=notrade_days)
+def tradedays():
+    trading_calendar = USTradingCalendar()
+    return CustomBusinessDay(holidays=trading_calendar.holidays())
 
 def select_rows_by_condition_on_columns(df, cols, condition='== 1', logic='or'):
     """
