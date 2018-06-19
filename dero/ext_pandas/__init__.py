@@ -499,6 +499,7 @@ def averages(df, avgvars, byvars, wtvar=None, count=False, flatten=True):
     if isinstance(avgvars, str): avgvars = [avgvars]
     else:
         assert isinstance(avgvars, list)
+        avgvars = avgvars.copy() # don't modify existing avgvars inplace
     assert isinstance(byvars, (str, list))
     if wtvar != None:
         assert isinstance(wtvar, str)
