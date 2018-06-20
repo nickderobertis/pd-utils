@@ -462,7 +462,18 @@ def long_to_wide(df, groupvars, values, colindex=None):
     
     return combined.drop([colindex,'__key__'] + values, axis=1).drop_duplicates().reset_index(drop=True)
 
-def load_sas(filepath, csv=True, **read_csv_kwargs):  
+def load_sas(filepath, csv=True, **read_csv_kwargs):
+    """
+    Loads sas sas7bdat file into a pandas DataFrame.
+
+    :param filepath: str of location of sas7bdat file
+    :param csv: when set to True, saves a csv version of the data in the same directory as the sas7bdat.
+                Next time load_sas will load from the csv version rather than sas7bdat, which speeds up
+                load times about 3x. If the sas7bdat file is modified more recently than the csv,
+                the sas7bdat will automatically be loaded and saved to the csv again.
+    :param read_csv_kwargs: kwargs to pass to pd.read_csv if csv option is True
+    :return:
+    """
     sas_name = os.path.basename(filepath) #e.g. dsename.sas7bdat
     folder = os.path.dirname(filepath) #location of sas file
     filename, extension = os.path.splitext(sas_name) #returns ('dsenames','.sas7bdat')
@@ -762,6 +773,25 @@ class USTradingCalendar(AbstractHolidayCalendar):
     ]
         
 def tradedays():
+    """
+    Used for constructing a range of dates with pandas date_range function.
+
+    :Example:
+
+    >>>import pandas as pd
+    >>>pd.date_range(
+    >>>    start='1/1/2000',
+    >>>    end='1/31/2000',
+    >>>    freq=dero.pandas.tradedays()
+    >>>)
+    pd.DatetimeIndex(['2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06',
+               '2000-01-07', '2000-01-10', '2000-01-11', '2000-01-12',
+               '2000-01-13', '2000-01-14', '2000-01-18', '2000-01-19',
+               '2000-01-20', '2000-01-21', '2000-01-24', '2000-01-25',
+               '2000-01-26', '2000-01-27', '2000-01-28', '2000-01-31'],
+              dtype='datetime64[ns]', freq='C')
+
+    """
     trading_calendar = USTradingCalendar()
     return CustomBusinessDay(holidays=trading_calendar.holidays())
 
@@ -1073,10 +1103,11 @@ def apply_func_to_unique_and_merge(series, func):
     seres: pd.Series
     func: function to be applied to the series.
     
-    Usage:
-    import functools
-    to_datetime = functools.partial(pd.to_datetime, format='%Y%m')
-    apply_func_to_unique_and_merge(df['MONTH'], to_datetime)
+    :Usage:
+
+    >>>import functools
+    >>>to_datetime = functools.partial(pd.to_datetime, format='%Y%m')
+    >>>apply_func_to_unique_and_merge(df['MONTH'], to_datetime)
     """
 
     unique = pd.Series(series.dropna().unique())
