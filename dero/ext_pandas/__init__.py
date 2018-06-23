@@ -386,7 +386,7 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
     
     return outdf.drop(drop_cols, axis=1)
 
-def long_to_wide(df, groupvars, values, colindex=None):
+def long_to_wide(df, groupvars, values, colindex=None, colindex_only=False):
     '''
     
     groupvars = string or list of variables which signify unique observations in the output dataset
@@ -395,6 +395,10 @@ def long_to_wide(df, groupvars, values, colindex=None):
                in the output dataset. If not specified, just uses the
                count of the row within the group. If a list is provided, each column value will be appended
                in order separated by _
+    colindex_only = boolean. If true, column names in output data will be only the colindex, and will not
+                    include the name of the values variable. Only valid when passing a single value, otherwise
+                    multiple columns would have the same name.
+
     
     NOTE: Don't have any variables named key or idx
     
@@ -428,6 +432,9 @@ def long_to_wide(df, groupvars, values, colindex=None):
     if isinstance(values,str):
         values = [values]
     assert isinstance(values, list)
+
+    if colindex_only and len(values) > 1:
+        raise NotImplementedError('set colindex_only to False when passing more than one value')
     
     #Fixes for colindex
     #Use count of the row within the group for column index if not specified
@@ -454,7 +461,12 @@ def long_to_wide(df, groupvars, values, colindex=None):
             combined = df.copy()
         #Create wide dataset
         raw_wide = df.pivot(index='__key__', columns=colindex, values=value)
-        raw_wide.columns = [value + str(col) for col in raw_wide.columns]
+        if not colindex_only:
+            # add value name
+            raw_wide.columns = [value + str(col) for col in raw_wide.columns]
+        else:
+            # remove _ from colindex name
+            raw_wide.columns = [str(col).strip('_') for col in raw_wide.columns]
         wide = raw_wide.reset_index()
 
         #Merge back to original dataset
