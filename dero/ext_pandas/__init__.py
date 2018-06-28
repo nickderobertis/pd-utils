@@ -1202,8 +1202,8 @@ def _left_merge_latest_pandas(df, df2, on, left_datevar='Date', right_datevar='D
     lt = many.loc[many[left_datevar] >= many[right_datevar]] #left with datadates less than date
 
     #find rows within groups which have the maximum right_datevar (soonest before left_datevar)
-    data_rows = lt.groupby(on + [left_datevar], as_index=False)[right_datevar].max() \
-        .merge(lt, on=on + [left_datevar, right_datevar], how='left')
+    data_rows = lt.groupby(on + [left_datevar])[right_datevar].max() \
+        .reset_index().merge(lt, on=on + [left_datevar, right_datevar], how='left')
         
     if rename: #remove the _x for final merge
         data_rows.rename(columns={left_datevar: orig_left_datevar}, inplace=True)
