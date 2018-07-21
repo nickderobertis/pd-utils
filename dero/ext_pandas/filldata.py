@@ -45,11 +45,17 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
     return filled
 
-def add_missing_group_rows(df, fill_id_cols):
+def add_missing_group_rows(df, fill_id_cols, fill_method='ffill'):
     fill_ids = [df[fill_id_col].unique() for fill_id_col in fill_id_cols]
     index_df = pd.DataFrame([i for i in product(*fill_ids)], columns=fill_id_cols)
 
-    return index_df.merge(df, how='left', on=fill_id_cols)
+    merged = index_df.merge(df, how='left', on=fill_id_cols)
+
+    # Newly created rows will have missing values. Sort and fill
+    merged.sort_values(fill_id_cols, inplace=True)
+    merged.fillna(method=fill_method, inplace=True)
+
+    return merged
 
 def drop_missing_group_rows(df, fill_id_cols):
     drop_subset = [col for col in df.columns if col not in fill_id_cols]
