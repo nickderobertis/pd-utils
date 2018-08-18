@@ -56,6 +56,11 @@ def df_for_reg(df, yvar, xvars, groupvar):
     # Recombine groupvar and drop missing
     yx_df = pd.concat([yx_df, df[groupvar]], axis=1).dropna()
 
+    # Now drop groups which have too few observations
+    group_counts = yx_df.groupby(groupvar)[yvar].count()
+    valid_groups = pd.Series(group_counts[group_counts > len(xvars) + 1].index).tolist()
+    yx_df = yx_df[yx_df[groupvar].isin(valid_groups)]
+
     return yx_df
 
 def _reg_by(arrs, groups, xvars, rhs, cons, mp=False, stderr=False):
