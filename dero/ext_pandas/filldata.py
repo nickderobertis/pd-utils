@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from functools import partial
 from itertools import product
+from typing import List
 
 from .pdutils import _to_list_if_str
 
@@ -36,7 +37,7 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
     out_dfs = []
     for group, group_df in df[byvars + cols_to_fill].groupby(byvars, as_index=False):
-        out_dfs.append(group_df.apply(_fill_data, axis=1))
+        out_dfs.append(group_df.apply(_fill_data, axis=0))
 
     filled = pd.concat(out_dfs, axis=0).reset_index(drop=True)
 
@@ -45,7 +46,22 @@ def fillna_by_groups(df, byvars, exclude_cols=None, str_vars='first', num_vars='
 
     return filled
 
-def add_missing_group_rows(df, fill_id_cols, fill_method='ffill'):
+def add_missing_group_rows(df, group_id_cols: List[str], non_group_id_cols: List[str], fill_method='ffill',
+                           fill_limit: int=None):
+    """
+
+    Args:
+        df:
+        group_id_cols: typically entity ids. these ids represents groups in the data. data will not be
+            forward/back filled across differences in these ids.
+        non_group_id_cols: typically date or time ids. data will be forward/back filled across differences in these ids
+        fill_method: pandas fill methods
+        fill_limit: pandas fill limit
+
+    Returns:
+
+    """
+    fill_id_cols = group_id_cols + non_group_id_cols
     fill_ids = [df[fill_id_col].unique() for fill_id_col in fill_id_cols]
     index_df = pd.DataFrame([i for i in product(*fill_ids)], columns=fill_id_cols)
 
@@ -53,7 +69,8 @@ def add_missing_group_rows(df, fill_id_cols, fill_method='ffill'):
 
     # Newly created rows will have missing values. Sort and fill
     merged.sort_values(fill_id_cols, inplace=True)
-    merged.fillna(method=fill_method, inplace=True)
+    # TODO: this method can still fill nans in existing data, not just created rows
+    merged = merged.groupby(group_id_cols, as_index=False).fillna(method=fill_method, limit=fill_limit)
 
     return merged
 
