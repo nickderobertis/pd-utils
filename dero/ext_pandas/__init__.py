@@ -193,7 +193,7 @@ def expand_months(df, datevar='Date', newdatevar='Daily Date', trade_days=True):
     return df.merge(days, on=datevar, how='left')
 
 def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, grossify=False,
-             multiprocess=True):
+             multiprocess=True, replace: bool=False):
     """
     Cumulates a variable over time. Typically used to get cumulative returns. 
     
