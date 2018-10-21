@@ -43,6 +43,9 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True, mp=False, stderr=F
     # Combine list of arrays into df, and apply column labels
     result_df = _result_list_of_arrays_to_df(results, rhs, groupvar, stderr=stderr)
 
+    if cons:
+        result_df.rename(columns={'coef_const': 'const'}, inplace=True)
+
     if merge:
         result_df = df.merge(result_df, how='left', on=groupvar)
     if drop_group:
@@ -57,9 +60,9 @@ def df_for_reg(df, yvar, xvars, groupvar):
     yx_df = pd.concat([yx_df, df[groupvar]], axis=1).dropna()
 
     # Now drop groups which have too few observations
-    group_counts = yx_df.groupby(groupvar)[yvar].count()
-    valid_groups = pd.Series(group_counts[group_counts > len(xvars) + 1].index).tolist()
-    yx_df = yx_df[yx_df[groupvar].isin(valid_groups)]
+    # group_counts = yx_df.groupby(groupvar)[yvar].count()
+    # valid_groups = pd.Series(group_counts[group_counts > len(xvars) + 1].index).tolist()
+    # yx_df = yx_df[yx_df[groupvar].isin(valid_groups)]
 
     return yx_df
 
@@ -131,13 +134,15 @@ class ResultCounter:
 
 def _reg(arr, xvars, rhs, cons, group, stderr):
     X = arr[:, 1:].astype(float)
+    min_obs = len(xvars) + 1
 
     if cons:
         X = sm.add_constant(X)
+        min_obs += 1
 
     y = arr[:, 0].astype(float)
 
-    if arr.shape[0] > len(xvars) + 1:  # if enough observations, run regression
+    if arr.shape[0] >= min_obs:  # if enough observations, run regression
         model = sm.OLS(y, X)
         result = model.fit()
         this_result = np.append(result.params, group)  # add groupvar
