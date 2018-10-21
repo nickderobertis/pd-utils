@@ -228,7 +228,9 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
     grossify: bool, set to True to add one to all variables then subtract one at the end
     multiprocess: bool or int, set to True to use all available processors, 
                   set to False to use only one, pass an int less or equal to than number of 
-                  processors to use that amount of processors 
+                  processors to use that amount of processors
+    replace: bool, True to return df with passed columns replaced with cumulated columns.
+             False to return df with both passed columns and cumulated columns
     """
     import time as time2 #accidentally used time an an input parameter and don't want to break prior code
     
@@ -381,6 +383,10 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
         all_cumvars = cumvars + new_cumvars
         for col in all_cumvars:
             outdf[col] = outdf[col] - 1
+
+    if replace:
+        outdf.drop(cumvars, axis=1, inplace=True)
+        outdf.rename(columns={'cum_' + str(cumvar): cumvar for cumvar in cumvars}, inplace=True)
     
     drop_cols = [col for col in outdf.columns if col.startswith('__')]
     
