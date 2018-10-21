@@ -1161,7 +1161,7 @@ def _map_windows(df, time, method='between', periodvar='Shift Date', byvars=['PE
     return df.rename(columns={periodvar + '_transform': '__map_window__'})
 
 def left_merge_latest(df, df2, on, left_datevar='Date', right_datevar='Date',
-                      limit_years=False, backend='pandas'):
+                      max_offset = None, backend='pandas'):
     """
     Left merges df2 to df using on, but grabbing the most recent observation (right_datevar will be
     the soonest earlier than left_datevar). Useful for situations where data needs to be merged with
@@ -1177,7 +1177,9 @@ def left_merge_latest(df, df2, on, left_datevar='Date', right_datevar='Date',
     Optional inputs:
     left_datevar: str, name of date variable on which to merge in df
     right_datevar: str, name of date variable on which to merge in df2
-    limit_years: False or int, only applicable for backend='sql'. 
+    max_offset: int or datetime.timedelta, maximum amount of time to go back to look for a match.
+        When datevar is a datetime column, pass datetime.timedelta. When datevar is an int column
+        (e.g. year), pass an int. Currently only applicable for backend 'pandas'
     backend: str, 'pandas' or 'sql'. Specify the underlying machinery used to perform the merge.
              'pandas' means native pandas, while 'sql' uses pandasql. Try 'sql' if you run
              out of memory.
@@ -1187,14 +1189,17 @@ def left_merge_latest(df, df2, on, left_datevar='Date', right_datevar='Date',
         on = [on]
         
     if backend.lower() in ('pandas','pd'):
-        return _left_merge_latest_pandas(df, df2, on, left_datevar=left_datevar, right_datevar=right_datevar)
+        return _left_merge_latest_pandas(df, df2, on, left_datevar=left_datevar, right_datevar=right_datevar,
+                                         max_offset=max_offset)
     elif backend.lower() in ('sql','pandasql'):
+        if max_offset is not None:
+            raise NotImplementedError('cannot yet handle max_offset for sql backend')
         return _left_merge_latest_sql(df, df2, on, left_datevar=left_datevar, right_datevar=right_datevar)
     else:
         raise ValueError("select backend='pandas' or backend='sql'.")
         
     
-def _left_merge_latest_pandas(df, df2, on, left_datevar='Date', right_datevar='Date'):
+def _left_merge_latest_pandas(df, df2, on, left_datevar='Date', right_datevar='Date', max_offset = None):
     many = df.loc[:,on + [left_datevar]].merge(df2, on=on, how='left')
     
     rename = False
@@ -1206,6 +1211,9 @@ def _left_merge_latest_pandas(df, df2, on, left_datevar='Date', right_datevar='D
         right_datevar += '_y'
     
     lt = many.loc[many[left_datevar] >= many[right_datevar]] #left with datadates less than date
+
+    if max_offset is not None:
+        lt = lt.loc[lt[right_datevar] >= lt[left_datevar] - max_offset]
 
     #find rows within groups which have the maximum right_datevar (soonest before left_datevar)
     data_rows = lt.groupby(on + [left_datevar])[right_datevar].max() \
