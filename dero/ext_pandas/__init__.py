@@ -4,6 +4,7 @@ import os
 import sys
 import timeit
 import warnings
+from typing import Dict, List, Union, Optional
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
 from tkinter import Tk, Frame, BOTH, YES
@@ -25,7 +26,7 @@ from .pdutils import window_mapping, year_month_from_single_date, _check_portfol
                      _create_cutoffs_and_sort_into_ports, _split, _sort_arr_list_into_ports_and_return_series, \
                      _to_list_if_str, _expand, _to_series_if_str, _to_name_if_series, \
                      _extract_table_names_from_sql, _get_datetime_cols, \
-                     _select_long_short_ports, _portfolio_difference, split
+                     _select_long_short_ports, _portfolio_difference, split, _sort_into_ports
 
 from .regby import reg_by
 from .filldata import fillna_by_groups_and_keep_one_per_group, fillna_by_groups
@@ -564,7 +565,9 @@ def averages(df, avgvars, byvars, wtvar=None, count=False, flatten=True):
     else:
         return outdf
     
-def portfolio(df, groupvar, ngroups=10, byvars=None, cutdf=None, portvar='portfolio',
+def portfolio(df, groupvar, ngroups=10, cutoffs: Optional[List[Union[float, int]]] = None,
+              quant_cutoffs: Optional[List[float]] = None,
+              byvars=None, cutdf=None, portvar='portfolio',
               multiprocess=False):
     '''
     Constructs portfolios based on percentile values of groupvar. If ngroups=10, then will form 10 portfolios,
@@ -573,7 +576,11 @@ def portfolio(df, groupvar, ngroups=10, byvars=None, cutdf=None, portvar='portfo
     
     df: pandas dataframe, input data
     groupvar: string, name of variable in df to form portfolios on
-    ngroups: integer, number of portfolios to form
+    ngroups: integer, number of portfolios to form. will be ignored if option cutoffs or quant_cutoffs is passed
+    cutoffs: e.g. [100, 10000] to form three portfolios, 1 would be < 100, 2 would be > 100 and < 10000,
+        3 would be > 10000. cannot be used with option ngroups
+    quant_cutoffs: eg. [0.1, 0.9] to form three portfolios. 1 would be lowest 10% of data,
+        2 would be > 10 and < 90 percentiles, 3 would be highest 10%. All will be within byvars if byvars are passed.
     byvars: string, list, or None, name of variable(s) in df, finds portfolios within byvars. For example if byvars='Month',
             would take each month and form portfolios based on the percentiles of the groupvar during only that month
     cutdf: pandas dataframe or None, optionally determine percentiles using another dataset. See second note.
@@ -589,33 +596,64 @@ def portfolio(df, groupvar, ngroups=10, byvars=None, cutdf=None, portvar='portfo
     NOTE: For some reason, multiprocessing seems to be slower in testing, so it is disabled by default
     '''
     #Check types
-    _check_portfolio_inputs(df, groupvar, ngroups=ngroups, byvars=byvars, cutdf=cutdf, portvar=portvar)
+    _check_portfolio_inputs(df, groupvar, ngroups=ngroups, byvars=byvars, cutdf=cutdf, portvar=portvar, cutoffs=cutoffs,
+                            quant_cutoffs=quant_cutoffs)
     byvars = _assert_byvars_list(byvars)
     if cutdf != None:
         assert isinstance(cutdf, pd.DataFrame)
     else: #this is where cutdf == None, the default case
         cutdf = df
         tempcutdf = cutdf.copy()
-    
-    pct_per_group = 100/ngroups
-    percentiles = [i*pct_per_group for i in range(ngroups)] #percentile values, e.g. 0, 10, 20, 30... 100
-    percentiles += [100]
-    
-#     pct_per_group = int(100/ngroups)
-#     percentiles = [i for i in range(0, 100 + pct_per_group, pct_per_group)] #percentile values, e.g. 0, 10, 20, 30... 100
-    
-    #Create new functions with common arguments added
-    create_cutoffs_and_sort_into_ports = functools.partial(_create_cutoffs_and_sort_into_ports, 
-                                       groupvar=groupvar, portvar=portvar, percentiles=percentiles)
+
+    # With passed cutoffs, can skip all logic to calculate cutoffs, and go right to portfolio sort
+    if cutoffs is not None:
+        # Must add a minimum and maximum to cutoffs (bottom of lowest port, top of highest port)
+        # for code to work properly
+        min_groupvar_value = df[groupvar].min()
+        max_groupvar_value = df[groupvar].max()
+        all_cutoffs = [min_groupvar_value] + cutoffs + [max_groupvar_value]
+        return _sort_into_ports(
+            df,
+            all_cutoffs,
+            portvar,
+            groupvar
+        )
+
+    # Hard cutoffs not passed, handle percentile based portfolios (either ngroups or passed quant_cuts)
+    if quant_cutoffs is not None:
+        # Must add a minimum and maximum to quant cutoffs and scale to 0-100 for code to work properly
+        percentiles = [
+            0,
+            *[q * 100 for q in quant_cutoffs],
+            100
+        ]
+    else:
+        # ngroups handling
+        pct_per_group = 100 / ngroups
+        percentiles = [i * pct_per_group for i in range(ngroups)]  # percentile values, e.g. 0, 10, 20, 30... 100
+        percentiles += [100]
+
+
+    # Create new functions with common arguments added. First function is for handling entire df, second is for
+    # splitting into numpy arrays by byvars
+    create_cutoffs_if_necessary_and_sort_into_ports = functools.partial(
+        _create_cutoffs_and_sort_into_ports,
+        groupvar=groupvar,
+        portvar=portvar,
+        percentiles=percentiles
+    )
+
+    sort_arr_list_into_ports_and_return_series = functools.partial(
+        _sort_arr_list_into_ports_and_return_series,
+        percentiles=percentiles,
+        multiprocess=multiprocess
+    )
+
     split = functools.partial(_split, keepvars=[groupvar], force_numeric=True)
-    sort_arr_list_into_ports_and_return_series = functools.partial(_sort_arr_list_into_ports_and_return_series,
-                                                         percentiles=percentiles,
-                                                         multiprocess=multiprocess)
-    
     tempdf = df.copy()
     
     #If there are no byvars, just complete portfolio sort
-    if byvars == None: return create_cutoffs_and_sort_into_ports(tempdf, cutdf)
+    if byvars == None: return create_cutoffs_if_necessary_and_sort_into_ports(tempdf, cutdf)
     
     #The below rename is incase there is already a variable named index in the data
     #The rename will just not do anything if there's not

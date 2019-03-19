@@ -1,4 +1,5 @@
-
+import warnings
+from typing import Optional, List, Union
 import pandas as pd
 import numpy as np
 from itertools import chain
@@ -86,9 +87,28 @@ def split(df, keepvars, keyvar='__key_var__'):
 
 ############Portfolio Utilities###############
 def _check_portfolio_inputs(*args, **kwargs):
+    user_passed = partial(_user_passed, kwargs=kwargs)
     assert isinstance(args[0], pd.DataFrame)
     assert isinstance(args[1], str)
-    assert isinstance(kwargs['ngroups'], int)
+    user_passed_any_cutoffs = user_passed('cutoffs') or user_passed('quant_cutoffs')
+
+    if user_passed_any_cutoffs and kwargs['ngroups'] not in [10, None, 0]: # 10 is default ngroups
+        raise ValueError(f'cannot pass both cutoffs and ngroups. got {kwargs["cutoffs"]} cutoffs '
+                         f'and {kwargs["ngroups"]} ngroups')
+
+    if user_passed_any_cutoffs and kwargs['cutdf'] is not None:
+        warnings.warn(f'cutdf will not be used for portfolios as cutoffs {kwargs["cutoffs"]} were passed')
+
+    if user_passed('cutoffs') and user_passed('quant_cutoffs'):
+        raise ValueError(f'cannot pass both cutoffs and quant_cutoffs. got {kwargs["cutoffs"]} cutoffs and '
+                         f'{kwargs["quant_cutoffs"]} quant_cutoffs')
+
+    if not user_passed_any_cutoffs:
+        # Must be using ngroups instead of cutoffs
+        assert isinstance(kwargs['ngroups'], int)
+
+def _user_passed(key: str, kwargs: dict) -> bool:
+    return key in kwargs and kwargs[key] is not None
     
 def _assert_byvars_list(byvars):
     if byvars != None:
@@ -154,29 +174,41 @@ def _gen_port_cutoffs(cutoffs):
                     in enumerate(zip(cutoffs[:-1],cutoffs[1:]))]
 
 
-def _sort_arr_list_into_ports(array_list, cut_array_list, percentiles, multiprocess):
+def _sort_arr_list_into_ports(array_list, cut_array_list, percentiles, multiprocess,
+                              cutoffs: Optional[List[Union[float, int]]] = None):
+    common_args = (
+        array_list,
+        cut_array_list,
+        percentiles
+    )
+    common_kwargs = dict(
+        cutoffs=cutoffs
+    )
     if multiprocess:
         if isinstance(multiprocess, int):
-            return _sort_arr_list_into_ports_mp(array_list, cut_array_list, percentiles, mp=multiprocess)
+            return _sort_arr_list_into_ports_mp(*common_args, mp=multiprocess, **common_kwargs)
         else:
-            return _sort_arr_list_into_ports_mp(array_list, cut_array_list, percentiles)
+            return _sort_arr_list_into_ports_mp(*common_args, **common_kwargs)
     else:
-        return _sort_arr_list_into_ports_sp(array_list, cut_array_list, percentiles)
+        return _sort_arr_list_into_ports_sp(*common_args, **common_kwargs)
 
 
-def _create_cutoffs_arr_and_sort_into_ports(data_tup, percentiles):
+def _create_cutoffs_arr_if_necessary_and_sort_into_ports(data_tup, percentiles,
+                                                         cutoffs: Optional[List[Union[float, int]]] = None):
     arr, cutarr = data_tup
-    cutoffs = _create_cutoffs_arr(cutarr, percentiles)
+    if cutoffs is None:
+        cutoffs = _create_cutoffs_arr(cutarr, percentiles)
     if cutoffs:
         return _sort_arr_into_ports(arr, cutoffs)
     else:
         return [0 for elem in arr]
     
-def _sort_arr_list_into_ports_sp(array_list, cut_array_list, percentiles):
+def _sort_arr_list_into_ports_sp(array_list, cut_array_list, percentiles,
+                                 cutoffs: Optional[List[Union[float, int]]] = None):
     outlist = []
     for i, arr in enumerate(array_list):
-        result = _create_cutoffs_arr_and_sort_into_ports((arr, cut_array_list[i]),
-                                                        percentiles)
+        result = _create_cutoffs_arr_if_necessary_and_sort_into_ports((arr, cut_array_list[i]),
+                                                                      percentiles, cutoffs=cutoffs)
         outlist.append(result)
     return outlist
 
@@ -189,15 +221,16 @@ def _sort_arr_list_into_ports_mp(array_list, cut_array_list, percentiles, mp=Non
             return _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, pool)
 
     
-def _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, pool):
+def _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, pool,
+                                      cutoffs: Optional[List[Union[float, int]]] = None):
         #For time estimation
         counter = []
         num_loops = len(array_list)
         start_time = timeit.default_timer()
         
         #Mp setup
-        port = partial(_create_cutoffs_arr_and_sort_into_ports,
-                                 percentiles=percentiles)
+        port = partial(_create_cutoffs_arr_if_necessary_and_sort_into_ports,
+                       percentiles=percentiles, cutoffs=cutoffs)
         
         data_tups = [(arr, cut_array_list[i]) for i, arr in enumerate(array_list)]
 
@@ -217,8 +250,9 @@ def _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, p
 def _arr_list_to_series(array_list):
     return pd.Series(np.concatenate(array_list, axis=0))
 
-def _sort_arr_list_into_ports_and_return_series(array_list, cut_array_list, percentiles, multiprocess):
-    al = _sort_arr_list_into_ports(array_list, cut_array_list, percentiles, multiprocess)
+def _sort_arr_list_into_ports_and_return_series(array_list, cut_array_list, percentiles, multiprocess,
+                                                cutoffs: Optional[List[Union[float, int]]] = None):
+    al = _sort_arr_list_into_ports(array_list, cut_array_list, percentiles, multiprocess, cutoffs=cutoffs)
     return _arr_list_to_series(al)
 
 #############End portfolio utilities###########################################################################
