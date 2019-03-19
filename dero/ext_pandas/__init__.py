@@ -1270,7 +1270,13 @@ def _left_merge_latest_sql(df, df2, on, left_datevar='Date', right_datevar='Date
         df2 = df2.copy()
         df2.rename(columns={right_datevar: right_datevar + '_y'}, inplace=True)
         right_datevar += '_y'
-    
+
+    # Pandasql cannot handle spaces in names, replace
+    df_reverse_col_replacements  = _replace_df_columns_char(df, find_str=' ', replace_str='_')
+    df2_reverse_col_replacements = _replace_df_columns_char(df2, find_str=' ', replace_str='_')
+    orig_on = on.copy()
+    on = [col.replace(' ', '_') for col in on]
+
     on_str = ' and \n    '.join(['a.{0} = b.{0}'.format(i) for i in on])
     groupby_str = ', '.join(on)
     a_cols = ', '.join(['a.' + col for col in on + [left_datevar]])
@@ -1288,9 +1294,40 @@ def _left_merge_latest_sql(df, df2, on, left_datevar='Date', right_datevar='Date
     having
         b.{2} = max(b.{2})
     """.format(on_str, left_datevar, right_datevar, groupby_str, b_cols, a_cols)
-    
-    return df.merge(sql([df, df2], query), on=on + [left_datevar], how='left')
-    
+
+    result = sql([df, df2], query)
+
+    # Reverse the name replacements, bring spaces back
+    df.rename(columns=df_reverse_col_replacements, inplace=True)
+    df2.rename(columns=df2_reverse_col_replacements, inplace=True)
+    # Get all replacements, for result table which may have columns from both
+    df_reverse_col_replacements.update(df2_reverse_col_replacements)
+    result.rename(columns=df_reverse_col_replacements, inplace=True)
+
+    return df.merge(result, on=orig_on + [left_datevar], how='left')
+
+
+def _replace_df_columns_char(df: pd.DataFrame, find_str: str = ' ', replace_str: str = '_') -> Dict[str,str]:
+    """
+    Note: inplace
+
+    Args:
+        df:
+        find_str:
+        replace_str:
+
+    Returns: reverse replacement dict, use to reverse changes
+
+    """
+    replace_dict = {}
+    for col in df.columns:
+        replace_dict[col] = col.replace(find_str, replace_str)
+
+    df.rename(columns=replace_dict, inplace=True)
+
+    reverse_replace_dict = {v: k for k, v in replace_dict.items()}
+    return reverse_replace_dict
+
 
 def var_change_by_groups(df, var, byvars, datevar='Date', numlags=1):
     """
