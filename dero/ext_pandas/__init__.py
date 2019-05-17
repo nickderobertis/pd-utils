@@ -108,9 +108,13 @@ def expand_time(df, intermediate_periods=False, **kwargs):
         kwargs['time'] = time
     return _expand_time(df, **kwargs)
 
-def _expand_time(df, datevar='Date', freq='m', time=[12, 24, 36, 48, 60], newdate='Shift Date', shiftvar='Shift'):
+def _expand_time(df, datevar='Date', freq='m', time=[12, 24, 36, 48, 60], newdate='Shift Date', shiftvar='Shift',
+                 custom_business_day: Optional[CustomBusinessDay] = None):
     '''
     Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.
+
+    custom_business_day: pandas.tseries.offsets.CustomBusinessDay. Only used for daily frequency. Defaults to using
+    trading days based on US market holiday calendar. Can pass custom business days for other calendars
     '''
     def log(message):
         if message != '\n':
@@ -122,8 +126,13 @@ def _expand_time(df, datevar='Date', freq='m', time=[12, 24, 36, 48, 60], newdat
     log('Initializing expand_time for periods {}.'.format(time))
     
     if freq == 'd':
-        log('Daily frequency, getting trading day calendar.')
-        td = tradedays() #gets trading day calendar
+
+        if custom_business_day is None:
+            log('Daily frequency, getting trading day calendar.')
+            td = tradedays() #gets trading day calendar
+        else:
+            log('Daily frequency, using passed business day calendar.')
+            td = custom_business_day
     else:
         td = None
     
