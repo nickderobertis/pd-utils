@@ -15,7 +15,6 @@ from dateutil.relativedelta import relativedelta
 from numpy import nan
 from pandas.tseries.offsets import CustomBusinessDay
 from pandasql import PandaSQL
-from pandastable import Table
 from sas7bdat import SAS7BDAT
 
 from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, nearest_workday, \
@@ -892,6 +891,8 @@ def show_df(df):
     pool.apply_async(_show_df, args=[df])
     
 def _show_df(df):
+    from pandastable import Table
+    # TODO: this import was causing an issue importing pandas.tools with pandas 0.24.x, moved here as a temp fix
     root = Tk()
     frame = Frame(root)
     frame.pack(fill=BOTH, expand=YES)
