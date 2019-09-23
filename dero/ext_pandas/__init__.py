@@ -1209,7 +1209,7 @@ def _map_windows(df, time, method='between', periodvar='Shift Date', byvars=['PE
     return df.rename(columns={periodvar + '_transform': '__map_window__'})
 
 def left_merge_latest(df, df2, on, left_datevar='Date', right_datevar='Date',
-                      max_offset = None, backend='pandas'):
+                      max_offset = None, backend='pandas', low_memory: bool = False):
     """
     Left merges df2 to df using on, but grabbing the most recent observation (right_datevar will be
     the soonest earlier than left_datevar). Useful for situations where data needs to be merged with
@@ -1237,6 +1237,10 @@ def left_merge_latest(df, df2, on, left_datevar='Date', right_datevar='Date',
         on = [on]
         
     if backend.lower() in ('pandas','pd'):
+        if low_memory:
+            return _left_merge_latest_pandas_low_memory(
+                df, df2, on, left_datevar=left_datevar, right_datevar=right_datevar
+            )
         return _left_merge_latest_pandas(df, df2, on, left_datevar=left_datevar, right_datevar=right_datevar,
                                          max_offset=max_offset)
     elif backend.lower() in ('sql','pandasql'):
@@ -1273,6 +1277,96 @@ def _left_merge_latest_pandas(df, df2, on, left_datevar='Date', right_datevar='D
     
     #if no renaming is required, just merge and exit
     return df.merge(data_rows, on=on + [left_datevar], how='left')
+
+
+def _left_merge_latest_pandas_low_memory(df: pd.DataFrame, df2: pd.DataFrame, on: List[str],
+                                         left_datevar='Date', right_datevar='Date'):
+
+    MERGE_DATE = '_merge_date'
+
+    def _get_latest_date(orig_date, dates=None):
+        if dates is None:
+            dates = []
+        last_date = None
+        for date in dates:
+            if date > orig_date:
+                return last_date
+            last_date = date
+        # Did not find any dates greater than passed date
+        last_date = max(dates)
+        if last_date < orig_date:
+            return last_date
+
+    def _to_datetime(date_like):
+        """
+        Skips converting NaT and NaN but does convert dates
+        Args:
+            date_like:
+
+        Returns:
+
+        """
+        if pd.isnull(date_like):
+            return date_like
+
+        return pd.to_datetime(date_like)
+
+    # Need to handle conversion to datetime for created match date if originally a datetime type
+    date_is_datetime_type = left_datevar in df.select_dtypes(include=[np.datetime64]).columns
+
+    dfs_for_concat = []
+    df2_for_slice = df2[on + [right_datevar]].set_index(on)
+    grouped = df.groupby(on)
+    num_grouped = len(grouped)
+    count = -1
+    start_time = timeit.default_timer()
+    print('Starting low memory handling for left_merge_latest. Processing groups one at a time.\n')
+    for group_on, group_df in grouped:
+        count += 1
+        try:
+            df2_group_df = df2_for_slice.loc[group_on]
+        except KeyError:
+            # Did not find this obs in the second df, cannot get date to merge
+            group_df[MERGE_DATE] = np.nan
+            dfs_for_concat.append(group_df)
+            continue
+        if isinstance(df2_group_df, pd.Series):
+            # Only got a single row for group df, so got a single date, wrap in a list
+            df2_dates = [df2_group_df[right_datevar]]
+        else:
+            df2_dates = df2_group_df[right_datevar].dropna().unique()
+            df2_dates.sort()
+        get_latest_date = functools.partial(_get_latest_date, dates=df2_dates)
+        group_df[MERGE_DATE] = group_df[left_datevar].apply(get_latest_date)
+        dfs_for_concat.append(group_df)
+        estimate_time(num_grouped, count, start_time)
+    print('\nFinished processing groups to get latest date. Now doing final merge.')
+
+    df_for_merge = pd.concat(dfs_for_concat, axis=0)
+    del dfs_for_concat  # free up memory
+
+    if date_is_datetime_type:
+        df_for_merge[MERGE_DATE] = df_for_merge[MERGE_DATE].apply(_to_datetime)
+    else:
+        # Handle other type conversions
+        desired_dtype = df_for_merge[left_datevar].dtype
+        df_for_merge[MERGE_DATE] = df_for_merge[MERGE_DATE].astype(desired_dtype)
+
+    merged = df_for_merge.merge(df2, how='left', left_on=on + [MERGE_DATE], right_on=on + [right_datevar])
+    merged.drop(MERGE_DATE, axis=1, inplace=True)
+
+    rename = False
+    # if they are named the same, pandas will automatically add _x and _y to names
+    if left_datevar == right_datevar:
+        rename = True  # will need to rename the _x datevar for the last step
+        orig_left_datevar = left_datevar
+        left_datevar += '_x'
+        right_datevar += '_y'
+
+    if rename:  # remove the _x
+        merged.rename(columns={left_datevar: orig_left_datevar}, inplace=True)
+
+    return merged
 
 def _left_merge_latest_sql(df, df2, on, left_datevar='Date', right_datevar='Date'):
     
