@@ -847,10 +847,11 @@ def tradedays():
     :Example:
 
     >>>import pandas as pd
+    >>>import pd_utils
     >>>pd.date_range(
     >>>    start='1/1/2000',
     >>>    end='1/31/2000',
-    >>>    freq=dero.pandas.tradedays()
+    >>>    freq=pd_utils.tradedays()
     >>>)
     pd.DatetimeIndex(['2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06',
                '2000-01-07', '2000-01-10', '2000-01-11', '2000-01-12',
