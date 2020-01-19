@@ -87,8 +87,12 @@ def year_month_from_date(df, date='Date', yearname='Year', monthname='Month'):
     df = df.copy()
 #     df[yearname] =  [date.year  for date in df[date]]
 #     df[monthname] = [date.month for date in df[date]]
-    df[[yearname, monthname]] = apply_func_to_unique_and_merge(df[date], year_month_from_single_date)
-    
+#     df[[yearname, monthname]] = apply_func_to_unique_and_merge(df[date], year_month_from_single_date)
+    ### TEMP
+    df[yearname] = df[date].apply(lambda x: x.year)
+    df[monthname] = df[date].apply(lambda x: x.month)
+    ### END TEMP
+
     return df
 
 def expand_time(df, intermediate_periods=False, **kwargs):
@@ -1175,7 +1179,10 @@ def apply_func_to_unique_and_merge(series, func):
     >>>to_datetime = functools.partial(pd.to_datetime, format='%Y%m')
     >>>apply_func_to_unique_and_merge(df['MONTH'], to_datetime)
     """
-
+    ### TEMP
+    import warnings
+    warnings.warn('having issues with apply_func_to_unique_and_merge method. May have unpredictable results.')
+    ### END TEMP
     unique = pd.Series(series.dropna().unique())
     new = unique.apply(func)
 

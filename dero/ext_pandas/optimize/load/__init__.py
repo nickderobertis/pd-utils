@@ -10,5 +10,9 @@ def read_file(filepath: str, **read_func_kwargs) -> DfOrSeries:
     # TODO: determine filetype and use proper loader
     else:
         raise NotImplementedError(f'could not load filetype {extension}')
+    #### TEMP
+    # from dero.ext_pandas.optimize.dftypes import optimized_df
+    # df = optimized_df(df)
+    ### END TEMP
 
     return df
