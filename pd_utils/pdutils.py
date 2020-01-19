@@ -11,7 +11,7 @@ import timeit
 import time, datetime
 import re
 
-from dero.ext_time import estimate_time
+from pd_utils.timer import estimate_time
 
 def _to_list_if_str(var):
     if isinstance(var, str):

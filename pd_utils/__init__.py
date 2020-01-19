@@ -29,7 +29,7 @@ from .pdutils import window_mapping, year_month_from_single_date, _check_portfol
 
 from .regby import reg_by
 from .filldata import fillna_by_groups_and_keep_one_per_group, fillna_by_groups
-from dero.ext_time import estimate_time
+from pd_utils.timer import estimate_time
 
 
 def to_csv(dataframe, path, filename, output=True, action='w', index=True):
