@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dero.ext_pandas.optimize.typing import DfOrSeries
+from pd_utils.optimize.typing import DfOrSeries
 
 
 def read_file(filepath: str, **read_func_kwargs) -> DfOrSeries:
