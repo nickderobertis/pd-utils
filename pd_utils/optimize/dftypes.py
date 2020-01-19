@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dero.ext_pandas.optimize.typing import PdDTypeQuadTuple, StrDict
+from pd_utils.optimize.typing import PdDTypeQuadTuple, StrDict
 
 
 def optimized_df(df: pd.DataFrame) -> pd.DataFrame:

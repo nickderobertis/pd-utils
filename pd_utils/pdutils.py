@@ -11,8 +11,7 @@ import timeit
 import time, datetime
 import re
 
-from dero.ext_time import estimate_time
-from dero.core import OrderedSet
+from pd_utils.timer import estimate_time
 
 def _to_list_if_str(var):
     if isinstance(var, str):
@@ -277,7 +276,8 @@ def _extract_table_names_from_sql(query):
     tables = [tbl
               for block in tables_blocks
               for tbl in re.findall(r'\w+', block)]
-    return OrderedSet(tables)
+    return list(dict.fromkeys(tables).keys())  # remove duplicates, keeping order
+
 
 def _get_datetime_cols(df):
     """

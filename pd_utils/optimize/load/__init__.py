@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dero.ext_pandas.optimize.typing import DfOrSeries
+from pd_utils.optimize.typing import DfOrSeries
 
 
 def read_file(filepath: str, **read_func_kwargs) -> DfOrSeries:
@@ -11,7 +11,7 @@ def read_file(filepath: str, **read_func_kwargs) -> DfOrSeries:
     else:
         raise NotImplementedError(f'could not load filetype {extension}')
     #### TEMP
-    # from dero.ext_pandas.optimize.dftypes import optimized_df
+    # from pd_utils.optimize.dftypes import optimized_df
     # df = optimized_df(df)
     ### END TEMP
 
