@@ -1,0 +1,50 @@
+pd\_utils package
+=================
+
+.. automodule:: pd_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   pd_utils.optimize
+
+Submodules
+----------
+
+pd\_utils.filldata module
+-------------------------
+
+.. automodule:: pd_utils.filldata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.pdutils module
+------------------------
+
+.. automodule:: pd_utils.pdutils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.regby module
+----------------------
+
+.. automodule:: pd_utils.regby
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.timer module
+----------------------
+
+.. automodule:: pd_utils.timer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

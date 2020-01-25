@@ -1,0 +1,34 @@
+pd\_utils.optimize package
+==========================
+
+.. automodule:: pd_utils.optimize
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   pd_utils.optimize.load
+
+Submodules
+----------
+
+pd\_utils.optimize.dftypes module
+---------------------------------
+
+.. automodule:: pd_utils.optimize.dftypes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.optimize.typing module
+--------------------------------
+
+.. automodule:: pd_utils.optimize.typing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
