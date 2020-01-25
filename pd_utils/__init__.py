@@ -312,7 +312,7 @@ def cumulate(
     """
     import time as time2  # accidentally used time an an input parameter and don't want to break prior code
 
-    # TODO: get method 'zero' of cumulate working
+    # TODO [$5e2cae21ea98000008d5b986]: get method 'zero' of cumulate working
     #
     # Has some WIP already commited, commented out
 
@@ -1035,7 +1035,7 @@ def show_df(df):
 def _show_df(df):
     from pandastable import Table
     from tkinter import Tk, Frame, BOTH, YES
-    # TODO: remove show_df or update imports
+    # TODO [$5e2cae21ea98000008d5b987]: remove show_df or update imports
     #
     # this import was causing an issue importing pandas.tools with pandas 0.24.x, moved here as a temp fix
     root = Tk()

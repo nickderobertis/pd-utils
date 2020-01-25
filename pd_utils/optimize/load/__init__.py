@@ -7,12 +7,12 @@ def read_file(filepath: str, **read_func_kwargs) -> DfOrSeries:
     extension = filepath.rpartition(".")[-1].lower()
     if extension == "csv":
         df = pd.read_csv(filepath, **read_func_kwargs)
-    # TODO: in read_file, determine filetype and use proper loader
+    # TODO [$5e2cae21ea98000008d5b989]: in read_file, determine filetype and use proper loader
     #
     # Currently it just handles csv
     else:
         raise NotImplementedError(f"could not load filetype {extension}")
-    # TODO: make optimize df an option for read_file
+    # TODO [$5e2cae21ea98000008d5b98a]: make optimize df an option for read_file
 
     #### TEMP
     # from pd_utils.optimize.dftypes import optimized_df
