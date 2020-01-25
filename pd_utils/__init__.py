@@ -60,6 +60,8 @@ def convert_sas_date_to_pandas_date(sasdates):
     epoch = datetime.datetime(1960, 1, 1)
 
     def to_pandas(date):
+        if pd.isnull(date):
+            return pd.NaT
         return epoch + datetime.timedelta(days=date)
 
     if isinstance(sasdates, pd.Series):
@@ -82,7 +84,7 @@ def convert_sas_date_to_pandas_date(sasdates):
 
 #         return pd.Series([epoch + datetime.timedelta(days=int(float(date))) if not pd.isnull(date) else nan for date in sasdates])
     else:
-        return epoch + datetime.timedelta(days=sasdates)
+        return to_pandas(sasdates)
 
 def year_month_from_date(df, date='Date', yearname='Year', monthname='Month'):
     '''
