@@ -262,6 +262,7 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
 
     df = df.copy() #don't want to modify original dataframe
 
+    sort_time: Optional[List[int]]
     if time:
         sort_time = sorted(time)
     else: sort_time = None
@@ -368,10 +369,11 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
     #need to determine when to cumulate backwards
     #check if method is zero, there only negatives and zero, and there is at least one negative in each window
     if method.lower() == 'zero':
+        raise NotImplementedError('need to implement method zero')
         #flip is a list of indices of windows for which the window should be flipped
-        flip = [j for j, window in enumerate(windows) \
-               if all([i <= 0 for i in window]) and any([i < 0 for i in window])]
-        df = flip(df, flip)
+        # to_flip = [j for j, window in enumerate(windows) \
+        #        if all([i <= 0 for i in window]) and any([i < 0 for i in window])]
+        # df = flip(df, to_flip)
 
 
     log('Creating by groups.')

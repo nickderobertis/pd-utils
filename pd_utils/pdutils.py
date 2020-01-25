@@ -54,7 +54,7 @@ def create_windows(periods, time, method='between'):
         if extra_windows != [[]]: #don't want to add empty window
             windows += extra_windows
         return windows
-    
+
 def window_mapping(time, col, method='between'):
     """
     Takes a pandas series of dates as inputs, calculates windows, and returns a series of which
@@ -108,7 +108,7 @@ def _check_portfolio_inputs(*args, **kwargs):
 
 def _user_passed(key: str, kwargs: dict) -> bool:
     return key in kwargs and kwargs[key] is not None
-    
+
 def _assert_byvars_list(byvars):
     if byvars != None:
         if isinstance(byvars, str): byvars = [byvars]
@@ -122,7 +122,7 @@ def _sort_into_ports(df, cutoffs, portvar, groupvar):
                 rows = df[(df[groupvar] >= low_cut) & (df[groupvar] <= high_cut)].index
                 df.loc[rows, portvar] = i + 1
         return df
-    
+
 def _create_cutoffs(cutdf, groupvar, percentiles):
     return [np.nanpercentile(cutdf[groupvar], i) for i in percentiles]
 
@@ -166,7 +166,7 @@ def _portfolio_match(elem, port_cutoffs):
     if np.isnan(elem) or np.isinf(elem): return 0
     return [index + 1 for index, bot, top in port_cutoffs \
             if elem >= bot and elem <= top][0]
-    
+
 def _gen_port_cutoffs(cutoffs):
     return [(i, low_cut, high_cut) \
                     for i, (low_cut, high_cut) \
@@ -201,7 +201,7 @@ def _create_cutoffs_arr_if_necessary_and_sort_into_ports(data_tup, percentiles,
         return _sort_arr_into_ports(arr, cutoffs)
     else:
         return [0 for elem in arr]
-    
+
 def _sort_arr_list_into_ports_sp(array_list, cut_array_list, percentiles,
                                  cutoffs: Optional[List[Union[float, int]]] = None):
     outlist = []
@@ -219,28 +219,28 @@ def _sort_arr_list_into_ports_mp(array_list, cut_array_list, percentiles, mp=Non
         with Pool() as pool: #use all processors
             return _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, pool)
 
-    
+
 def _sort_arr_list_into_ports_mp_main(array_list, cut_array_list, percentiles, pool,
                                       cutoffs: Optional[List[Union[float, int]]] = None):
         #For time estimation
-        counter = []
+        counter: List[float] = []
         num_loops = len(array_list)
         start_time = timeit.default_timer()
-        
+
         #Mp setup
         port = partial(_create_cutoffs_arr_if_necessary_and_sort_into_ports,
                        percentiles=percentiles, cutoffs=cutoffs)
-        
+
         data_tups = [(arr, cut_array_list[i]) for i, arr in enumerate(array_list)]
 
         results = [pool.apply_async(port, ((arr, cut_array_list[i]),), callback=counter.append) \
                         for i, arr in enumerate(array_list)]
-        
+
         #Time estimation
         while len(counter) < num_loops:
             estimate_time(num_loops, len(counter), start_time)
             time.sleep(0.5)
-            
+
         #Collect and output results. A timeout of 1 should be fine because
         #it should wait until completion anyway
         return [r.get(timeout=1) for r in results]
@@ -257,10 +257,10 @@ def _sort_arr_list_into_ports_and_return_series(array_list, cut_array_list, perc
 #############End portfolio utilities###########################################################################
 
 def _expand(monthly_date, datevar, td, newdatevar):
-   
+
     t = time.gmtime(monthly_date/1000000000) #date coming in as integer, need to parse
     t = datetime.date(t.tm_year, t.tm_mon, t.tm_mday) #better output than gmtime
-    
+
     beginning = datetime.date(t.year, t.month, 1) #beginning of month of date
     end = beginning + relativedelta(months=1, days=-1) #last day of month
     days = pd.date_range(start=beginning, end=end, freq=td) #trade days within month
@@ -293,12 +293,12 @@ def _select_long_short_ports(df, portvar, top_minus_bot=True):
     #Get numbered value of highest and lowest portfolio
     top = max(df[portvar])
     bot = min(df[portvar])
-    
+
     if top_minus_bot:
         return top, bot
     else:
         return bot, top
-    
+
 def _portfolio_difference(df, portvar, long, short, byvars=None, retvars=None):
     """
     Calculates long portfolio minus short portfolio
@@ -307,7 +307,7 @@ def _portfolio_difference(df, portvar, long, short, byvars=None, retvars=None):
         out = df[df[portvar] == long].set_index(byvars) - df[df[portvar] == short].set_index(byvars)
     else:
         out = df[df[portvar] == long] - df[df[portvar] == short]
-        
+
     if retvars:
         return out[retvars]
     else:
