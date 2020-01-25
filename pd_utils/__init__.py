@@ -1479,10 +1479,15 @@ def _left_merge_latest_pandas(
 
     if rename:  # remove the _x for final merge
         data_rows.rename(columns={left_datevar: orig_left_datevar}, inplace=True)
-        return df.merge(data_rows, on=on + [orig_left_datevar], how="left")
+        datevar_for_merge = orig_left_datevar
+    else:
+        datevar_for_merge = left_datevar
 
-    # if no renaming is required, just merge and exit
-    return df.merge(data_rows, on=on + [left_datevar], how="left")
+    merged = df.merge(data_rows, on=on + [datevar_for_merge], how="left")
+    # for some reason is getting converted to object type
+    merged[right_datevar] = pd.to_datetime(merged[right_datevar])
+
+    return merged
 
 
 def _left_merge_latest_pandas_low_memory(
@@ -1632,7 +1637,11 @@ def _left_merge_latest_sql(df, df2, on, left_datevar="Date", right_datevar="Date
     df_reverse_col_replacements.update(df2_reverse_col_replacements)
     result.rename(columns=df_reverse_col_replacements, inplace=True)
 
-    return df.merge(result, on=orig_on + [left_datevar], how="left")
+    merged = df.merge(result, on=orig_on + [left_datevar], how="left")
+    # for some reason is getting converted to object type
+    merged[right_datevar] = pd.to_datetime(merged[right_datevar])
+
+    return merged
 
 
 def _replace_df_columns_char(
