@@ -85,7 +85,7 @@ def add_missing_group_rows(
 
     # Newly created rows will have missing values. Sort and fill
     merged.sort_values(fill_id_cols, inplace=True)
-    # TODO [$5e2cae21ea98000008d5b988]: Update add_missing_group_rows to not fill nans in existing data
+    # TODO [#3]: Update add_missing_group_rows to not fill nans in existing data
     #
     # this method can still fill nans in existing data, not just created rows
     merged = merged.groupby(group_id_cols, as_index=False).fillna(
