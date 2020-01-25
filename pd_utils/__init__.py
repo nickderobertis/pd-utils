@@ -1193,11 +1193,7 @@ def apply_func_to_unique_and_merge(series, func):
     >>>to_datetime = functools.partial(pd.to_datetime, format='%Y%m')
     >>>apply_func_to_unique_and_merge(df['MONTH'], to_datetime)
     """
-    ### TEMP
-    import warnings
-    warnings.warn('having issues with apply_func_to_unique_and_merge method. May have unpredictable results.')
-    ### END TEMP
-    unique = pd.Series(series.dropna().unique())
+    unique = pd.Series(series.unique())
     new = unique.apply(func)
 
     for_merge = pd.concat([unique, new], axis=1)
