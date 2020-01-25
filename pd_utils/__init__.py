@@ -10,7 +10,6 @@ import timeit
 import warnings
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
-from tkinter import BOTH, YES, Frame, Tk
 from typing import Dict, List, Optional, Union
 
 import numpy as np
@@ -1035,7 +1034,7 @@ def show_df(df):
 
 def _show_df(df):
     from pandastable import Table
-
+    from tkinter import Tk, Frame, BOTH, YES
     # TODO: remove show_df or update imports
     #
     # this import was causing an issue importing pandas.tools with pandas 0.24.x, moved here as a temp fix
