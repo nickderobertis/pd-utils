@@ -23,6 +23,11 @@ pytest-cov = "*"
 mypy = "*"
 pypandoc = "*"
 cruft = "*"
+pandas = "*"
+numpy = "*"
+pandasql = "*"
+sas7bdat = "*"
+statsmodels = "*"
 
 [requires]
 python_version = "3.7"

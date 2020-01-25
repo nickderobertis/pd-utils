@@ -25,7 +25,7 @@ PACKAGE_SHORT_DESCRIPTION = "High-level tools for common Pandas workflows"
 # Long description of the package for PyPI
 # Set to 'auto' to use README.md as the PyPI description
 # Any other string will be used directly as the PyPI description
-PACKAGE_DESCRIPTION = 'auto'
+PACKAGE_DESCRIPTION = "auto"
 
 # Author
 PACKAGE_AUTHOR = "Nick DeRobertis"
@@ -34,7 +34,7 @@ PACKAGE_AUTHOR = "Nick DeRobertis"
 PACKAGE_AUTHOR_EMAIL = "whoopnip@gmail.com"
 
 # Name of license for package
-PACKAGE_LICENSE = 'MIT'
+PACKAGE_LICENSE = "MIT"
 
 # Classifications for the package, see common settings below
 PACKAGE_CLASSIFIERS = [
@@ -42,15 +42,13 @@ PACKAGE_CLASSIFIERS = [
     #   3 - Alpha
     #   4 - Beta
     #   5 - Production/Stable
-    'Development Status :: 3 - Alpha',
-
+    "Development Status :: 3 - Alpha",
     # Indicate who your project is intended for
-    'Intended Audience :: Developers',
-
+    "Intended Audience :: Developers",
     # Specify the Python versions you support here. In particular, ensure
     # that you indicate whether you support Python 2, Python 3 or both.
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7'
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
 ]
 
 # Add any third party packages you use in requirements here
@@ -59,14 +57,17 @@ PACKAGE_INSTALL_REQUIRES = [
     # e.g.
     # 'package',
     # 'otherpackage>=1,<2'
+    "pandas",
+    "numpy",
+    "pandasql",
+    "sas7bdat",
+    "statsmodels",
 ]
 
 # Add any third party packages you use in requirements for optional features of your package here
 # Keys should be name of the optional feature and values are lists of required packages
 # E.g. {'feature1': ['pandas', 'numpy'], 'feature2': ['matplotlib']}
-OPTIONAL_PACKAGE_INSTALL_REQUIRES = {
-
-}
+OPTIONAL_PACKAGE_INSTALL_REQUIRES = {}
 
 # Packages added to Binder environment so that examples can be executed in Binder
 # By default, takes this package (PACKAGE_NAME)
@@ -75,8 +76,13 @@ OPTIONAL_PACKAGE_INSTALL_REQUIRES = {
 # If a custom list is passed, it must include all the requirements for the Binder environment
 BINDER_ENVIRONMENT_REQUIRES = list(
     set(
-        PACKAGE_INSTALL_REQUIRES + [PACKAGE_NAME] +
-        [package for package_list in OPTIONAL_PACKAGE_INSTALL_REQUIRES.values() for package in package_list]
+        PACKAGE_INSTALL_REQUIRES
+        + [PACKAGE_NAME]
+        + [
+            package
+            for package_list in OPTIONAL_PACKAGE_INSTALL_REQUIRES.values()
+            for package in package_list
+        ]
     )
 )
 
@@ -92,7 +98,7 @@ DOCS_OTHER_MOCK_IMPORTS = [
 
 # Add any Python scripts which should be exposed to the command line in the format:
 # CONSOLE_SCRIPTS = ['funniest-joke=funniest.command_line:main']
-CONSOLE_SCRIPTS = [],
+CONSOLE_SCRIPTS = ([],)
 
 # Add any arbitrary scripts to be exposed to the command line in the format:
 # SCRIPTS = ['bin/funniest-joke']
@@ -104,19 +110,20 @@ SCRIPTS = []
 GOOGLE_ANALYTICS_TRACKING_ID = "UA-156908023-1"
 
 PACKAGE_URLS = {
-    'Code': f'https://github.com/{REPO_USERNAME}/{REPO_NAME}',
-    'Documentation': f'https://{REPO_USERNAME}.github.io/{REPO_NAME}'
+    "Code": f"https://github.com/{REPO_USERNAME}/{REPO_NAME}",
+    "Documentation": f"https://{REPO_USERNAME}.github.io/{REPO_NAME}",
 }
 
 # Does not affect anything about the current package. Simply used for tracking when this repo was created off
 # of the quickstart template, so it is easier to bring over new changes to the template.
 _TEMPLATE_VERSION_TUPLE = (0, 5, 5)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Store config as environment variables
     env_vars = dict(locals())
     # Imports after getting locals so that locals are only environment variables
     import shlex
+
     for name, value in env_vars.items():
         quoted_value = shlex.quote(str(value))
-        print(f'export {name}={quoted_value};')
+        print(f"export {name}={quoted_value};")
