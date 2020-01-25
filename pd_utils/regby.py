@@ -8,6 +8,7 @@ import time
 
 from .pdutils import split
 
+
 def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True, mp=False, stderr=False):
     """
     Runs a regression of df[yvar] on df[xvars] by values of groupvar. Outputs a dataframe with values of
@@ -44,14 +45,15 @@ def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True, mp=False, stderr=F
     result_df = _result_list_of_arrays_to_df(results, rhs, groupvar, stderr=stderr)
 
     if cons:
-        result_df.rename(columns={'coef_const': 'const'}, inplace=True)
+        result_df.rename(columns={"coef_const": "const"}, inplace=True)
 
     if merge:
-        result_df = df.merge(result_df, how='left', on=groupvar)
+        result_df = df.merge(result_df, how="left", on=groupvar)
     if drop_group:
         result_df.drop(groupvar, axis=1, inplace=True)
 
     return result_df.reset_index(drop=True)
+
 
 def df_for_reg(df, yvar, xvars, groupvar):
     # Select dataframe of only y and x vars
@@ -66,17 +68,20 @@ def df_for_reg(df, yvar, xvars, groupvar):
 
     return yx_df
 
+
 def _reg_by(arrs, groups, xvars, rhs, cons, mp=False, stderr=False):
     if mp:
         return _reg_by_mp(arrs, groups, xvars, rhs, cons, stderr=stderr)
     else:
         return _reg_by_sp(arrs, groups, xvars, rhs, cons, stderr=stderr)
 
+
 def _reg_by_sp(arrs, groups, xvars, rhs, cons, stderr=False):
     results = []
     for i, arr in enumerate(arrs):
         results.append(_reg(arr, xvars, rhs, cons, groups[i], stderr))
     return results
+
 
 def _reg_by_mp(arrs, groups, xvars, rhs, cons, mp=True, stderr=False):
     if isinstance(mp, int):
@@ -106,7 +111,10 @@ def _reg_by_mp(arrs, groups, xvars, rhs, cons, mp=True, stderr=False):
         while num_completed != num_expected_results:
             time.sleep(1)
             num_completed = sum([1 for result in expected_results if result.ready()])
-            print(f'Finished {num_completed} out of {num_expected_results} calculations', end='\r')
+            print(
+                f"Finished {num_completed} out of {num_expected_results} calculations",
+                end="\r",
+            )
 
         completed_results = [result.get() for result in expected_results]
 
@@ -115,10 +123,10 @@ def _reg_by_mp(arrs, groups, xvars, rhs, cons, mp=True, stderr=False):
 
 def _log_mp_status(result, result_counter):
     result_counter += 1
-    print(result_counter, end='\r')
+    print(result_counter, end="\r")
+
 
 class ResultCounter:
-
     def __init__(self, num_expected_results):
         self.count = 0
         self.expected_results = num_expected_results
@@ -127,10 +135,11 @@ class ResultCounter:
         self.count += other
 
     def __repr__(self):
-        return rf'<ResultCounter(count={self.count}, expected={self.expected_results})>'
+        return rf"<ResultCounter(count={self.count}, expected={self.expected_results})>"
 
     def __str__(self):
-        return f'Finished {completed_results} out of {num_expected_results} calculations'
+        return f"Finished {self.count} out of {self.expected_results} calculations"
+
 
 def _reg(arr, xvars, rhs, cons, group, stderr):
     X = arr[:, 1:].astype(float)
@@ -147,10 +156,10 @@ def _reg(arr, xvars, rhs, cons, group, stderr):
         result = model.fit()
         this_result = np.append(result.params, group)  # add groupvar
         if stderr:
-            this_result = np.append(this_result, result.HC1_se) # robust stderr
+            this_result = np.append(this_result, result.HC1_se)  # robust stderr
         this_result = this_result[None, :]  # cast 1d array into 2d array
     else:  # not enough obs, return nans
-        this_result = np.empty((1, len(rhs) + 1), dtype='O')
+        this_result = np.empty((1, len(rhs) + 1), dtype="O")
         this_result[:] = nan
         this_result[0, len(rhs)] = group
 
@@ -164,32 +173,36 @@ def _check_inputs_regby(xvars):
 
     return xvars
 
+
 def _set_groupvar_and_drop_group(df, groupvar):
     drop_group = False
     if isinstance(groupvar, list):
-        df['__key_regby__'] = ''
+        df["__key_regby__"] = ""
         for var in groupvar:
-            df['__key_regby__'] = df['__key_regby__'] + df[var].astype(str)
-        groupvar = '__key_regby__'
+            df["__key_regby__"] = df["__key_regby__"] + df[var].astype(str)
+        groupvar = "__key_regby__"
         drop_group = True
 
     return groupvar, drop_group
 
+
 def _set_rhs(xvars, cons):
     if cons:
-        rhs = ['const'] + xvars
+        rhs = ["const"] + xvars
     else:
         rhs = xvars
 
     return rhs
 
+
 def _result_list_of_arrays_to_df(results, rhs, groupvar, stderr=False):
     result_df = pd.DataFrame(np.concatenate(results, axis=0))
-    result_df = result_df.apply(pd.to_numeric, errors='ignore')
+    result_df = result_df.apply(pd.to_numeric, errors="ignore")
     result_df.columns = _set_cols_by_stderr(rhs, groupvar, stderr)
     result_df[groupvar] = result_df[groupvar].astype(str)
 
     return result_df
+
 
 def _get_lists_of_arrays_and_groups(df, yvar, xvars, groupvar):
     df.sort_values(groupvar, inplace=True)
@@ -199,12 +212,13 @@ def _get_lists_of_arrays_and_groups(df, yvar, xvars, groupvar):
 
     return arrs, groups
 
+
 def _set_cols_by_stderr(rhs, groupvar, stderr):
-    coef_cols = ['coef_' + col for col in rhs]
+    coef_cols = ["coef_" + col for col in rhs]
     if not stderr:
         cols = coef_cols + [groupvar]
     else:
-        stderr_cols = ['stderr_' + col for col in rhs]
+        stderr_cols = ["stderr_" + col for col in rhs]
         cols = coef_cols + [groupvar] + stderr_cols
 
     return cols

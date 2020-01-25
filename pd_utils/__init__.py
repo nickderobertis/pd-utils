@@ -251,6 +251,10 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
     """
     import time as time2 #accidentally used time an an input parameter and don't want to break prior code
 
+    # TODO: get method 'zero' of cumulate working
+    #
+    # Has some WIP already commited, commented out
+
     def log(message):
         if message != '\n':
             time = datetime.datetime.now().replace(microsecond=0)
@@ -277,13 +281,14 @@ def cumulate(df, cumvars, method, periodvar='Date',  byvars=None, time=None, gro
         for col in cumvars:
             df[col] = df[col] + 1
 
-    def unflip(df, cumvars):
-        flipcols = ['cum_' + str(c) for c in cumvars] #select cumulated columns
-        for col in flipcols:
-            tempdf[col] = tempdf[col].shift(1) #shift all values down one row for cumvars
-            tempdf[col] = -tempdf[col] + 2 #converts a positive return into a negative return
-        tempdf = tempdf[1:].copy() #drop out period 0
-        tempdf = tempdf.sort_values(periodvar) #resort to original order
+    # For method 'zero' implementation
+    # def unflip(df, cumvars):
+    #     flipcols = ['cum_' + str(c) for c in cumvars] #select cumulated columns
+    #     for col in flipcols:
+    #         tempdf[col] = tempdf[col].shift(1) #shift all values down one row for cumvars
+    #         tempdf[col] = -tempdf[col] + 2 #converts a positive return into a negative return
+    #     tempdf = tempdf[1:].copy() #drop out period 0
+    #     tempdf = tempdf.sort_values(periodvar) #resort to original order
 
     def flip(df, flip):
         flip_df = df[df['window'].isin(flip)]
