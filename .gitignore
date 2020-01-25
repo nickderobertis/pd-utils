@@ -65,3 +65,4 @@ docs
 docsrc/source/auto_examples
 _examples
 **/.ipynb_checkpoints
+.vscode

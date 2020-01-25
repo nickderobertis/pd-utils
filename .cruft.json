@@ -1,6 +1,6 @@
 {
     "template": "https://github.com/nickderobertis/cookiecutter-pypi-sphinx",
-    "commit": "2613f0ba89ee303e9a92dbf9386d4d025487bfe2",
+    "commit": "3ad9a7295b56f006b8f0978a6e031d821c34cc6b",
     "context": {
         "cookiecutter": {
             "package_name": "pd_utils",
