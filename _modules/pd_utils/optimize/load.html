@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.optimize.load &mdash; pd_utils 0.1.0 documentation</title>
+  <title>pd_utils.optimize.load &mdash; pd_utils 0.1.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -174,12 +174,12 @@
     <span class="n">extension</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">read_func_kwargs</span><span class="p">)</span>
-    <span class="c1"># TODO: in read_file, determine filetype and use proper loader</span>
+    <span class="c1"># TODO [#4]: in read_file, determine filetype and use proper loader</span>
     <span class="c1">#</span>
     <span class="c1"># Currently it just handles csv</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not load filetype </span><span class="si">{extension}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># TODO: make optimize df an option for read_file</span>
+    <span class="c1"># TODO [#5]: make optimize df an option for read_file</span>
 
     <span class="c1">#### TEMP</span>
     <span class="c1"># from pd_utils.optimize.dftypes import optimized_df</span>

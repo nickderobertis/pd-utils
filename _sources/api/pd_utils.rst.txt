@@ -16,6 +16,14 @@ Subpackages
 Submodules
 ----------
 
+pd\_utils.corr module
+---------------------
+
+.. automodule:: pd_utils.corr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pd\_utils.filldata module
 -------------------------
 

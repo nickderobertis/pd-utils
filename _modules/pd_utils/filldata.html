@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.filldata &mdash; pd_utils 0.1.0 documentation</title>
+  <title>pd_utils.filldata &mdash; pd_utils 0.1.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -252,12 +252,15 @@
 
     <span class="c1"># Newly created rows will have missing values. Sort and fill</span>
     <span class="n">merged</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">fill_id_cols</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="c1"># TODO: Update add_missing_group_rows to not fill nans in existing data</span>
+    <span class="c1"># TODO [#3]: Update add_missing_group_rows to not fill nans in existing data</span>
     <span class="c1">#</span>
     <span class="c1"># this method can still fill nans in existing data, not just created rows</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_id_cols</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
-        <span class="n">method</span><span class="o">=</span><span class="n">fill_method</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">fill_limit</span>
-    <span class="p">)</span>
+
+    <span class="c1"># if fill_method is None, don&#39;t call fillna at all, return with NaNs</span>
+    <span class="k">if</span> <span class="n">fill_method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_id_cols</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">fill_method</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">fill_limit</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">merged</span></div>
 

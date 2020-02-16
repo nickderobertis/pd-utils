@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.timer &mdash; pd_utils 0.1.1 documentation</title>
+  <title>pd_utils.corr &mdash; pd_utils 0.1.1 documentation</title>
   
 
   
@@ -149,7 +149,7 @@
         
           <li><a href="../pd_utils.html">pd_utils</a> &raquo;</li>
         
-      <li>pd_utils.timer</li>
+      <li>pd_utils.corr</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,60 +164,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pd_utils.timer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">timeit</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+  <h1>Source code for pd_utils.corr</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="estimate_time"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.timer.estimate_time">[docs]</a><span class="k">def</span> <span class="nf">estimate_time</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the estimate of when a looping operation will be finished.</span>
+<div class="viewcode-block" id="formatted_corr_df"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.corr.formatted_corr_df">[docs]</a><span class="k">def</span> <span class="nf">formatted_corr_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">_lower_triangular_of_df</span><span class="p">(</span><span class="n">corr_df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corr_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{x:.2f}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span></div>
 
-<span class="sd">    HOW TO USE:</span>
-<span class="sd">    This function goes at the end of the loop to be timed. Outside of this function at the beginning of the</span>
-<span class="sd">    loop, you must start a timer object as follows:</span>
 
-<span class="sd">    start_time = timeit.default_timer()</span>
-
-<span class="sd">    So the entire loop will look like this:</span>
-
-<span class="sd">    my_start_time = timeit.default_timer()</span>
-<span class="sd">    for i, item in enumerate(my_list):</span>
-
-<span class="sd">        #Do loop stuff here</span>
-
-<span class="sd">         estimate_time(len(my_list),i,my_start_time)</span>
-
-<span class="sd">    REQUIRED OPTIONS:</span>
-<span class="sd">    length:     total number of iterations for the loop</span>
-<span class="sd">    i:          iterator for the loop</span>
-<span class="sd">    start_time: timer object, to be started outside of this function (SEE ABOVE)</span>
-
-<span class="sd">    OPTIONAL OPTIONS:</span>
-<span class="sd">    output: specify other than True to suppress printing estimated time. Use this if you want to just store the time</span>
-<span class="sd">            for some other use or custom output. The syntax then is as follows:</span>
-
-<span class="sd">    my_start_time = timeit.default_timer()</span>
-<span class="sd">    for i, item in enumerate(my_list):</span>
-
-<span class="sd">        #Do loop stuff here</span>
-
-<span class="sd">        my_timer = estimate_time(len(my_list),i,my_start_time, output=False)</span>
-<span class="sd">        print(&quot;I like my output sentence better! Here&#39;s the estimate: {}&quot;.format(my_timer))</span>
-
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">avg_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">loops_left</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">est_time_remaining</span> <span class="o">=</span> <span class="n">avg_time</span> <span class="o">*</span> <span class="n">loops_left</span>
-    <span class="n">est_finish_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">est_time_remaining</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimated finish time: </span><span class="si">{}</span><span class="s2">. Completed </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">, (</span><span class="si">{:.0%}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">est_finish_time</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">i</span> <span class="o">/</span> <span class="n">length</span><span class="p">),</span>
-              <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">est_finish_time</span></div>
+<span class="k">def</span> <span class="nf">_lower_triangular_of_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>

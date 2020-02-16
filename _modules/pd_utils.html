@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils &mdash; pd_utils 0.1.0 documentation</title>
+  <title>pd_utils &mdash; pd_utils 0.1.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -219,6 +219,7 @@
     <span class="n">year_month_from_single_date</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.regby</span> <span class="kn">import</span> <span class="n">reg_by</span>
+<span class="kn">from</span> <span class="nn">pd_utils.corr</span> <span class="kn">import</span> <span class="n">formatted_corr_df</span>
 
 
 <div class="viewcode-block" id="to_csv"><a class="viewcode-back" href="../api/pd_utils.html#pd_utils.to_csv">[docs]</a><span class="k">def</span> <span class="nf">to_csv</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -477,7 +478,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">time2</span>  <span class="c1"># accidentally used time an an input parameter and don&#39;t want to break prior code</span>
 
-    <span class="c1"># TODO: get method &#39;zero&#39; of cumulate working</span>
+    <span class="c1"># TODO [#1]: get method &#39;zero&#39; of cumulate working</span>
     <span class="c1">#</span>
     <span class="c1"># Has some WIP already commited, commented out</span>
 
@@ -1200,7 +1201,7 @@
 <span class="k">def</span> <span class="nf">_show_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">pandastable</span> <span class="kn">import</span> <span class="n">Table</span>
     <span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">Tk</span><span class="p">,</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">BOTH</span><span class="p">,</span> <span class="n">YES</span>
-    <span class="c1"># TODO: remove show_df or update imports</span>
+    <span class="c1"># TODO [#2]: remove show_df or update imports</span>
     <span class="c1">#</span>
     <span class="c1"># this import was causing an issue importing pandas.tools with pandas 0.24.x, moved here as a temp fix</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
