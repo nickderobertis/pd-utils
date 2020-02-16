@@ -88,9 +88,12 @@ def add_missing_group_rows(
     # TODO [#3]: Update add_missing_group_rows to not fill nans in existing data
     #
     # this method can still fill nans in existing data, not just created rows
-    merged = merged.groupby(group_id_cols, as_index=False).fillna(
-        method=fill_method, limit=fill_limit
-    )
+
+    # if fill_method is None, don't call fillna at all, return with NaNs
+    if fill_method is not None:
+        merged = merged.groupby(group_id_cols, as_index=False).fillna(
+            method=fill_method, limit=fill_limit
+        )
 
     return merged
 
