@@ -54,7 +54,7 @@ def sql(df_list: List[pd.DataFrame], query: str):
     :param query:
     :return:
     """
-    # TODO [$5e4af5c060b98000082ffb3c]: add example in docs for sql
+    # TODO [#8]: add example in docs for sql
 
     # Pandasql looks up tables by names given in query. Here we are passed a list of dfs without names.
     # Therefore we need to extract the names of the tables from the query, then assign

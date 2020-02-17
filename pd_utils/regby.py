@@ -28,7 +28,7 @@ def reg_by(df: pd.DataFrame, yvar: str, xvars: List[str], groupvar: Union[str, L
     :param stderr: True to include standard errors of coefficients
     :return:
     """
-    # TODO [$5e4af5c060b98000082ffb3d]: fill out param docs for reg_by
+    # TODO [#9]: fill out param docs for reg_by
     # Convert xvars to list if str is passed
     xvars = _check_inputs_regby(xvars)
 
