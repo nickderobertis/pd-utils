@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from functools import partial
 import time
 
-from .pdutils import split
+from pd_utils.utils import split
 
 
 def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True, mp=False, stderr=False):

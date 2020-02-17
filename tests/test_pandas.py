@@ -5,6 +5,12 @@ from numpy import nan
 import numpy
 
 import pd_utils
+import pd_utils.cum
+import pd_utils.datetime_utils
+import pd_utils.filldata
+import pd_utils.merge
+import pd_utils.port
+import pd_utils.transform
 
 
 class DataFrameTest:
@@ -255,7 +261,7 @@ class TestGroupbyMerge(DataFrameTest):
 
     def test_subset_std(self):
         byvars = ["PERMNO", "byvar"]
-        out = pd_utils.groupby_merge(self.df, byvars, "std", subset="RET")
+        out = pd_utils.merge.groupby_merge(self.df, byvars, "std", subset="RET")
         expect_df = pd.DataFrame(
             [
                 (10516, "a", "1/1/2000", 1.01, 0.012909944487358068),
@@ -1173,7 +1179,7 @@ class TestMapWindows(DataFrameTest):
 
     def test_method_first(self):
 
-        result = pd_utils._map_windows(
+        result = pd_utils.cum._map_windows(
             self.df_period,
             self.times[0],
             method="first",
@@ -1186,7 +1192,7 @@ class TestMapWindows(DataFrameTest):
     @run_for_each_time
     def test_method_between(self, time, expect_df):
 
-        result = pd_utils._map_windows(
+        result = pd_utils.cum._map_windows(
             self.df_period, time, method="between", periodvar="Date", byvars=["PERMNO"]
         )
 
@@ -1231,13 +1237,13 @@ class TestLeftMergeLatest(DataFrameTest):
             columns=["GVKEY", "Date", "Date_y"],
         )
 
-        lm = pd_utils.left_merge_latest(
+        lm = pd_utils.merge.left_merge_latest(
             self.df_gvkey_str, self.df_gvkey_str2, on="GVKEY"
         )
-        lm_low_mem = pd_utils.left_merge_latest(
+        lm_low_mem = pd_utils.merge.left_merge_latest(
             self.df_gvkey_str, self.df_gvkey_str2, on="GVKEY", low_memory=True
         )
-        lm_sql = pd_utils.left_merge_latest(
+        lm_sql = pd_utils.merge.left_merge_latest(
             self.df_gvkey_str, self.df_gvkey_str2, on="GVKEY", backend="sql"
         )
 
@@ -1266,7 +1272,7 @@ class TestVarChangeByGroups(DataFrameTest):
             columns=["PERMNO", "byvar", "Date", "RET", "RET_change"],
         )
 
-        vc = pd_utils.var_change_by_groups(self.df, "RET", ["PERMNO", "byvar"])
+        vc = pd_utils.transform.var_change_by_groups(self.df, "RET", ["PERMNO", "byvar"])
 
         assert_frame_equal(expect_df, vc)
 
@@ -1297,7 +1303,7 @@ class TestVarChangeByGroups(DataFrameTest):
             ],
         )
 
-        vc = pd_utils.var_change_by_groups(
+        vc = pd_utils.transform.var_change_by_groups(
             self.df_weight, ["RET", "weight"], ["PERMNO", "byvar"]
         )
 
@@ -1321,11 +1327,11 @@ class TestFillExcludedRows(DataFrameTest):
     )
 
     def test_no_fillvars_str_byvars(self):
-        result = pd_utils.fill_excluded_rows(self.df_gvkey_str, ["GVKEY", "Date"])
+        result = pd_utils.filldata.fill_excluded_rows(self.df_gvkey_str, ["GVKEY", "Date"])
         assert_frame_equal(self.expect_df_nofill, result)
 
     def test_no_fillvars_series_byvars(self):
-        result = pd_utils.fill_excluded_rows(
+        result = pd_utils.filldata.fill_excluded_rows(
             self.df_gvkey_str, [self.df_gvkey_str["GVKEY"], "Date"]
         )
         assert_frame_equal(self.expect_df_nofill, result)
@@ -1348,7 +1354,7 @@ class TestFillExcludedRows(DataFrameTest):
             columns=["GVKEY", "Date", "var"],
         )
 
-        result = pd_utils.fill_excluded_rows(var_df, ["GVKEY", "Date"], "var", value=0)
+        result = pd_utils.filldata.fill_excluded_rows(var_df, ["GVKEY", "Date"], "var", value=0)
         assert_frame_equal(expect_df, result)
 
 

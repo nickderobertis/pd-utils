@@ -4,7 +4,7 @@ from functools import partial
 from itertools import product
 from typing import List
 
-from .pdutils import _to_list_if_str
+from pd_utils.utils import _to_list_if_str, _to_series_if_str, _to_name_if_series
 
 
 def fillna_by_groups_and_keep_one_per_group(
@@ -155,3 +155,48 @@ def _drop_duplicates(df, byvars):
     Note: inplace
     """
     df.drop_duplicates(subset=byvars, inplace=True)
+
+
+def fill_excluded_rows(df, byvars, fillvars=None, **fillna_kwargs):
+    """
+    Takes a dataframe which does not contain all possible combinations of byvars as rows. Creates
+    those rows if fillna_kwargs are passed, calls fillna using fillna_kwargs for fillvars.
+
+    For example, df:
+                 date     id  var
+        0  2003-06-09 42223C    1
+        1  2003-06-10 09255G    2
+    with fillna_for_excluded_rows(df, byvars=['date','id'], fillvars='var', value=0) becomes:
+                  date     id  var
+        0  2003-06-09 42223C    1
+        1  2003-06-10 42223C    0
+        2  2003-06-09 09255G    0
+        3  2003-06-10 09255G    2
+
+    Required options:
+    df: pandas dataframe
+    byvars: variables on which dataset should be expanded to product. Can pass a str, list of
+            strs, or a list of pd.Series.
+
+    Optional options:
+    fillvars: variables to apply fillna to
+    fillna_kwargs: See pandas.DataFrame.fillna for kwargs, value=0 is common
+
+
+    """
+    byvars, fillvars = [
+        _to_list_if_str(v) for v in [byvars, fillvars]
+    ]  # convert to lists
+
+    #     multiindex = [df[i].dropna().unique() for i in byvars]
+    multiindex = [_to_series_if_str(df, i).dropna().unique() for i in byvars]
+    byvars = [_to_name_if_series(i) for i in byvars]  # get name of any series
+
+    all_df = pd.DataFrame(index=pd.MultiIndex.from_product(multiindex)).reset_index()
+    all_df.columns = byvars
+    merged = all_df.merge(df, how="left", on=byvars)
+
+    if fillna_kwargs:
+        fillna_kwargs.update({"inplace": False})
+        merged[fillvars] = merged[fillvars].fillna(**fillna_kwargs)
+    return merged
