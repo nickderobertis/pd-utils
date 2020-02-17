@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.timer &mdash; pd_utils 0.1.1 documentation</title>
+  <title>pd_utils.timer &mdash; pd_utils 0.2.0 documentation</title>
   
 
   
@@ -22,13 +22,13 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
-        <script type="text/javascript" src="../../_static/copybutton.js"></script>
-        <script type="text/javascript">var copybuttonSkipText = '>>> ';</script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.2.0
               </div>
             
           
@@ -147,8 +147,6 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pd_utils.html">pd_utils</a> &raquo;</li>
-        
       <li>pd_utils.timer</li>
     
     
@@ -170,43 +168,35 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
-<div class="viewcode-block" id="estimate_time"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.timer.estimate_time">[docs]</a><span class="k">def</span> <span class="nf">estimate_time</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="estimate_time"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.timer.estimate_time">[docs]</a><span class="k">def</span> <span class="nf">estimate_time</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the estimate of when a looping operation will be finished.</span>
 
-<span class="sd">    HOW TO USE:</span>
+<span class="sd">    :param length: total number of iterations for the loop</span>
+<span class="sd">    :param i: iterator for the loop</span>
+<span class="sd">    :param start_time: time created from timeit.default_timer(), see examples</span>
+<span class="sd">    :param output: False to suppress printing estimated time. Use this if you want to just store the time</span>
+<span class="sd">        for some other use or custom output.</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Examples:</span>
+
 <span class="sd">    This function goes at the end of the loop to be timed. Outside of this function at the beginning of the</span>
-<span class="sd">    loop, you must start a timer object as follows:</span>
+<span class="sd">    loop, you must start a timer object as follows::</span>
 
-<span class="sd">    start_time = timeit.default_timer()</span>
+<span class="sd">        start_time = timeit.default_timer()</span>
 
-<span class="sd">    So the entire loop will look like this:</span>
+<span class="sd">    So the entire loop will look like this::</span>
 
-<span class="sd">    my_start_time = timeit.default_timer()</span>
-<span class="sd">    for i, item in enumerate(my_list):</span>
+<span class="sd">        my_start_time = timeit.default_timer()</span>
+<span class="sd">        for i, item in enumerate(my_list):</span>
 
-<span class="sd">        #Do loop stuff here</span>
+<span class="sd">            #Do loop stuff here</span>
 
-<span class="sd">         estimate_time(len(my_list),i,my_start_time)</span>
+<span class="sd">             estimate_time(len(my_list),i,my_start_time)</span>
 
-<span class="sd">    REQUIRED OPTIONS:</span>
-<span class="sd">    length:     total number of iterations for the loop</span>
-<span class="sd">    i:          iterator for the loop</span>
-<span class="sd">    start_time: timer object, to be started outside of this function (SEE ABOVE)</span>
 
-<span class="sd">    OPTIONAL OPTIONS:</span>
-<span class="sd">    output: specify other than True to suppress printing estimated time. Use this if you want to just store the time</span>
-<span class="sd">            for some other use or custom output. The syntax then is as follows:</span>
-
-<span class="sd">    my_start_time = timeit.default_timer()</span>
-<span class="sd">    for i, item in enumerate(my_list):</span>
-
-<span class="sd">        #Do loop stuff here</span>
-
-<span class="sd">        my_timer = estimate_time(len(my_list),i,my_start_time, output=False)</span>
-<span class="sd">        print(&quot;I like my output sentence better! Here&#39;s the estimate: {}&quot;.format(my_timer))</span>
-
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">avg_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">loops_left</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">est_time_remaining</span> <span class="o">=</span> <span class="n">avg_time</span> <span class="o">*</span> <span class="n">loops_left</span>

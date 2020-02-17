@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.query &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.query</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.query</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandasql</span> <span class="kn">import</span> <span class="n">PandaSQL</span>
+
+
+<div class="viewcode-block" id="select_rows_by_condition_on_columns"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.query.select_rows_by_condition_on_columns">[docs]</a><span class="k">def</span> <span class="nf">select_rows_by_condition_on_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                                        <span class="n">condition</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;== 1&quot;</span><span class="p">,</span> <span class="n">logic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;or&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Selects rows of a pandas dataframe by evaluating a condition on a subset of the dataframe&#39;s columns.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param cols: column names, the subset of columns on which to evaluate conditions</span>
+<span class="sd">    :param condition: needs to contain comparison operator and right hand side of comparison. For example,</span>
+<span class="sd">       &#39;== 1&#39; checks for each row that the value of each column is equal to one.</span>
+<span class="sd">    :param logic: &#39;or&#39; or &#39;and&#39;. With &#39;or&#39;, only one of the columns in cols need to match the condition</span>
+<span class="sd">        for the row to be kept. With &#39;and&#39;, all of the columns in cols need to match the condition.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># First eliminate spaces in columns, this method will not work with spaces</span>
+    <span class="n">new_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">new_col</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">new_col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">new_cols</span><span class="p">)},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Now create a string to query the dataframe with</span>
+    <span class="n">logic_spaces</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">logic</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+    <span class="n">query_str</span> <span class="o">=</span> <span class="n">logic_spaces</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="o">+</span> <span class="n">condition</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_cols</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1">#&#39;col1 == 1, col2 == 1&#39;, etc.</span>
+
+    <span class="c1"># Query dataframe</span>
+    <span class="n">outdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_str</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Rename columns back to original</span>
+    <span class="n">outdf</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">new_col</span><span class="p">:</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">new_col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">new_cols</span><span class="p">)},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outdf</span></div>
+
+
+<div class="viewcode-block" id="sql"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.query.sql">[docs]</a><span class="k">def</span> <span class="nf">sql</span><span class="p">(</span><span class="n">df_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for running a pandasql query. Keeps track of which variables are of</span>
+<span class="sd">    datetime type, and converts them back after running the sql query.</span>
+
+<span class="sd">    :Notes:</span>
+
+<span class="sd">    Ensure that dfs are passed in the order that they are used in the query.</span>
+
+<span class="sd">    :param df_list:</span>
+<span class="sd">    :param query:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: add example in docs for sql</span>
+
+    <span class="c1"># Pandasql looks up tables by names given in query. Here we are passed a list of dfs without names.</span>
+    <span class="c1"># Therefore we need to extract the names of the tables from the query, then assign</span>
+    <span class="c1"># those names to the dfs in df_list in the locals dictionary.</span>
+    <span class="n">table_names</span> <span class="o">=</span> <span class="n">_extract_table_names_from_sql</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table_names</span><span class="p">):</span>
+        <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">df_list</span><span class="p">[</span><span class="n">i</span><span class="p">]})</span>
+
+    <span class="c1"># Get date variable column names</span>
+    <span class="n">datevars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">df_list</span><span class="p">:</span>
+        <span class="n">datevars</span> <span class="o">+=</span> <span class="n">_get_datetime_cols</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">datevars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">datevars</span><span class="p">))</span>  <span class="c1"># remove duplicates</span>
+
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">PandaSQL</span><span class="p">()(</span><span class="n">query</span><span class="p">)</span>
+
+    <span class="c1"># Convert back to datetime</span>
+    <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datevars</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">merged</span><span class="o">.</span><span class="n">columns</span><span class="p">]:</span>
+        <span class="n">merged</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="n">date</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">merged</span></div>
+
+
+<span class="k">def</span> <span class="nf">_extract_table_names_from_sql</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extract table names from an SQL query. &quot;&quot;&quot;</span>
+    <span class="c1"># a good old fashioned regex. turns out this worked better than actually parsing the code</span>
+    <span class="n">tables_blocks</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:FROM|JOIN)\s+(\w+(?:\s*,\s*\w+)*)&#39;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">tbl</span>
+              <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">tables_blocks</span>
+              <span class="k">for</span> <span class="n">tbl</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">,</span> <span class="n">block</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">tables</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># remove duplicates, keeping order</span>
+
+
+<span class="k">def</span> <span class="nf">_get_datetime_cols</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of column names of df for which the dtype starts with datetime</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dtypes</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+    <span class="k">return</span> <span class="n">dtypes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dtypes</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">))]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

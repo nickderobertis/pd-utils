@@ -1,0 +1,661 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.port &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.port</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.port</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pd_utils.timer</span> <span class="kn">import</span> <span class="n">estimate_time</span>
+<span class="kn">from</span> <span class="nn">pd_utils.transform</span> <span class="kn">import</span> <span class="n">averages</span>
+
+
+<div class="viewcode-block" id="portfolio"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.port.portfolio">[docs]</a><span class="k">def</span> <span class="nf">portfolio</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">groupvar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ngroups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">quant_cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">byvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cutdf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">portvar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;portfolio&quot;</span><span class="p">,</span>
+    <span class="n">multiprocess</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs portfolios based on percentile values of groupvar.</span>
+
+<span class="sd">    If ngroups=10, then will form 10 portfolios,</span>
+<span class="sd">    with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having the top 10 percentile</span>
+<span class="sd">    of groupvar.</span>
+
+<span class="sd">    :Notes:</span>
+
+<span class="sd">    * Resets index and drops in output data, so don&#39;t use if index is important (input data not affected)</span>
+<span class="sd">    * If using a cutdf, MUST have the same bygroups as df. The number of observations within each bygroup</span>
+<span class="sd">      can be different, but there MUST be a one-to-one match of bygroups, or this will NOT work correctly.</span>
+<span class="sd">      This may require some cleaning of the cutdf first.</span>
+<span class="sd">    * For some reason, multiprocessing seems to be slower in testing, so it is disabled by default</span>
+
+<span class="sd">    :param df: input data</span>
+<span class="sd">    :param groupvar: name of variable in df to form portfolios on</span>
+<span class="sd">    :param ngroups: number of portfolios to form. will be ignored if option cutoffs or quant_cutoffs is passed</span>
+<span class="sd">    :param cutoffs: e.g. [100, 10000] to form three portfolios, 1 would be &lt; 100, 2 would be &gt; 100 and &lt; 10000,</span>
+<span class="sd">        3 would be &gt; 10000. cannot be used with option ngroups</span>
+<span class="sd">    :param quant_cutoffs: eg. [0.1, 0.9] to form three portfolios. 1 would be lowest 10% of data,</span>
+<span class="sd">        2 would be &gt; 10 and &lt; 90 percentiles, 3 would be highest 10%. All will be within byvars if byvars are passed</span>
+<span class="sd">    :param byvars: name of variable(s) in df, finds portfolios within byvars. For example if byvars=&#39;Month&#39;,</span>
+<span class="sd">        would take each month and form portfolios based on the percentiles of the groupvar during only that month</span>
+<span class="sd">    :param cutdf: optionally determine percentiles using another dataset. See second note.</span>
+<span class="sd">    :param portvar: name of portfolio variable in the output dataset</span>
+<span class="sd">    :param multiprocess: set to True to use all available processors,</span>
+<span class="sd">        set to False to use only one, pass an int less or equal to than number of</span>
+<span class="sd">        processors to use that amount of processors</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check types</span>
+    <span class="n">_check_portfolio_inputs</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">groupvar</span><span class="p">,</span>
+        <span class="n">ngroups</span><span class="o">=</span><span class="n">ngroups</span><span class="p">,</span>
+        <span class="n">byvars</span><span class="o">=</span><span class="n">byvars</span><span class="p">,</span>
+        <span class="n">cutdf</span><span class="o">=</span><span class="n">cutdf</span><span class="p">,</span>
+        <span class="n">portvar</span><span class="o">=</span><span class="n">portvar</span><span class="p">,</span>
+        <span class="n">cutoffs</span><span class="o">=</span><span class="n">cutoffs</span><span class="p">,</span>
+        <span class="n">quant_cutoffs</span><span class="o">=</span><span class="n">quant_cutoffs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">byvars</span> <span class="o">=</span> <span class="n">_assert_byvars_list</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cutdf</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cutdf</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># this is where cutdf == None, the default case</span>
+        <span class="n">cutdf</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="n">tempcutdf</span> <span class="o">=</span> <span class="n">cutdf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># With passed cutoffs, can skip all logic to calculate cutoffs, and go right to portfolio sort</span>
+    <span class="k">if</span> <span class="n">cutoffs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Must add a minimum and maximum to cutoffs (bottom of lowest port, top of highest port)</span>
+        <span class="c1"># for code to work properly</span>
+        <span class="n">min_groupvar_value</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">groupvar</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">max_groupvar_value</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">groupvar</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">all_cutoffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_groupvar_value</span><span class="p">]</span> <span class="o">+</span> <span class="n">cutoffs</span> <span class="o">+</span> <span class="p">[</span><span class="n">max_groupvar_value</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">_sort_into_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">all_cutoffs</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">)</span>
+
+    <span class="c1"># Hard cutoffs not passed, handle percentile based portfolios (either ngroups or passed quant_cuts)</span>
+    <span class="k">if</span> <span class="n">quant_cutoffs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Must add a minimum and maximum to quant cutoffs and scale to 0-100 for code to work properly</span>
+        <span class="n">percentiles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">q</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quant_cutoffs</span><span class="p">],</span> <span class="mi">100</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># ngroups handling</span>
+        <span class="n">pct_per_group</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">ngroups</span>
+        <span class="n">percentiles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">i</span> <span class="o">*</span> <span class="n">pct_per_group</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ngroups</span><span class="p">)</span>
+        <span class="p">]</span>  <span class="c1"># percentile values, e.g. 0, 10, 20, 30... 100</span>
+        <span class="n">percentiles</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span>
+
+    <span class="c1"># Create new functions with common arguments added. First function is for handling entire df, second is for</span>
+    <span class="c1"># splitting into numpy arrays by byvars</span>
+    <span class="n">create_cutoffs_if_necessary_and_sort_into_ports</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+        <span class="n">_create_cutoffs_and_sort_into_ports</span><span class="p">,</span>
+        <span class="n">groupvar</span><span class="o">=</span><span class="n">groupvar</span><span class="p">,</span>
+        <span class="n">portvar</span><span class="o">=</span><span class="n">portvar</span><span class="p">,</span>
+        <span class="n">percentiles</span><span class="o">=</span><span class="n">percentiles</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">sort_arr_list_into_ports_and_return_series</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+        <span class="n">_sort_arr_list_into_ports_and_return_series</span><span class="p">,</span>
+        <span class="n">percentiles</span><span class="o">=</span><span class="n">percentiles</span><span class="p">,</span>
+        <span class="n">multiprocess</span><span class="o">=</span><span class="n">multiprocess</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">split</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">_split</span><span class="p">,</span> <span class="n">keepvars</span><span class="o">=</span><span class="p">[</span><span class="n">groupvar</span><span class="p">],</span> <span class="n">force_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tempdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># If there are no byvars, just complete portfolio sort</span>
+    <span class="k">if</span> <span class="n">byvars</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">create_cutoffs_if_necessary_and_sort_into_ports</span><span class="p">(</span><span class="n">tempdf</span><span class="p">,</span> <span class="n">cutdf</span><span class="p">)</span>
+
+    <span class="c1"># The below rename is incase there is already a variable named index in the data</span>
+    <span class="c1"># The rename will just not do anything if there&#39;s not</span>
+    <span class="n">tempdf</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">tempdf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;__temp_index__&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># get a variable &#39;index&#39; containing obs count</span>
+
+    <span class="c1"># Also replace index in byvars if there</span>
+    <span class="n">temp_byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">if</span> <span class="n">b</span> <span class="o">!=</span> <span class="s2">&quot;index&quot;</span> <span class="k">else</span> <span class="s2">&quot;__temp_index__&quot;</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">byvars</span><span class="p">]</span>
+    <span class="n">all_byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_byvars</span><span class="p">,</span> <span class="n">byvars</span><span class="p">]</span>  <span class="c1"># list of lists</span>
+
+    <span class="c1"># else, deal with byvars</span>
+    <span class="c1"># First create a key variable based on all the byvars</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">tempdf</span><span class="p">,</span> <span class="n">tempcutdf</span><span class="p">]):</span>
+        <span class="n">this_df</span><span class="p">[</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;key&quot;</span>  <span class="c1"># container for key</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="n">this_df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">all_byvars</span><span class="p">[</span><span class="n">i</span><span class="p">]]:</span>
+            <span class="n">this_df</span><span class="p">[</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">col</span>
+        <span class="n">this_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Now split into list of arrays and process</span>
+    <span class="n">array_list</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">tempdf</span><span class="p">)</span>
+    <span class="n">cut_array_list</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">tempcutdf</span><span class="p">)</span>
+
+    <span class="n">tempdf</span> <span class="o">=</span> <span class="n">tempdf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
+        <span class="n">drop</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># need to reset index again for adding new column</span>
+    <span class="n">tempdf</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_arr_list_into_ports_and_return_series</span><span class="p">(</span>
+        <span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">tempdf</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;__temp_index__&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="portfolio_averages"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.port.portfolio_averages">[docs]</a><span class="k">def</span> <span class="nf">portfolio_averages</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">groupvar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">avgvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">ngroups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">byvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cutdf</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">wtvar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">count</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">portvar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;portfolio&quot;</span><span class="p">,</span>
+    <span class="n">avgonly</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates portfolios and calculates equal- and value-weighted averages of variables within portfolios.</span>
+
+<span class="sd">    If ngroups=10,</span>
+<span class="sd">    then will form 10 portfolios, with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having</span>
+<span class="sd">    the top 10 percentile of groupvar.</span>
+
+<span class="sd">    :Notes:</span>
+
+<span class="sd">    Resets index and drops in output data, so don&#39;t use if index is important (input data not affected)</span>
+
+<span class="sd">    :param df: input data</span>
+<span class="sd">    :param groupvar: name of variable in df to form portfolios on</span>
+<span class="sd">    :param avgvars: variables to be averaged</span>
+<span class="sd">    :param ngroups: number of portfolios to form</span>
+<span class="sd">    :param byvars: name of variable(s) in df, finds portfolios within byvars. For example if byvars=&#39;Month&#39;,</span>
+<span class="sd">            would take each month and form portfolios based on the percentiles of the groupvar during only that month</span>
+<span class="sd">    :param cutdf: optionally determine percentiles using another dataset</span>
+<span class="sd">    :param wtvar: name of variable in df to use for weighting in weighted average</span>
+<span class="sd">    :param count: pass variable name to get count of non-missing of that variable within groups.</span>
+<span class="sd">    :param portvar: name of portfolio variable in the output dataset</span>
+<span class="sd">    :param avgonly: True to return only averages, False to return (averages, individual observations with portfolios)</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">,</span> <span class="n">ngroups</span><span class="o">=</span><span class="n">ngroups</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="n">byvars</span><span class="p">,</span> <span class="n">cutdf</span><span class="o">=</span><span class="n">cutdf</span><span class="p">,</span> <span class="n">portvar</span><span class="o">=</span><span class="n">portvar</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">byvars</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">byvars</span><span class="p">]</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">+</span> <span class="n">byvars</span>
+        <span class="n">avgs</span> <span class="o">=</span> <span class="n">averages</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="n">avgvars</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">wtvar</span><span class="o">=</span><span class="n">wtvar</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">avgs</span> <span class="o">=</span> <span class="n">averages</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="n">avgvars</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="n">portvar</span><span class="p">,</span> <span class="n">wtvar</span><span class="o">=</span><span class="n">wtvar</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">avgonly</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">avgs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">avgs</span><span class="p">,</span> <span class="n">ports</span></div>
+
+
+<div class="viewcode-block" id="long_short_portfolio"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.port.long_short_portfolio">[docs]</a><span class="k">def</span> <span class="nf">long_short_portfolio</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">portvar</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">retvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">top_minus_bot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a df with a column of numbered portfolios and creates a new</span>
+<span class="sd">    portfolio which is long the top portfolio and short the bottom portfolio.</span>
+
+<span class="sd">    :param df: dataframe containing a column with portfolio numbers</span>
+<span class="sd">    :param portvar: name of column containing portfolios</span>
+<span class="sd">    :param byvars: column names containing groups for portfolios.</span>
+<span class="sd">        Calculates long-short within these groups. These should be the same groups</span>
+<span class="sd">        in which portfolios were formed.</span>
+<span class="sd">    :param retvars: variables to return in the long-short dataset.</span>
+<span class="sd">        By default, will use all numeric variables in the df</span>
+<span class="sd">    :param top_minus_bot: True to be long the top portfolio, short the bottom portfolio.</span>
+<span class="sd">       False to be long the bottom portfolio, short the top portfolio.</span>
+<span class="sd">    :return: a df of long-short portfolio</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">long</span><span class="p">,</span> <span class="n">short</span> <span class="o">=</span> <span class="n">_select_long_short_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">top_minus_bot</span><span class="o">=</span><span class="n">top_minus_bot</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_portfolio_difference</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">short</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="n">byvars</span><span class="p">,</span> <span class="n">retvars</span><span class="o">=</span><span class="n">retvars</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_select_long_short_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">top_minus_bot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the appropriate portfolio number and returns (long number, short number)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Get numbered value of highest and lowest portfolio</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">])</span>
+    <span class="n">bot</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">top_minus_bot</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">top</span><span class="p">,</span> <span class="n">bot</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">bot</span><span class="p">,</span> <span class="n">top</span>
+
+
+<span class="k">def</span> <span class="nf">_portfolio_difference</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">short</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retvars</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates long portfolio minus short portfolio</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">byvars</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">==</span> <span class="n">long</span><span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">==</span> <span class="n">short</span><span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">==</span> <span class="n">long</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">==</span> <span class="n">short</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">retvars</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="n">retvars</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_into_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cutoffs</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">):</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">portvar</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">low_cut</span><span class="p">,</span> <span class="n">high_cut</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cutoffs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">cutoffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="n">groupvar</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">low_cut</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">groupvar</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">high_cut</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">portvar</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">_create_cutoffs</span><span class="p">(</span><span class="n">cutdf</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">cutdf</span><span class="p">[</span><span class="n">groupvar</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">percentiles</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_create_cutoffs_and_sort_into_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cutdf</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">):</span>
+    <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">_create_cutoffs</span><span class="p">(</span><span class="n">cutdf</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_sort_into_ports</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cutoffs</span><span class="p">,</span> <span class="n">portvar</span><span class="p">,</span> <span class="n">groupvar</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_split</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keepvars</span><span class="p">,</span> <span class="n">force_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a dataframe into a list of arrays based on a key variable. Pass keepvars</span>
+<span class="sd">    to keep variables other than the key variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="c1">#     df = df.sort_values(&#39;__key_var__&#39;) #now done outside of function</span>
+    <span class="n">small_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;__key_var__&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">keepvars</span><span class="p">]</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">small_df</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#different key</span>
+            <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">outarr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="n">force_numeric</span><span class="p">:</span>
+        <span class="n">outarr</span> <span class="o">=</span> <span class="n">outarr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">outarr</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_create_cutoffs_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">):</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">arr</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">percentiles</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_into_ports</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">cutoffs</span><span class="p">):</span>
+    <span class="n">port_cutoffs</span> <span class="o">=</span> <span class="n">_gen_port_cutoffs</span><span class="p">(</span><span class="n">cutoffs</span><span class="p">)</span>
+    <span class="n">portfolio_match</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_portfolio_match</span><span class="p">,</span> <span class="n">port_cutoffs</span><span class="o">=</span><span class="n">port_cutoffs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">portfolio_match</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_portfolio_match</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">port_cutoffs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span> <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">bot</span><span class="p">,</span> <span class="n">top</span> <span class="ow">in</span> <span class="n">port_cutoffs</span> \
+            <span class="k">if</span> <span class="n">elem</span> <span class="o">&gt;=</span> <span class="n">bot</span> <span class="ow">and</span> <span class="n">elem</span> <span class="o">&lt;=</span> <span class="n">top</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_gen_port_cutoffs</span><span class="p">(</span><span class="n">cutoffs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">low_cut</span><span class="p">,</span> <span class="n">high_cut</span><span class="p">)</span> \
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">low_cut</span><span class="p">,</span> <span class="n">high_cut</span><span class="p">)</span> \
+                    <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cutoffs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">cutoffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))]</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_list_into_ports</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">multiprocess</span><span class="p">,</span>
+                              <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">common_args</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">array_list</span><span class="p">,</span>
+        <span class="n">cut_array_list</span><span class="p">,</span>
+        <span class="n">percentiles</span>
+    <span class="p">)</span>
+    <span class="n">common_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">cutoffs</span><span class="o">=</span><span class="n">cutoffs</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">multiprocess</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">multiprocess</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_sort_arr_list_into_ports_mp</span><span class="p">(</span><span class="o">*</span><span class="n">common_args</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="n">multiprocess</span><span class="p">,</span> <span class="o">**</span><span class="n">common_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_sort_arr_list_into_ports_mp</span><span class="p">(</span><span class="o">*</span><span class="n">common_args</span><span class="p">,</span> <span class="o">**</span><span class="n">common_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sort_arr_list_into_ports_sp</span><span class="p">(</span><span class="o">*</span><span class="n">common_args</span><span class="p">,</span> <span class="o">**</span><span class="n">common_kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_create_cutoffs_arr_if_necessary_and_sort_into_ports</span><span class="p">(</span><span class="n">data_tup</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span>
+                                                         <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">arr</span><span class="p">,</span> <span class="n">cutarr</span> <span class="o">=</span> <span class="n">data_tup</span>
+    <span class="k">if</span> <span class="n">cutoffs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">_create_cutoffs_arr</span><span class="p">(</span><span class="n">cutarr</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cutoffs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sort_arr_into_ports</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">cutoffs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_list_into_ports_sp</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span>
+                                 <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">outlist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">array_list</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_create_cutoffs_arr_if_necessary_and_sort_into_ports</span><span class="p">((</span><span class="n">arr</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                                                                      <span class="n">percentiles</span><span class="p">,</span> <span class="n">cutoffs</span><span class="o">=</span><span class="n">cutoffs</span><span class="p">)</span>
+        <span class="n">outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">outlist</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_list_into_ports_mp</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span> <span class="c1">#use mp # processors</span>
+            <span class="k">return</span> <span class="n">_sort_arr_list_into_ports_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span> <span class="c1">#use all processors</span>
+            <span class="k">return</span> <span class="n">_sort_arr_list_into_ports_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_list_into_ports_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span>
+                                      <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#For time estimation</span>
+        <span class="n">counter</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">num_loops</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_list</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+
+        <span class="c1">#Mp setup</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_create_cutoffs_arr_if_necessary_and_sort_into_ports</span><span class="p">,</span>
+                       <span class="n">percentiles</span><span class="o">=</span><span class="n">percentiles</span><span class="p">,</span> <span class="n">cutoffs</span><span class="o">=</span><span class="n">cutoffs</span><span class="p">)</span>
+
+        <span class="n">data_tups</span> <span class="o">=</span> <span class="p">[(</span><span class="n">arr</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">array_list</span><span class="p">)]</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="p">((</span><span class="n">arr</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">[</span><span class="n">i</span><span class="p">]),),</span> <span class="n">callback</span><span class="o">=</span><span class="n">counter</span><span class="o">.</span><span class="n">append</span><span class="p">)</span> \
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">array_list</span><span class="p">)]</span>
+
+        <span class="c1">#Time estimation</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_loops</span><span class="p">:</span>
+            <span class="n">estimate_time</span><span class="p">(</span><span class="n">num_loops</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">counter</span><span class="p">),</span> <span class="n">start_time</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1">#Collect and output results. A timeout of 1 should be fine because</span>
+        <span class="c1">#it should wait until completion anyway</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_arr_list_to_series</span><span class="p">(</span><span class="n">array_list</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_arr_list_into_ports_and_return_series</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">multiprocess</span><span class="p">,</span>
+                                                <span class="n">cutoffs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">al</span> <span class="o">=</span> <span class="n">_sort_arr_list_into_ports</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">cut_array_list</span><span class="p">,</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">multiprocess</span><span class="p">,</span> <span class="n">cutoffs</span><span class="o">=</span><span class="n">cutoffs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_arr_list_to_series</span><span class="p">(</span><span class="n">al</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_check_portfolio_inputs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">user_passed</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_user_passed</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">user_passed_any_cutoffs</span> <span class="o">=</span> <span class="n">user_passed</span><span class="p">(</span><span class="s1">&#39;cutoffs&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">user_passed</span><span class="p">(</span><span class="s1">&#39;quant_cutoffs&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user_passed_any_cutoffs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ngroups&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span> <span class="c1"># 10 is default ngroups</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cannot pass both cutoffs and ngroups. got </span><span class="si">{kwargs[&quot;cutoffs&quot;]}</span><span class="s1"> cutoffs &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;and </span><span class="si">{kwargs[&quot;ngroups&quot;]}</span><span class="s1"> ngroups&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user_passed_any_cutoffs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;cutdf&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cutdf will not be used for portfolios as cutoffs </span><span class="si">{kwargs[&quot;cutoffs&quot;]}</span><span class="s1"> were passed&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user_passed</span><span class="p">(</span><span class="s1">&#39;cutoffs&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">user_passed</span><span class="p">(</span><span class="s1">&#39;quant_cutoffs&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cannot pass both cutoffs and quant_cutoffs. got </span><span class="si">{kwargs[&quot;cutoffs&quot;]}</span><span class="s1"> cutoffs and &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{kwargs[&quot;quant_cutoffs&quot;]}</span><span class="s1"> quant_cutoffs&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_passed_any_cutoffs</span><span class="p">:</span>
+        <span class="c1"># Must be using ngroups instead of cutoffs</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ngroups&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_user_passed</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_assert_byvars_list</span><span class="p">(</span><span class="n">byvars</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">byvars</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">byvars</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">byvars</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

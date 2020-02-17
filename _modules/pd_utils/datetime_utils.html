@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.datetime_utils &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.datetime_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.datetime_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries.holiday</span> <span class="kn">import</span> <span class="n">AbstractHolidayCalendar</span><span class="p">,</span> <span class="n">Holiday</span><span class="p">,</span> <span class="n">nearest_workday</span><span class="p">,</span> <span class="n">USMartinLutherKingJr</span><span class="p">,</span> \
+    <span class="n">USPresidentsDay</span><span class="p">,</span> <span class="n">GoodFriday</span><span class="p">,</span> <span class="n">USMemorialDay</span><span class="p">,</span> <span class="n">USLaborDay</span><span class="p">,</span> <span class="n">USThanksgivingDay</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries.offsets</span> <span class="kn">import</span> <span class="n">CustomBusinessDay</span>
+
+<span class="kn">from</span> <span class="nn">pd_utils.merge</span> <span class="kn">import</span> <span class="n">apply_func_to_unique_and_merge</span>
+
+
+<div class="viewcode-block" id="convert_sas_date_to_pandas_date"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.convert_sas_date_to_pandas_date">[docs]</a><span class="k">def</span> <span class="nf">convert_sas_date_to_pandas_date</span><span class="p">(</span><span class="n">sasdates</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a date or Series of dates loaded from a SAS SAS7BDAT file to a pandas date type.</span>
+
+<span class="sd">    :param sasdates: SAS7BDAT-loaded date(s) to convert</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">epoch</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1960</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
+        <span class="k">return</span> <span class="n">epoch</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sasdates</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">apply_func_to_unique_and_merge</span><span class="p">(</span><span class="n">sasdates</span><span class="p">,</span> <span class="n">to_pandas</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">to_pandas</span><span class="p">(</span><span class="n">sasdates</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="year_month_from_date"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.year_month_from_date">[docs]</a><span class="k">def</span> <span class="nf">year_month_from_date</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">yearname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">monthname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Month&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a dataframe with a datetime object and creates year and month variables</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param date: name of date column</span>
+<span class="sd">    :param yearname: name of year column to be created</span>
+<span class="sd">    :param monthname: name of month column to be created</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">yearname</span><span class="p">]</span> <span class="o">=</span>  <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">year</span>  <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">date</span><span class="p">]]</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">monthname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">date</span><span class="p">]]</span>
+    <span class="n">df</span><span class="p">[[</span><span class="n">yearname</span><span class="p">,</span> <span class="n">monthname</span><span class="p">]]</span> <span class="o">=</span> <span class="n">apply_func_to_unique_and_merge</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date</span><span class="p">],</span> <span class="n">year_month_from_single_date</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="expand_time"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.expand_time">[docs]</a><span class="k">def</span> <span class="nf">expand_time</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">intermediate_periods</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="n">time</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span>
+    <span class="n">newdate</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Shift Date&quot;</span><span class="p">,</span>
+    <span class="n">shiftvar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Shift&quot;</span><span class="p">,</span>
+    <span class="n">custom_business_day</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CustomBusinessDay</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param intermediate_periods: Specify intermediate_periods=True to get periods in between given time periods, e.g.</span>
+<span class="sd">        passing time=[12,24,36] will get periods 12, 13, 14, ..., 35, 36.</span>
+<span class="sd">    :param datevar: column name of date variable</span>
+<span class="sd">    :param freq: &#39;d&#39; for daily, &#39;m&#39; for monthly, &#39;a&#39; for annual</span>
+<span class="sd">    :param time: number of periods to advance by</span>
+<span class="sd">    :param newdate: name of new date in the output data</span>
+<span class="sd">    :param shiftvar: name of variable which specifies how much the time has been shifted</span>
+<span class="sd">    :param custom_business_day: Only used for daily frequency. Defaults to using</span>
+<span class="sd">        trading days based on US market holiday calendar. Can pass custom business days for other calendars</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">intermediate_periods</span><span class="p">:</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">_expand_time</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">datevar</span><span class="o">=</span><span class="n">datevar</span><span class="p">,</span>
+        <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span>
+        <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
+        <span class="n">newdate</span><span class="o">=</span><span class="n">newdate</span><span class="p">,</span>
+        <span class="n">shiftvar</span><span class="o">=</span><span class="n">shiftvar</span><span class="p">,</span>
+        <span class="n">custom_business_day</span><span class="o">=</span><span class="n">custom_business_day</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_expand_time</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="n">time</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span>
+    <span class="n">newdate</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Shift Date&quot;</span><span class="p">,</span>
+    <span class="n">shiftvar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Shift&quot;</span><span class="p">,</span>
+    <span class="n">custom_business_day</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CustomBusinessDay</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param datevar: column name of date variable</span>
+<span class="sd">    :param freq: &#39;d&#39; for daily, &#39;m&#39; for monthly, &#39;a&#39; for annual</span>
+<span class="sd">    :param time: number of periods to advance by</span>
+<span class="sd">    :param newdate: name of new date in the output data</span>
+<span class="sd">    :param shiftvar: name of variable which specifies how much the time has been shifted</span>
+<span class="sd">    :param custom_business_day: Only used for daily frequency. Defaults to using</span>
+<span class="sd">        trading days based on US market holiday calendar. Can pass custom business days for other calendars</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">message</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Initializing expand_time for periods </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">custom_business_day</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Daily frequency, getting trading day calendar.&quot;</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">tradedays</span><span class="p">()</span>  <span class="c1"># gets trading day calendar</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Daily frequency, using passed business day calendar.&quot;</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">custom_business_day</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">td</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">time_shift</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">td</span><span class="o">=</span><span class="n">td</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;m&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">td</span>
+        <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">years</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Calculating number of rows.&quot;</span><span class="p">)</span>
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Calculating number of duplicates.&quot;</span><span class="p">)</span>
+    <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+
+    <span class="c1"># Expand number of rows</span>
+    <span class="k">if</span> <span class="n">duplicates</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Duplicating observations </span><span class="si">{}</span><span class="s2"> times.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duplicates</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">df</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">duplicates</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Duplicated.&quot;</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Creating shift variable.&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">shiftvar</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">time</span> <span class="o">*</span> <span class="n">num_rows</span>
+    <span class="p">)</span>  <span class="c1"># Create a variable containing amount of time to shift</span>
+    <span class="c1"># Now create shifted date</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Creating shifted date.&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">newdate</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">date</span> <span class="o">+</span> <span class="n">time_shift</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">shift</span><span class="p">))</span> <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">datevar</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">shiftvar</span><span class="p">])</span>
+    <span class="p">]</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;expand_time completed.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Cleanup and exit</span>
+    <span class="k">return</span> <span class="n">df</span>  <span class="c1"># .drop(&#39;Shift&#39;, axis=1)</span>
+
+
+<div class="viewcode-block" id="expand_months"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.expand_months">[docs]</a><span class="k">def</span> <span class="nf">expand_months</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">newdatevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Daily Date&quot;</span><span class="p">,</span> <span class="n">trade_days</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a monthly dataframe and returns a daily (trade day or calendar day) dataframe.</span>
+<span class="sd">    For each row in the input data, duplicates that row over each trading/calendar day in the month of</span>
+<span class="sd">    the date in that row. Creates a new date column containing the daily date.</span>
+
+<span class="sd">    :Notes:</span>
+
+<span class="sd">    If the input dataset has multiple observations per month, all of these will be expanded. Therefore</span>
+<span class="sd">    you will have one row for each trade day for each original observation.</span>
+
+<span class="sd">    :param df: DataFrame containing a date variable</span>
+<span class="sd">    :param datevar: name of column containing dates in the input df</span>
+<span class="sd">    :param newdatevar: name of new column to be created containing daily dates</span>
+<span class="sd">    :param trade_days: True to use trading days and False to use calendar days</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trade_days</span><span class="p">:</span>
+        <span class="n">td</span> <span class="o">=</span> <span class="n">tradedays</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">td</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span>
+
+    <span class="n">expand</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">_expand</span><span class="p">,</span> <span class="n">datevar</span><span class="o">=</span><span class="n">datevar</span><span class="p">,</span> <span class="n">td</span><span class="o">=</span><span class="n">td</span><span class="p">,</span> <span class="n">newdatevar</span><span class="o">=</span><span class="n">newdatevar</span><span class="p">)</span>
+
+    <span class="n">expand_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">expand</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span>
+
+    <span class="n">days</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">expand_all</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">datevar</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">datevar</span><span class="p">,</span> <span class="n">newdatevar</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;datetime64&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">datevar</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tradedays"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.tradedays">[docs]</a><span class="k">def</span> <span class="nf">tradedays</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used for constructing a range of dates with pandas date_range function.</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; import pd_utils</span>
+<span class="sd">        &gt;&gt;&gt; pd.date_range(</span>
+<span class="sd">        &gt;&gt;&gt;     start=&#39;1/1/2000&#39;,</span>
+<span class="sd">        &gt;&gt;&gt;     end=&#39;1/31/2000&#39;,</span>
+<span class="sd">        &gt;&gt;&gt;     freq=pd_utils.tradedays()</span>
+<span class="sd">        &gt;&gt;&gt; )</span>
+<span class="sd">        pd.DatetimeIndex([&#39;2000-01-03&#39;, &#39;2000-01-04&#39;, &#39;2000-01-05&#39;, &#39;2000-01-06&#39;,</span>
+<span class="sd">                   &#39;2000-01-07&#39;, &#39;2000-01-10&#39;, &#39;2000-01-11&#39;, &#39;2000-01-12&#39;,</span>
+<span class="sd">                   &#39;2000-01-13&#39;, &#39;2000-01-14&#39;, &#39;2000-01-18&#39;, &#39;2000-01-19&#39;,</span>
+<span class="sd">                   &#39;2000-01-20&#39;, &#39;2000-01-21&#39;, &#39;2000-01-24&#39;, &#39;2000-01-25&#39;,</span>
+<span class="sd">                   &#39;2000-01-26&#39;, &#39;2000-01-27&#39;, &#39;2000-01-28&#39;, &#39;2000-01-31&#39;],</span>
+<span class="sd">                  dtype=&#39;datetime64[ns]&#39;, freq=&#39;C&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trading_calendar</span> <span class="o">=</span> <span class="n">USTradingCalendar</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">CustomBusinessDay</span><span class="p">(</span><span class="n">holidays</span><span class="o">=</span><span class="n">trading_calendar</span><span class="o">.</span><span class="n">holidays</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="USTradingCalendar"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.USTradingCalendar">[docs]</a><span class="k">class</span> <span class="nc">USTradingCalendar</span><span class="p">(</span><span class="n">AbstractHolidayCalendar</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The US trading day calendar behind the function :py:func:`tradedays`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Holiday</span><span class="p">(</span><span class="s2">&quot;NewYearsDay&quot;</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">observance</span><span class="o">=</span><span class="n">nearest_workday</span><span class="p">),</span>
+        <span class="n">USMartinLutherKingJr</span><span class="p">,</span>
+        <span class="n">USPresidentsDay</span><span class="p">,</span>
+        <span class="n">GoodFriday</span><span class="p">,</span>
+        <span class="n">USMemorialDay</span><span class="p">,</span>
+        <span class="n">Holiday</span><span class="p">(</span><span class="s2">&quot;USIndependenceDay&quot;</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">observance</span><span class="o">=</span><span class="n">nearest_workday</span><span class="p">),</span>
+        <span class="n">USLaborDay</span><span class="p">,</span>
+        <span class="n">USThanksgivingDay</span><span class="p">,</span>
+        <span class="n">Holiday</span><span class="p">(</span><span class="s2">&quot;Christmas&quot;</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">observance</span><span class="o">=</span><span class="n">nearest_workday</span><span class="p">),</span>
+    <span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">monthly_date</span><span class="p">,</span> <span class="n">datevar</span><span class="p">,</span> <span class="n">td</span><span class="p">,</span> <span class="n">newdatevar</span><span class="p">):</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">monthly_date</span><span class="o">/</span><span class="mi">1000000000</span><span class="p">)</span> <span class="c1">#date coming in as integer, need to parse</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">tm_year</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">tm_mon</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">tm_mday</span><span class="p">)</span> <span class="c1">#better output than gmtime</span>
+
+    <span class="n">beginning</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#beginning of month of date</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">beginning</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">days</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#last day of month</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">beginning</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">td</span><span class="p">)</span> <span class="c1">#trade days within month</span>
+    <span class="n">days</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">newdatevar</span>
+    <span class="n">result</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">days</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="year_month_from_single_date"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.datetime_utils.year_month_from_single_date">[docs]</a><span class="k">def</span> <span class="nf">year_month_from_single_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;Year&#39;</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">})</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;Month&#39;</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

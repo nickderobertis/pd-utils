@@ -1,6 +1,6 @@
-pd_utils
-pandas
 pandasql
+pandas
+statsmodels
 numpy
 sas7bdat
-statsmodels
+pd_utils

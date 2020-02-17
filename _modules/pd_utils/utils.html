@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.corr &mdash; pd_utils 0.2.0 documentation</title>
+  <title>pd_utils.utils &mdash; pd_utils 0.2.0 documentation</title>
   
 
   
@@ -147,7 +147,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>pd_utils.corr</li>
+      <li>pd_utils.utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,34 +162,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pd_utils.corr</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+  <h1>Source code for pd_utils.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="formatted_corr_df"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.corr.formatted_corr_df">[docs]</a><span class="k">def</span> <span class="nf">formatted_corr_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates correlations on a DataFrame and displays only the lower triangular of the</span>
-<span class="sd">    resulting correlation DataFrame.</span>
-
-<span class="sd">    :param df:</span>
-<span class="sd">    :param cols: subset of column names on which to calculate correlations</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cols</span><span class="p">:</span>
-        <span class="n">use_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_to_list_if_str</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">var</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">use_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">var</span>
 
-    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">use_cols</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
-    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">_lower_triangular_of_df</span><span class="p">(</span><span class="n">corr_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">corr_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{x:.2f}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">_to_series_if_str</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Please provide a str, list of strs, or a list of pd.Series for byvars&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="k">def</span> <span class="nf">_to_name_if_series</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">i</span>
 
 
-<span class="k">def</span> <span class="nf">_lower_triangular_of_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="split"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.utils.split">[docs]</a><span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keepvars</span><span class="p">,</span> <span class="n">keyvar</span><span class="o">=</span><span class="s1">&#39;__key_var__&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a dataframe into a list of arrays based on a key variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">small_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">keyvar</span><span class="p">]</span> <span class="o">+</span> <span class="n">keepvars</span><span class="p">]</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">small_df</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#different key</span>
+            <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">splits</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

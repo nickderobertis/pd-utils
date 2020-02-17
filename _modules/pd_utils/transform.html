@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.transform &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.transform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.transform</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pd_utils.merge</span> <span class="kn">import</span> <span class="n">groupby_merge</span>
+<span class="kn">from</span> <span class="nn">pd_utils.utils</span> <span class="kn">import</span> <span class="n">_to_list_if_str</span>
+
+
+<div class="viewcode-block" id="long_to_wide"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.long_to_wide">[docs]</a><span class="k">def</span> <span class="nf">long_to_wide</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">groupvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">values</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                 <span class="n">colindex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colindex_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a &quot;long&quot; format DataFrame and converts to a &quot;wide&quot; format</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param groupvars: variables which signify unique observations in the output dataset</span>
+<span class="sd">    :param values: variables which contain the values which need to be transposed</span>
+<span class="sd">    :param colindex: columns containing extension for column name</span>
+<span class="sd">       in the output dataset. If not specified, just uses the</span>
+<span class="sd">       count of the row within the group. If a list is provided, each column value will be appended</span>
+<span class="sd">       in order separated by _</span>
+<span class="sd">    :param colindex_only: If True, column names in output data will be only the colindex, and will not</span>
+<span class="sd">        include the name of the values variable. Only valid when passing a single value, otherwise</span>
+<span class="sd">        multiple columns would have the same name.</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Examples:</span>
+
+<span class="sd">    For example::</span>
+
+<span class="sd">        If we had a long dataset of returns, with returns 12, 24, 36, 48, and 60 months after the date:</span>
+<span class="sd">                ticker    ret    months</span>
+<span class="sd">                AA        .01    12</span>
+<span class="sd">                AA        .15    24</span>
+<span class="sd">                AA        .21    36</span>
+<span class="sd">                AA       -.10    48</span>
+<span class="sd">                AA        .22    60</span>
+<span class="sd">        and we want to get this to one observation per ticker:</span>
+<span class="sd">                ticker    ret12    ret24    ret36    ret48    ret60</span>
+<span class="sd">                AA        .01      .15      .21     -.10      .22</span>
+<span class="sd">        We would use:</span>
+<span class="sd">        long_to_wide(df, groupvars=&#39;ticker&#39;, values=&#39;ret&#39;, colindex=&#39;months&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># don&#39;t overwrite original</span>
+
+    <span class="c1"># Check for duplicates</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Found duplicate rows and deleted.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Ensure type of groupvars is correct</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">groupvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">groupvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">groupvars</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">groupvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="c1"># Ensure type of values is correct</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">colindex_only</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;set colindex_only to False when passing more than one value&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Fixes for colindex</span>
+    <span class="c1"># Use count of the row within the group for column index if not specified</span>
+    <span class="k">if</span> <span class="n">colindex</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__idx__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupvars</span><span class="p">)</span><span class="o">.</span><span class="n">cumcount</span><span class="p">()</span>
+        <span class="n">colindex</span> <span class="o">=</span> <span class="s2">&quot;__idx__&quot;</span>
+    <span class="c1"># If multiple columns are provided for colindex, combine and drop old cols</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colindex</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__idx__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">colindex</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__idx__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__idx__&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">colindex</span> <span class="o">=</span> <span class="s2">&quot;__idx__&quot;</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__key__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">groupvars</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>  <span class="c1"># create key variable</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">groupvars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># if there are multiple groupvars, combine into one key</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">groupvars</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__key__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__key__&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="c1"># Create seperate wide datasets for each value variable then merge them together</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">combined</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># Create wide dataset</span>
+        <span class="n">raw_wide</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;__key__&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">colindex</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">colindex_only</span><span class="p">:</span>
+            <span class="c1"># add value name</span>
+            <span class="n">raw_wide</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">raw_wide</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># remove _ from colindex name</span>
+            <span class="n">raw_wide</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">raw_wide</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">wide</span> <span class="o">=</span> <span class="n">raw_wide</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="c1"># Merge back to original dataset</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">wide</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;__key__&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">combined</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="n">colindex</span><span class="p">,</span> <span class="s2">&quot;__key__&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="averages"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.averages">[docs]</a><span class="k">def</span> <span class="nf">averages</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">avgvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+             <span class="n">wtvar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">flatten</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns equal- and value-weighted averages of variables within groups</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param avgvars: variable names to take averages of</span>
+<span class="sd">    :param byvars: variable names for by groups</span>
+<span class="sd">    :param wtvar: variable to use for calculating weights in weighted average</span>
+<span class="sd">    :param count: string of variable name, pass variable name to get count of non-missing</span>
+<span class="sd">        of that variable within groups.</span>
+<span class="sd">    :param flatten: False to return df with multi-level index</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check types</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avgvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">avgvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">avgvars</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avgvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">avgvars</span> <span class="o">=</span> <span class="n">avgvars</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># don&#39;t modify existing avgvars inplace</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">wtvar</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wtvar</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">count</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">groupby_merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">avgvars</span> <span class="o">+=</span> <span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="s2">&quot;_count&quot;</span><span class="p">]</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
+    <span class="n">avg_df</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="n">avgvars</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">wtvar</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">flatten</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">avg_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">avg_df</span>
+
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">avgvars</span><span class="p">:</span>
+        <span class="n">colname</span> <span class="o">=</span> <span class="n">var</span> <span class="o">+</span> <span class="s2">&quot;_wavg&quot;</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">wtvar</span><span class="p">]</span> <span class="o">/</span> <span class="n">g</span><span class="p">[</span><span class="n">wtvar</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+
+    <span class="n">wavg_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;wavg&quot;</span><span class="p">]</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>  <span class="c1"># recreate because we not have _wavg cols in df</span>
+    <span class="n">wavg_df</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">sum</span><span class="p">()[</span><span class="n">wavg_cols</span><span class="p">]</span>
+
+    <span class="n">outdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">avg_df</span><span class="p">,</span> <span class="n">wavg_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">flatten</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">outdf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">outdf</span></div>
+
+
+<div class="viewcode-block" id="winsorize"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.winsorize">[docs]</a><span class="k">def</span> <span class="nf">winsorize</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pct</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+              <span class="n">subset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">bot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds observations above the pct percentile and replaces the with the pct percentile value.</span>
+<span class="sd">    Does this for all columns, or the subset given by subset.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param pct: 0 &lt; float &lt; 1 or list of two values 0 &lt; float &lt; 1. If two values are given, the first</span>
+<span class="sd">         will be used for the bottom percentile and the second will be used for the top. If one value</span>
+<span class="sd">         is given and both bot and top are True, will use the same value for both.</span>
+<span class="sd">    :param subset: column name(s) to winsorize</span>
+<span class="sd">    :param byvars: Column names of columns identifying groups in the data.</span>
+<span class="sd">        Winsorizing will be done within those groups.</span>
+<span class="sd">    :param bot: True to winsorize bottom observations</span>
+<span class="sd">    :param top: True to winsorize top observations</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; winsorize(df, .05, subset=&#39;RET&#39;) # replaces observations of RET below the 5% and above the 95% values</span>
+<span class="sd">        &gt;&gt;&gt; winsorize(df, (.05, .1), subset=&#39;RET&#39;) #replaces observations of RET below the 5% and above the 90% values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check inputs</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">([</span><span class="n">bot</span><span class="p">,</span> <span class="n">top</span><span class="p">])</span>  <span class="c1"># must winsorize something</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">bot_pct</span> <span class="o">=</span> <span class="n">pct</span>
+        <span class="n">top_pct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">pct</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">bot_pct</span> <span class="o">=</span> <span class="n">pct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">top_pct</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">pct</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pct must be float or a tuple of two floats&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">temp_winsor</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_winsorize</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">top_pct</span><span class="p">,</span> <span class="n">bot_pct</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span> <span class="n">bot</span><span class="o">=</span><span class="n">bot</span><span class="p">)</span>
+
+    <span class="c1"># Save column order</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># Get a dataframe of data to be winsorized, and a dataframe of the other columns</span>
+    <span class="n">to_winsor</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">_select_numeric_or_subset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="p">,</span> <span class="n">extra_include</span><span class="o">=</span><span class="n">byvars</span><span class="p">)</span>
+
+    <span class="c1"># Now winsorize</span>
+    <span class="k">if</span> <span class="n">byvars</span><span class="p">:</span>  <span class="c1"># use groupby to process groups individually</span>
+        <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">groupby_merge</span><span class="p">(</span>
+            <span class="n">to_winsor</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">temp_winsor</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># do entire df, one column at a time</span>
+        <span class="n">to_winsor</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">temp_winsor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">to_winsor</span><span class="p">,</span> <span class="n">rest</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_winsorize</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">top_pct</span><span class="p">,</span> <span class="n">bot_pct</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Winsorizes a pandas Series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">top</span><span class="p">:</span>
+        <span class="n">top_val</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">top_pct</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span> <span class="o">&gt;</span> <span class="n">top_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_val</span>
+    <span class="k">if</span> <span class="n">bot</span><span class="p">:</span>
+        <span class="n">bot_val</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">bot_pct</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span> <span class="o">&lt;</span> <span class="n">bot_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">bot_val</span>
+    <span class="k">return</span> <span class="n">col</span>
+
+
+<span class="k">def</span> <span class="nf">_select_numeric_or_subset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="p">,</span> <span class="n">extra_include</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If subset is not None, selects all numeric columns. Else selects subset.</span>
+<span class="sd">    If extra_include is not None and subset is None, will select all numeric columns plus</span>
+<span class="sd">    those in extra_include.</span>
+<span class="sd">    Returns a tuple of (dataframe containing subset columns, dataframe of other columns)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">subset</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">to_winsor</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">subset</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subset</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">other_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">]</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">other_cols</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">extra_include</span><span class="p">:</span>
+        <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">to_winsor</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">extra_include</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">rest</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">extra_include</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">to_winsor</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="var_change_by_groups"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.var_change_by_groups">[docs]</a><span class="k">def</span> <span class="nf">var_change_by_groups</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                         <span class="n">datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">numlags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used for getting variable changes over time within bygroups.</span>
+
+<span class="sd">    :Notes:</span>
+
+<span class="sd">    Dataset is not sorted in this process. Sort the data in the order in which you wish</span>
+<span class="sd">    lags to be created before running this command.</span>
+
+<span class="sd">    :param df: dataframe containing bygroups, a date variable, and variables of interest</span>
+<span class="sd">    :param var: column names of variables to get changes</span>
+<span class="sd">    :param byvars: column names of variables identifying by groups</span>
+<span class="sd">    :param datevar: column names of variables identifying periods</span>
+<span class="sd">    :param numlags: number of periods to go back to get change</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">var</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">datevar</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">_to_list_if_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">datevar</span><span class="p">]</span>
+    <span class="p">]</span>  <span class="c1"># convert to lists</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datevar</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="n">short_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">byvars</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">var</span> <span class="o">+</span> <span class="n">byvars</span> <span class="o">+</span> <span class="n">datevar</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
+        <span class="n">short_df</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_lag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">byvars</span><span class="p">)[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">numlags</span><span class="p">)</span>
+        <span class="n">short_df</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_change&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">short_df</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">-</span> <span class="n">short_df</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_lag&quot;</span><span class="p">]</span>
+    <span class="n">dropvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_lag&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var</span><span class="p">]</span>
+    <span class="n">short_df</span> <span class="o">=</span> <span class="n">short_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">dropvars</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">short_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">datevar</span> <span class="o">+</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="state_abbrev"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.state_abbrev">[docs]</a><span class="k">def</span> <span class="nf">state_abbrev</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">toabbrev</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replaces a DataFrame&#39;s column of a state abbreviation or state name to the opposite</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param col: name of column containing state names or state abbreviations</span>
+<span class="sd">    :param toabbrev: True to convert state names to abbreviations, defaults to converting abbreviations</span>
+<span class="sd">        to state names</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">states_to_abbrev</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Alabama&quot;</span><span class="p">:</span> <span class="s2">&quot;AL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Montana&quot;</span><span class="p">:</span> <span class="s2">&quot;MT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Alaska&quot;</span><span class="p">:</span> <span class="s2">&quot;AK&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Nebraska&quot;</span><span class="p">:</span> <span class="s2">&quot;NE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Arizona&quot;</span><span class="p">:</span> <span class="s2">&quot;AZ&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Nevada&quot;</span><span class="p">:</span> <span class="s2">&quot;NV&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Arkansas&quot;</span><span class="p">:</span> <span class="s2">&quot;AR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;New Hampshire&quot;</span><span class="p">:</span> <span class="s2">&quot;NH&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;California&quot;</span><span class="p">:</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;New Jersey&quot;</span><span class="p">:</span> <span class="s2">&quot;NJ&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Colorado&quot;</span><span class="p">:</span> <span class="s2">&quot;CO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;New Mexico&quot;</span><span class="p">:</span> <span class="s2">&quot;NM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Connecticut&quot;</span><span class="p">:</span> <span class="s2">&quot;CT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;New York&quot;</span><span class="p">:</span> <span class="s2">&quot;NY&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Delaware&quot;</span><span class="p">:</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;North Carolina&quot;</span><span class="p">:</span> <span class="s2">&quot;NC&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Florida&quot;</span><span class="p">:</span> <span class="s2">&quot;FL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;North Dakota&quot;</span><span class="p">:</span> <span class="s2">&quot;ND&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Georgia&quot;</span><span class="p">:</span> <span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ohio&quot;</span><span class="p">:</span> <span class="s2">&quot;OH&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Hawaii&quot;</span><span class="p">:</span> <span class="s2">&quot;HI&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Oklahoma&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Idaho&quot;</span><span class="p">:</span> <span class="s2">&quot;ID&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Oregon&quot;</span><span class="p">:</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Illinois&quot;</span><span class="p">:</span> <span class="s2">&quot;IL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Pennsylvania&quot;</span><span class="p">:</span> <span class="s2">&quot;PA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Indiana&quot;</span><span class="p">:</span> <span class="s2">&quot;IN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Rhode Island&quot;</span><span class="p">:</span> <span class="s2">&quot;RI&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Iowa&quot;</span><span class="p">:</span> <span class="s2">&quot;IA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;South Carolina&quot;</span><span class="p">:</span> <span class="s2">&quot;SC&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Kansas&quot;</span><span class="p">:</span> <span class="s2">&quot;KS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;South Dakota&quot;</span><span class="p">:</span> <span class="s2">&quot;SD&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Kentucky&quot;</span><span class="p">:</span> <span class="s2">&quot;KY&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Tennessee&quot;</span><span class="p">:</span> <span class="s2">&quot;TN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Louisiana&quot;</span><span class="p">:</span> <span class="s2">&quot;LA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Texas&quot;</span><span class="p">:</span> <span class="s2">&quot;TX&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Maine&quot;</span><span class="p">:</span> <span class="s2">&quot;ME&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Utah&quot;</span><span class="p">:</span> <span class="s2">&quot;UT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Maryland&quot;</span><span class="p">:</span> <span class="s2">&quot;MD&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Vermont&quot;</span><span class="p">:</span> <span class="s2">&quot;VT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Massachusetts&quot;</span><span class="p">:</span> <span class="s2">&quot;MA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Virginia&quot;</span><span class="p">:</span> <span class="s2">&quot;VA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Michigan&quot;</span><span class="p">:</span> <span class="s2">&quot;MI&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Washington&quot;</span><span class="p">:</span> <span class="s2">&quot;WA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Minnesota&quot;</span><span class="p">:</span> <span class="s2">&quot;MN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;West Virginia&quot;</span><span class="p">:</span> <span class="s2">&quot;WV&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mississippi&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Wisconsin&quot;</span><span class="p">:</span> <span class="s2">&quot;WI&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Missouri&quot;</span><span class="p">:</span> <span class="s2">&quot;MO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Wyoming&quot;</span><span class="p">:</span> <span class="s2">&quot;WY&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">toabbrev</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">states_to_abbrev</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">abbrev_to_states</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">states_to_abbrev</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">abbrev_to_states</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<span class="k">def</span> <span class="nf">_join_col_strings</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">strs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="join_col_strings"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.transform.join_col_strings">[docs]</a><span class="k">def</span> <span class="nf">join_col_strings</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a dataframe and column name(s) and concatenates string versions of the columns with those names.</span>
+<span class="sd">    Useful for when a group is identified by several variables and we need one key variable to describe a group.</span>
+<span class="sd">    Returns a pandas Series.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param cols: names of columns in df to be concatenated</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="n">jc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">_join_col_strings</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">jc</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]))</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

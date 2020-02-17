@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.merge &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.merge</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.merge</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">nan</span>
+
+<span class="kn">from</span> <span class="nn">pd_utils.timer</span> <span class="kn">import</span> <span class="n">estimate_time</span>
+<span class="kn">from</span> <span class="nn">pd_utils.query</span> <span class="kn">import</span> <span class="n">sql</span>
+
+
+<div class="viewcode-block" id="groupby_merge"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.merge.groupby_merge">[docs]</a><span class="k">def</span> <span class="nf">groupby_merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">func_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">func_args</span><span class="p">,</span> <span class="n">subset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                  <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a pandas groupby object, applies the aggregation function in func_str, and merges back the</span>
+<span class="sd">    aggregated data to the original dataframe.</span>
+
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param byvars: column names which uniquely identify groups</span>
+<span class="sd">    :param func_str: name of groupby aggregation function such as &#39;min&#39;, &#39;max&#39;, &#39;sum&#39;, &#39;count&#39;, etc.</span>
+<span class="sd">    :param func_args: arguments to pass to func</span>
+<span class="sd">    :param subset: column names for which to apply aggregation functions or &#39;all&#39; for all columns</span>
+<span class="sd">    :param replace: True to replace original columns in the data with aggregated/transformed columns</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; import pd_utils</span>
+<span class="sd">    &gt;&gt;&gt; df = pd_utils.groupby_merge(df, [&#39;PERMNO&#39;,&#39;byvar&#39;], &#39;max&#39;, subset=&#39;RET&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Convert byvars to list if neceessary</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">byvars</span><span class="p">]</span>
+
+    <span class="c1"># Store all variables except byvar in subset if subset is &#39;all&#39;</span>
+    <span class="k">if</span> <span class="n">subset</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">byvars</span><span class="p">]</span>
+
+    <span class="c1"># Convert subset to list if necessary</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">subset</span><span class="p">]</span>
+
+    <span class="c1"># Groupby expects to receive a string if there is a single variable</span>
+    <span class="n">groupby_subset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">groupby_subset</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">groupby_subset</span> <span class="o">=</span> <span class="n">subset</span>
+
+    <span class="k">if</span> <span class="n">func_str</span> <span class="o">==</span> <span class="s2">&quot;transform&quot;</span><span class="p">:</span>
+        <span class="c1"># transform works very differently from other aggregation functions</span>
+
+        <span class="c1"># First we need to deal with nans in the by variables. If there are any nans, transform will error out</span>
+        <span class="c1"># Therefore we must fill the nans in the by variables beforehand and replace afterwards</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">byvars</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">byvars</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;__tempnan__&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Now we must deal with nans in the subset variables. If there are any nans, tranform will error out</span>
+        <span class="c1"># because it tries to ignore the nan. Therefore we must remove these rows from the dataframe,</span>
+        <span class="c1"># transform, then add those rows back.</span>
+        <span class="n">any_nan_subset_mask</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+            <span class="p">[</span><span class="nb">all</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="o">~</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">])</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">]))],</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">no_nans</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">any_nan_subset_mask</span><span class="p">]</span>
+
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">no_nans</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">grouped</span><span class="p">,</span> <span class="n">func_str</span>
+        <span class="p">)</span>  <span class="c1"># pull method of groupby class with same name as func_str</span>
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">func_args</span><span class="p">)[</span>
+            <span class="n">groupby_subset</span>
+        <span class="p">]</span>  <span class="c1"># apply the class method and select subset columns</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">grouped</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">col</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_str</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">grouped</span><span class="o">.</span><span class="n">columns</span>
+            <span class="p">]</span>  <span class="c1"># rename transformed columns</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="n">grouped</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_str</span>
+
+        <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;__tempnan__&quot;</span><span class="p">,</span> <span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># fill nan back into dataframe</span>
+
+        <span class="c1"># Put nan rows back</span>
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="n">full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">grouped</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># .min(), .max(), etc.</span>
+
+        <span class="c1">#         grouped = df.groupby(byvars, as_index=False)[byvars + subset]</span>
+        <span class="c1">#         func = getattr(grouped, func_str) #pull method of groupby class with same name as func_str</span>
+        <span class="c1">#         grouped = func(*func_args) #apply the class method</span>
+
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">byvars</span><span class="p">)[</span><span class="n">groupby_subset</span><span class="p">]</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">grouped</span><span class="p">,</span> <span class="n">func_str</span>
+        <span class="p">)</span>  <span class="c1"># pull method of groupby class with same name as func_str</span>
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">func_args</span><span class="p">)</span>  <span class="c1"># apply the class method</span>
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="c1"># Merge and output</span>
+        <span class="n">full</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">byvars</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_str</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
+        <span class="n">_replace_with_transformed</span><span class="p">(</span><span class="n">full</span><span class="p">,</span> <span class="n">func_str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">full</span></div>
+
+
+<span class="k">def</span> <span class="nf">_replace_with_transformed</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">func_str</span><span class="o">=</span><span class="s2">&quot;transform&quot;</span><span class="p">):</span>
+    <span class="n">transform_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_str</span><span class="p">)]</span>
+    <span class="n">orig_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">[:</span> <span class="n">col</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_str</span><span class="p">)]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">transform_cols</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">orig_names</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">old</span><span class="p">:</span> <span class="n">new</span> <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">transform_cols</span><span class="p">,</span> <span class="n">orig_names</span><span class="p">)},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="groupby_index"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.merge.groupby_index">[docs]</a><span class="k">def</span> <span class="nf">groupby_index</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">byvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">sortvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">ascending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dataframe which is a copy of the old one with an additional column containing an index</span>
+<span class="sd">    by groups. Each time the bygroup changes, the index restarts at 0.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param byvars: column names containing group identifiers</span>
+<span class="sd">    :param sortvars: column names to sort by within by groups</span>
+<span class="sd">    :param ascending: direction of sort</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Convert sortvars and byvars to list if necessary</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sortvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">sortvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">sortvars</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">sortvars</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sortvars</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">byvars</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># don&#39;t modify the original dataframe</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">byvars</span> <span class="o">+</span> <span class="n">sortvars</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__temp_cons__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">groupby_merge</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">byvars</span><span class="p">,</span>
+        <span class="s2">&quot;transform&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))]),</span>
+        <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;__temp_cons__&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;__temp_cons__&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;__temp_cons___transform&quot;</span><span class="p">:</span> <span class="s2">&quot;group_index&quot;</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="apply_func_to_unique_and_merge"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.merge.apply_func_to_unique_and_merge">[docs]</a><span class="k">def</span> <span class="nf">apply_func_to_unique_and_merge</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reduces the given series down to unique values, applies the function,</span>
+<span class="sd">    then expands back up to the original shape of the data.</span>
+
+<span class="sd">    Many Pandas functions can be slow because they&#39;re doing repeated work. This can help</span>
+<span class="sd">    optimize some operations.</span>
+
+<span class="sd">    :param series:</span>
+<span class="sd">    :param func: function to be applied to the series</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Usage:</span>
+
+<span class="sd">    &gt;&gt;&gt;import functools</span>
+<span class="sd">    &gt;&gt;&gt;to_datetime = functools.partial(pd.to_datetime, format=&#39;%Y%m&#39;)</span>
+<span class="sd">    &gt;&gt;&gt;apply_func_to_unique_and_merge(df[&#39;MONTH&#39;], to_datetime)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unique</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">unique</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="n">for_merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">unique</span><span class="p">,</span> <span class="n">new</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">num_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">for_merge</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>  <span class="c1"># names of new columns</span>
+    <span class="n">for_merge</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">series</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="n">num_cols</span>
+
+    <span class="n">orig_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+    <span class="n">orig_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">for_merge</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">orig_df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="n">series</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">num_cols</span><span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="left_merge_latest"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.merge.left_merge_latest">[docs]</a><span class="k">def</span> <span class="nf">left_merge_latest</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df2</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">on</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">left_datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">right_datevar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">max_offset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pandas&quot;</span><span class="p">,</span>
+    <span class="n">low_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Left merges df2 to df using on, but grabbing the most recent observation (right_datevar will be</span>
+<span class="sd">    the soonest earlier than left_datevar). Useful for situations where data needs to be merged with</span>
+<span class="sd">    mismatched dates, and just the most recent data available is needed.</span>
+
+<span class="sd">    :param df: Pandas dataframe containing source data (all rows will be kept), must have on variables</span>
+<span class="sd">        and left_datevar</span>
+<span class="sd">    :param df2: Pandas dataframe containing data to be merged (only the most recent rows before source</span>
+<span class="sd">        data will be kept)</span>
+<span class="sd">    :param on: names of columns on which to match, excluding date</span>
+<span class="sd">    :param left_datevar: name of date variable on which to merge in df</span>
+<span class="sd">    :param right_datevar: name of date variable on which to merge in df2</span>
+<span class="sd">    :param max_offset: maximum amount of time to go back to look for a match.</span>
+<span class="sd">        When datevar is a datetime column, pass datetime.timedelta. When datevar is an int column</span>
+<span class="sd">        (e.g. year), pass an int. Currently only applicable for backend &#39;pandas&#39;</span>
+<span class="sd">    :param backend: &#39;pandas&#39; or &#39;sql&#39;. Specify the underlying machinery used to perform the merge.</span>
+<span class="sd">             &#39;pandas&#39; means native pandas, while &#39;sql&#39; uses pandasql. Try &#39;sql&#39; if you run</span>
+<span class="sd">             out of memory.</span>
+<span class="sd">    :param low_memory: True to reduce memory usage but decrease calculation speed</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">on</span> <span class="o">=</span> <span class="p">[</span><span class="n">on</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;pandas&quot;</span><span class="p">,</span> <span class="s2">&quot;pd&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">low_memory</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_left_merge_latest_pandas_low_memory</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="n">left_datevar</span><span class="o">=</span><span class="n">left_datevar</span><span class="p">,</span> <span class="n">right_datevar</span><span class="o">=</span><span class="n">right_datevar</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">_left_merge_latest_pandas</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span>
+            <span class="n">df2</span><span class="p">,</span>
+            <span class="n">on</span><span class="p">,</span>
+            <span class="n">left_datevar</span><span class="o">=</span><span class="n">left_datevar</span><span class="p">,</span>
+            <span class="n">right_datevar</span><span class="o">=</span><span class="n">right_datevar</span><span class="p">,</span>
+            <span class="n">max_offset</span><span class="o">=</span><span class="n">max_offset</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;sql&quot;</span><span class="p">,</span> <span class="s2">&quot;pandasql&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">max_offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;cannot yet handle max_offset for sql backend&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_left_merge_latest_sql</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="n">left_datevar</span><span class="o">=</span><span class="n">left_datevar</span><span class="p">,</span> <span class="n">right_datevar</span><span class="o">=</span><span class="n">right_datevar</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;select backend=&#39;pandas&#39; or backend=&#39;sql&#39;.&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_left_merge_latest_pandas</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="n">left_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">right_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">max_offset</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="n">many</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">left_datevar</span><span class="p">]]</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+
+    <span class="n">rename</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># if they are named the same, pandas will automatically add _x and _y to names</span>
+    <span class="k">if</span> <span class="n">left_datevar</span> <span class="o">==</span> <span class="n">right_datevar</span><span class="p">:</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># will need to rename the _x datevar for the last step</span>
+        <span class="n">orig_left_datevar</span> <span class="o">=</span> <span class="n">left_datevar</span>
+        <span class="n">left_datevar</span> <span class="o">+=</span> <span class="s2">&quot;_x&quot;</span>
+        <span class="n">right_datevar</span> <span class="o">+=</span> <span class="s2">&quot;_y&quot;</span>
+
+    <span class="n">lt</span> <span class="o">=</span> <span class="n">many</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">many</span><span class="p">[</span><span class="n">left_datevar</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">many</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span>
+    <span class="p">]</span>  <span class="c1"># left with datadates less than date</span>
+
+    <span class="k">if</span> <span class="n">max_offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lt</span> <span class="o">=</span> <span class="n">lt</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">lt</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lt</span><span class="p">[</span><span class="n">left_datevar</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_offset</span><span class="p">]</span>
+
+    <span class="c1"># find rows within groups which have the maximum right_datevar (soonest before left_datevar)</span>
+    <span class="n">data_rows</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">lt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">left_datevar</span><span class="p">])[</span><span class="n">right_datevar</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">lt</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">left_datevar</span><span class="p">,</span> <span class="n">right_datevar</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rename</span><span class="p">:</span>  <span class="c1"># remove the _x for final merge</span>
+        <span class="n">data_rows</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">left_datevar</span><span class="p">:</span> <span class="n">orig_left_datevar</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">datevar_for_merge</span> <span class="o">=</span> <span class="n">orig_left_datevar</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">datevar_for_merge</span> <span class="o">=</span> <span class="n">left_datevar</span>
+
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data_rows</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">datevar_for_merge</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="c1"># for some reason is getting converted to object type</span>
+    <span class="n">merged</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">merged</span>
+
+
+<span class="k">def</span> <span class="nf">_left_merge_latest_pandas_low_memory</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">df2</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">on</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">left_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">right_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="n">MERGE_DATE</span> <span class="o">=</span> <span class="s2">&quot;_merge_date&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_latest_date</span><span class="p">(</span><span class="n">orig_date</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">last_date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">date</span> <span class="o">&gt;</span> <span class="n">orig_date</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">last_date</span>
+            <span class="n">last_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="c1"># Did not find any dates greater than passed date</span>
+        <span class="n">last_date</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">last_date</span> <span class="o">&lt;</span> <span class="n">orig_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">last_date</span>
+
+    <span class="k">def</span> <span class="nf">_to_datetime</span><span class="p">(</span><span class="n">date_like</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Skips converting NaT and NaN but does convert dates</span>
+<span class="sd">        Args:</span>
+<span class="sd">            date_like:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">date_like</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">date_like</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date_like</span><span class="p">)</span>
+
+    <span class="c1"># Need to handle conversion to datetime for created match date if originally a datetime type</span>
+    <span class="n">date_is_datetime_type</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">left_datevar</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">)</span>
+
+    <span class="n">dfs_for_concat</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">df2_for_slice</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">right_datevar</span><span class="p">]]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">on</span><span class="p">)</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">on</span><span class="p">)</span>
+    <span class="n">num_grouped</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;Starting low memory handling for left_merge_latest. Processing groups one at a time.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">group_on</span><span class="p">,</span> <span class="n">group_df</span> <span class="ow">in</span> <span class="n">grouped</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df2_group_df</span> <span class="o">=</span> <span class="n">df2_for_slice</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group_on</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="c1"># Did not find this obs in the second df, cannot get date to merge</span>
+            <span class="n">group_df</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">dfs_for_concat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_df</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df2_group_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="c1"># Only got a single row for group df, so got a single date, wrap in a list</span>
+            <span class="n">df2_dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">df2_group_df</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df2_dates</span> <span class="o">=</span> <span class="n">df2_group_df</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="n">df2_dates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">get_latest_date</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">_get_latest_date</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="n">df2_dates</span><span class="p">)</span>
+        <span class="n">group_df</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_df</span><span class="p">[</span><span class="n">left_datevar</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_latest_date</span><span class="p">)</span>
+        <span class="n">dfs_for_concat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_df</span><span class="p">)</span>
+        <span class="n">estimate_time</span><span class="p">(</span><span class="n">num_grouped</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finished processing groups to get latest date. Now doing final merge.&quot;</span><span class="p">)</span>
+
+    <span class="n">df_for_merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs_for_concat</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">dfs_for_concat</span>  <span class="c1"># free up memory</span>
+
+    <span class="k">if</span> <span class="n">date_is_datetime_type</span><span class="p">:</span>
+        <span class="n">df_for_merge</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_for_merge</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_to_datetime</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Handle other type conversions</span>
+        <span class="n">desired_dtype</span> <span class="o">=</span> <span class="n">df_for_merge</span><span class="p">[</span><span class="n">left_datevar</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="n">df_for_merge</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_for_merge</span><span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">desired_dtype</span><span class="p">)</span>
+
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">df_for_merge</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">df2</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">MERGE_DATE</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">merged</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">MERGE_DATE</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">rename</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># if they are named the same, pandas will automatically add _x and _y to names</span>
+    <span class="k">if</span> <span class="n">left_datevar</span> <span class="o">==</span> <span class="n">right_datevar</span><span class="p">:</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># will need to rename the _x datevar for the last step</span>
+        <span class="n">orig_left_datevar</span> <span class="o">=</span> <span class="n">left_datevar</span>
+        <span class="n">left_datevar</span> <span class="o">+=</span> <span class="s2">&quot;_x&quot;</span>
+        <span class="n">right_datevar</span> <span class="o">+=</span> <span class="s2">&quot;_y&quot;</span>
+
+    <span class="k">if</span> <span class="n">rename</span><span class="p">:</span>  <span class="c1"># remove the _x</span>
+        <span class="n">merged</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">left_datevar</span><span class="p">:</span> <span class="n">orig_left_datevar</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">merged</span>
+
+
+<span class="k">def</span> <span class="nf">_left_merge_latest_sql</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="n">left_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">right_datevar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">left_datevar</span> <span class="o">==</span> <span class="n">right_datevar</span><span class="p">:</span>
+        <span class="n">df2</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df2</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">right_datevar</span><span class="p">:</span> <span class="n">right_datevar</span> <span class="o">+</span> <span class="s2">&quot;_y&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">right_datevar</span> <span class="o">+=</span> <span class="s2">&quot;_y&quot;</span>
+
+    <span class="c1"># Pandasql cannot handle spaces in names, replace</span>
+    <span class="n">df_reverse_col_replacements</span> <span class="o">=</span> <span class="n">_replace_df_columns_char</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">find_str</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">replace_str</span><span class="o">=</span><span class="s2">&quot;_&quot;</span>
+    <span class="p">)</span>
+    <span class="n">df2_reverse_col_replacements</span> <span class="o">=</span> <span class="n">_replace_df_columns_char</span><span class="p">(</span>
+        <span class="n">df2</span><span class="p">,</span> <span class="n">find_str</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">replace_str</span><span class="o">=</span><span class="s2">&quot;_&quot;</span>
+    <span class="p">)</span>
+    <span class="n">orig_on</span> <span class="o">=</span> <span class="n">on</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">on</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">on</span><span class="p">]</span>
+
+    <span class="n">on_str</span> <span class="o">=</span> <span class="s2">&quot; and </span><span class="se">\n</span><span class="s2">    &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;a.</span><span class="si">{0}</span><span class="s2"> = b.</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">on</span><span class="p">])</span>
+    <span class="n">groupby_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">on</span><span class="p">)</span>
+    <span class="n">a_cols</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;a.&quot;</span> <span class="o">+</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">on</span> <span class="o">+</span> <span class="p">[</span><span class="n">left_datevar</span><span class="p">]])</span>
+    <span class="n">b_cols</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;b.&quot;</span> <span class="o">+</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df2</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">on</span><span class="p">])</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    select </span><span class="si">{5}</span><span class="s2">, </span><span class="si">{4}</span><span class="s2"></span>
+<span class="s2">    from</span>
+<span class="s2">        df a</span>
+<span class="s2">    left join</span>
+<span class="s2">        df2 b</span>
+<span class="s2">    on</span>
+<span class="s2">        </span><span class="si">{0}</span><span class="s2"> and</span>
+<span class="s2">        a.</span><span class="si">{1}</span><span class="s2"> &gt;= b.</span><span class="si">{2}</span><span class="s2"></span>
+<span class="s2">    group by a.</span><span class="si">{3}</span><span class="s2">, a.</span><span class="si">{1}</span><span class="s2"></span>
+<span class="s2">    having</span>
+<span class="s2">        b.</span><span class="si">{2}</span><span class="s2"> = max(b.</span><span class="si">{2}</span><span class="s2">)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">on_str</span><span class="p">,</span> <span class="n">left_datevar</span><span class="p">,</span> <span class="n">right_datevar</span><span class="p">,</span> <span class="n">groupby_str</span><span class="p">,</span> <span class="n">b_cols</span><span class="p">,</span> <span class="n">a_cols</span>
+    <span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">sql</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">df2</span><span class="p">],</span> <span class="n">query</span><span class="p">)</span>
+
+    <span class="c1"># Reverse the name replacements, bring spaces back</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">df_reverse_col_replacements</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df2</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">df2_reverse_col_replacements</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Get all replacements, for result table which may have columns from both</span>
+    <span class="n">df_reverse_col_replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">df2_reverse_col_replacements</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">df_reverse_col_replacements</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">orig_on</span> <span class="o">+</span> <span class="p">[</span><span class="n">left_datevar</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="c1"># for some reason is getting converted to object type</span>
+    <span class="n">merged</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="n">right_datevar</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">merged</span>
+
+
+<span class="k">def</span> <span class="nf">_replace_df_columns_char</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">find_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">replace_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Note: inplace</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df:</span>
+<span class="sd">        find_str:</span>
+<span class="sd">        replace_str:</span>
+
+<span class="sd">    Returns: reverse replacement dict, use to reverse changes</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">replace_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">replace_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">find_str</span><span class="p">,</span> <span class="n">replace_str</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">replace_dict</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">reverse_replace_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">replace_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">reverse_replace_dict</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

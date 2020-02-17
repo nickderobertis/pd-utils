@@ -24,6 +24,22 @@ pd\_utils.corr module
    :undoc-members:
    :show-inheritance:
 
+pd\_utils.cum module
+--------------------
+
+.. automodule:: pd_utils.cum
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.datetime\_utils module
+--------------------------------
+
+.. automodule:: pd_utils.datetime_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pd\_utils.filldata module
 -------------------------
 
@@ -32,10 +48,34 @@ pd\_utils.filldata module
    :undoc-members:
    :show-inheritance:
 
-pd\_utils.pdutils module
-------------------------
+pd\_utils.load module
+---------------------
 
-.. automodule:: pd_utils.pdutils
+.. automodule:: pd_utils.load
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.merge module
+----------------------
+
+.. automodule:: pd_utils.merge
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.port module
+---------------------
+
+.. automodule:: pd_utils.port
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.query module
+----------------------
+
+.. automodule:: pd_utils.query
    :members:
    :undoc-members:
    :show-inheritance:
@@ -48,10 +88,34 @@ pd\_utils.regby module
    :undoc-members:
    :show-inheritance:
 
+pd\_utils.testing module
+------------------------
+
+.. automodule:: pd_utils.testing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pd\_utils.timer module
 ----------------------
 
 .. automodule:: pd_utils.timer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.transform module
+--------------------------
+
+.. automodule:: pd_utils.transform
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pd\_utils.utils module
+----------------------
+
+.. automodule:: pd_utils.utils
    :members:
    :undoc-members:
    :show-inheritance:

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.filldata &mdash; pd_utils 0.1.1 documentation</title>
+  <title>pd_utils.filldata &mdash; pd_utils 0.2.0 documentation</title>
   
 
   
@@ -22,13 +22,13 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script type="text/javascript" src="../../_static/clipboard.min.js"></script>
-        <script type="text/javascript" src="../../_static/copybutton.js"></script>
-        <script type="text/javascript">var copybuttonSkipText = '>>> ';</script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.2.0
               </div>
             
           
@@ -147,8 +147,6 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../pd_utils.html">pd_utils</a> &raquo;</li>
-        
       <li>pd_utils.filldata</li>
     
     
@@ -169,15 +167,18 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">.pdutils</span> <span class="kn">import</span> <span class="n">_to_list_if_str</span>
+<span class="kn">from</span> <span class="nn">pd_utils.utils</span> <span class="kn">import</span> <span class="n">_to_list_if_str</span><span class="p">,</span> <span class="n">_to_series_if_str</span><span class="p">,</span> <span class="n">_to_name_if_series</span>
 
 
 <div class="viewcode-block" id="fillna_by_groups_and_keep_one_per_group"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.filldata.fillna_by_groups_and_keep_one_per_group">[docs]</a><span class="k">def</span> <span class="nf">fillna_by_groups_and_keep_one_per_group</span><span class="p">(</span>
     <span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">exclude_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">str_vars</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">num_vars</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fills missing values by group, with different handling for string variables versus numeric,</span>
+<span class="sd">    then keeps one observation per group.</span>
+
 <span class="sd">    WARNING: do not use if index is important, it will be dropped</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">byvars</span> <span class="o">=</span> <span class="n">_to_list_if_str</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
@@ -194,6 +195,8 @@
 
 <div class="viewcode-block" id="fillna_by_groups"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.filldata.fillna_by_groups">[docs]</a><span class="k">def</span> <span class="nf">fillna_by_groups</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">exclude_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">str_vars</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">num_vars</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fills missing values by group, with different handling for string variables versus numeric</span>
+
 <span class="sd">    WARNING: do not use if index is important, it will be dropped</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">byvars</span> <span class="o">=</span> <span class="n">_to_list_if_str</span><span class="p">(</span><span class="n">byvars</span><span class="p">)</span>
@@ -228,21 +231,19 @@
     <span class="n">df</span><span class="p">,</span>
     <span class="n">group_id_cols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">non_group_id_cols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">fill_method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">,</span>
-    <span class="n">fill_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fill_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ffill&quot;</span><span class="p">,</span>
+    <span class="n">fill_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds rows so that each group has all non group IDs, optionally filling values by a pandas fill method</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        df:</span>
-<span class="sd">        group_id_cols: typically entity ids. these ids represents groups in the data. data will not be</span>
+<span class="sd">    :param df:</span>
+<span class="sd">    :param group_id_cols: typically entity ids. these ids represents groups in the data. data will not be</span>
 <span class="sd">            forward/back filled across differences in these ids.</span>
-<span class="sd">        non_group_id_cols: typically date or time ids. data will be forward/back filled across differences in these ids</span>
-<span class="sd">        fill_method: pandas fill methods</span>
-<span class="sd">        fill_limit: pandas fill limit</span>
-
-<span class="sd">    Returns:</span>
-
+<span class="sd">    :param non_group_id_cols: typically date or time ids. data will be forward/back filled across differences in these ids</span>
+<span class="sd">    :param fill_method: pandas fill methods, None to not fill</span>
+<span class="sd">    :param fill_limit: pandas fill limit</span>
+<span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fill_id_cols</span> <span class="o">=</span> <span class="n">group_id_cols</span> <span class="o">+</span> <span class="n">non_group_id_cols</span>
     <span class="n">fill_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">fill_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">for</span> <span class="n">fill_id_col</span> <span class="ow">in</span> <span class="n">fill_id_cols</span><span class="p">]</span>
@@ -322,6 +323,53 @@
 <span class="sd">    Note: inplace</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">byvars</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="fill_excluded_rows"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.filldata.fill_excluded_rows">[docs]</a><span class="k">def</span> <span class="nf">fill_excluded_rows</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="n">fillvars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fillna_kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a dataframe which does not contain all possible combinations of byvars as rows. Creates</span>
+<span class="sd">    those rows if fillna_kwargs are passed, calls fillna using fillna_kwargs for fillvars</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param byvars: variables on which dataset should be expanded to product. Can pass a str, list of</span>
+<span class="sd">            strs, or a list of pd.Series.</span>
+<span class="sd">    :param fillvars: optional variables to apply fillna to</span>
+<span class="sd">    :param fillna_kwargs: See pandas.DataFrame.fillna for kwargs, value=0 is common</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Example:</span>
+
+<span class="sd">    An example::</span>
+
+<span class="sd">        df:</span>
+<span class="sd">                     date     id  var</span>
+<span class="sd">            0  2003-06-09 42223C    1</span>
+<span class="sd">            1  2003-06-10 09255G    2</span>
+
+<span class="sd">        with fillna_for_excluded_rows(df, byvars=[&#39;date&#39;,&#39;id&#39;], fillvars=&#39;var&#39;, value=0) becomes:</span>
+
+<span class="sd">                      date     id  var</span>
+<span class="sd">            0  2003-06-09 42223C    1</span>
+<span class="sd">            1  2003-06-10 42223C    0</span>
+<span class="sd">            2  2003-06-09 09255G    0</span>
+<span class="sd">            3  2003-06-10 09255G    2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">byvars</span><span class="p">,</span> <span class="n">fillvars</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">_to_list_if_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="n">byvars</span><span class="p">,</span> <span class="n">fillvars</span><span class="p">]</span>
+    <span class="p">]</span>  <span class="c1"># convert to lists</span>
+
+    <span class="c1">#     multiindex = [df[i].dropna().unique() for i in byvars]</span>
+    <span class="n">multiindex</span> <span class="o">=</span> <span class="p">[</span><span class="n">_to_series_if_str</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">byvars</span><span class="p">]</span>
+    <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">_to_name_if_series</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">byvars</span><span class="p">]</span>  <span class="c1"># get name of any series</span>
+
+    <span class="n">all_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">multiindex</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">all_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">byvars</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">all_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">byvars</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fillna_kwargs</span><span class="p">:</span>
+        <span class="n">fillna_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;inplace&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+        <span class="n">merged</span><span class="p">[</span><span class="n">fillvars</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="n">fillvars</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">**</span><span class="n">fillna_kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merged</span></div>
 </pre></div>
 
            </div>

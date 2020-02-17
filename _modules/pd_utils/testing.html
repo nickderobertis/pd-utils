@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.corr &mdash; pd_utils 0.2.0 documentation</title>
+  <title>pd_utils.testing &mdash; pd_utils 0.2.0 documentation</title>
   
 
   
@@ -147,7 +147,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>pd_utils.corr</li>
+      <li>pd_utils.testing</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,34 +162,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pd_utils.corr</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <h1>Source code for pd_utils.testing</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
-<div class="viewcode-block" id="formatted_corr_df"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.corr.formatted_corr_df">[docs]</a><span class="k">def</span> <span class="nf">formatted_corr_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="to_copy_paste"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.testing.to_copy_paste">[docs]</a><span class="k">def</span> <span class="nf">to_copy_paste</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">column_names</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates correlations on a DataFrame and displays only the lower triangular of the</span>
-<span class="sd">    resulting correlation DataFrame.</span>
+<span class="sd">    Takes a dataframe and prints all of its data in such a format that it can be copy-pasted to create</span>
+<span class="sd">    a new dataframe from the pandas.DataFrame() constructor.</span>
 
 <span class="sd">    :param df:</span>
-<span class="sd">    :param cols: subset of column names on which to calculate correlations</span>
+<span class="sd">    :param index: True to include index</span>
+<span class="sd">    :param column_names: False to exclude column names</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cols</span><span class="p">:</span>
-        <span class="n">use_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">use_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
-
-    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">use_cols</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
-    <span class="n">corr_df</span> <span class="o">=</span> <span class="n">_lower_triangular_of_df</span><span class="p">(</span><span class="n">corr_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">corr_df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{x:.2f}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span></div>
-
-
-<span class="k">def</span> <span class="nf">_lower_triangular_of_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pd.DataFrame(data = [&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">last_line</span> <span class="o">=</span> <span class="s2">&quot;]&quot;</span>
+    <span class="k">if</span> <span class="n">column_names</span><span class="p">:</span>
+        <span class="n">last_line</span> <span class="o">+=</span> <span class="s2">&quot;, columns = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="p">)</span>  <span class="c1"># list comp to remove Index() around cols</span>
+    <span class="k">if</span> <span class="n">index</span><span class="p">:</span>
+        <span class="n">last_line</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2"> index = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="p">)</span>  <span class="c1"># list comp to remove Index() around index</span>
+    <span class="n">last_line</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>  <span class="c1"># end command</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">last_line</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pd_utils.cum &mdash; pd_utils 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script >var copybuttonSkipText = '>>> ';</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pd_utils
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pd_utils</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pd_utils.cum</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pd_utils.cum</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pd_utils.timer</span> <span class="kn">import</span> <span class="n">estimate_time</span>
+<span class="kn">from</span> <span class="nn">pd_utils.utils</span> <span class="kn">import</span> <span class="n">split</span>
+<span class="kn">from</span> <span class="nn">pd_utils.merge</span> <span class="kn">import</span> <span class="n">groupby_merge</span>
+
+
+<div class="viewcode-block" id="cumulate"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.cum.cumulate">[docs]</a><span class="k">def</span> <span class="nf">cumulate</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">cumvars</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">periodvar</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+    <span class="n">byvars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">grossify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">multiprocess</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cumulates a variable over time. Typically used to get cumulative returns.</span>
+
+<span class="sd">    :param df:</span>
+<span class="sd">    :param cumvars: column names to cumulate</span>
+<span class="sd">    :param method: &#39;between&#39;, &#39;zero&#39;, or &#39;first&#39;.</span>
+<span class="sd">             If &#39;zero&#39;, will give returns since the original date. Note: for periods before the original date,</span>
+<span class="sd">             this will turn positive returns negative as we are going backwards in time.</span>
+<span class="sd">             If &#39;between&#39;, will give returns since the prior requested time period. Note that</span>
+<span class="sd">             the first period is period 0.</span>
+<span class="sd">             If &#39;first&#39;, will give returns since the first requested time period.</span>
+<span class="sd">    :param periodvar:</span>
+<span class="sd">    :param byvars: column names to use to separate by groups</span>
+<span class="sd">    :param time: for use with method=&#39;between&#39;. Defines which periods to calculate between.</span>
+<span class="sd">    :param grossify: set to True to add one to all variables then subtract one at the end</span>
+<span class="sd">    :param multiprocess: set to True to use all available processors,</span>
+<span class="sd">                  set to False to use only one, pass an int less or equal to than number of</span>
+<span class="sd">                  processors to use that amount of processors</span>
+<span class="sd">    :param replace: True to return df with passed columns replaced with cumulated columns.</span>
+<span class="sd">             False to return df with both passed columns and cumulated columns</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    :Examples:</span>
+
+<span class="sd">    For example::</span>
+
+<span class="sd">        For example, if our input data was for date 1/5/2006, but we had shifted dates:</span>
+<span class="sd">             permno  date      RET  shift_date</span>
+<span class="sd">             10516   1/5/2006  110%  1/5/2006</span>
+<span class="sd">             10516   1/5/2006  120%  1/6/2006</span>
+<span class="sd">             10516   1/5/2006  105%  1/7/2006</span>
+<span class="sd">             10516   1/5/2006  130%  1/8/2006</span>
+<span class="sd">         Then cumulate(df, &#39;RET&#39;, cumret=&#39;between&#39;, time=[1,3], get=&#39;RET&#39;, periodvar=&#39;shift_date&#39;) would return:</span>
+<span class="sd">             permno  date      RET  shift_date  cumret</span>
+<span class="sd">             10516   1/5/2006  110%  1/5/2006    110%</span>
+<span class="sd">             10516   1/5/2006  120%  1/6/2006    120%</span>
+<span class="sd">             10516   1/5/2006  105%  1/7/2006    126%</span>
+<span class="sd">             10516   1/5/2006  130%  1/8/2006    130%</span>
+<span class="sd">         Then cumulate(df, &#39;RET&#39;, cumret=&#39;first&#39;, periodvar=&#39;shift_date&#39;) would return:</span>
+<span class="sd">             permno  date      RET  shift_date  cumret</span>
+<span class="sd">             10516   1/5/2006  110%  1/5/2006    110%</span>
+<span class="sd">             10516   1/5/2006  120%  1/6/2006    120%</span>
+<span class="sd">             10516   1/5/2006  105%  1/7/2006    126%</span>
+<span class="sd">             10516   1/5/2006  130%  1/8/2006    163.8%</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">time2</span>  <span class="c1"># accidentally used time an an input parameter and don&#39;t want to break prior code</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;method zero not implemented yet&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO [#1]: get method &#39;zero&#39; of cumulate working</span>
+    <span class="c1">#</span>
+    <span class="c1"># Has some WIP already commited, commented out</span>
+
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">message</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Initializing cumulate.&quot;</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># don&#39;t want to modify original dataframe</span>
+
+    <span class="n">sort_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">time</span><span class="p">:</span>
+        <span class="n">sort_time</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sort_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cumvars</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">cumvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">cumvars</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cumvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grossify</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grossify</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cumvars</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># For method &#39;zero&#39; implementation</span>
+    <span class="c1"># def unflip(df, cumvars):</span>
+    <span class="c1">#     flipcols = [&#39;cum_&#39; + str(c) for c in cumvars] #select cumulated columns</span>
+    <span class="c1">#     for col in flipcols:</span>
+    <span class="c1">#         tempdf[col] = tempdf[col].shift(1) #shift all values down one row for cumvars</span>
+    <span class="c1">#         tempdf[col] = -tempdf[col] + 2 #converts a positive return into a negative return</span>
+    <span class="c1">#     tempdf = tempdf[1:].copy() #drop out period 0</span>
+    <span class="c1">#     tempdf = tempdf.sort_values(periodvar) #resort to original order</span>
+
+    <span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">flip</span><span class="p">):</span>
+        <span class="n">flip_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;window&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">flip</span><span class="p">)]</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;window&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">flip</span><span class="p">)]</span>
+        <span class="n">flip_df</span> <span class="o">=</span> <span class="n">flip_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">byvars</span> <span class="o">+</span> <span class="p">[</span><span class="n">periodvar</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">flip_df</span><span class="p">,</span> <span class="n">rest</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cumulate</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="n">multiprocess</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">multiprocess</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">multiprocess</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">_cumulate_mp</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="n">mp</span><span class="p">)</span>  <span class="c1"># use mp # processors</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">_cumulate_mp</span><span class="p">(</span><span class="n">array_list</span><span class="p">)</span>  <span class="c1"># use all processors</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_cumulate_sp</span><span class="p">(</span><span class="n">array_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cumulate_sp</span><span class="p">(</span><span class="n">array_list</span><span class="p">):</span>
+        <span class="n">out_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">array</span> <span class="ow">in</span> <span class="n">array_list</span><span class="p">:</span>
+            <span class="n">out_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">out_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cumulate_mp</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>  <span class="c1"># use mp # processors</span>
+                <span class="k">return</span> <span class="n">_cumulate_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>  <span class="c1"># use all processors</span>
+                <span class="k">return</span> <span class="n">_cumulate_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cumulate_mp_main</span><span class="p">(</span><span class="n">array_list</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+
+        <span class="c1"># For time estimation</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">num_loops</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_list</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+
+        <span class="c1"># Mp setup</span>
+        <span class="n">cum</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">cum</span><span class="p">,</span> <span class="p">(</span><span class="n">arr</span><span class="p">,),</span> <span class="n">callback</span><span class="o">=</span><span class="n">counter</span><span class="o">.</span><span class="n">append</span><span class="p">)</span> <span class="k">for</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">array_list</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Time estimation</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_loops</span><span class="p">:</span>
+            <span class="n">estimate_time</span><span class="p">(</span><span class="n">num_loops</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">counter</span><span class="p">),</span> <span class="n">start_time</span><span class="p">)</span>
+            <span class="n">time2</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># Collect and output results. A timeout of 1 should be fine because</span>
+        <span class="c1"># it should wait until completion anyway</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1">#####TEMPORARY CODE######</span>
+    <span class="k">assert</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span>
+    <span class="c1">#########################</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="n">byvars</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span> <span class="s2">&quot;between&quot;</span><span class="p">,</span> <span class="s2">&quot;first&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;between&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">time</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># need time for between method</span>
+    <span class="k">if</span> <span class="n">time</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;between&quot;</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Time provided but method was not between. Time will be ignored.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Creates a variable containing index of window in which the observation belongs</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;between&quot;</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">_map_windows</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> <span class="n">sort_time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">periodvar</span><span class="o">=</span><span class="n">periodvar</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="n">byvars</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__map_window__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">periodvar</span><span class="p">]</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">periodvar</span><span class="p">]),</span> <span class="s2">&quot;__map_window__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">####################TEMP</span>
+    <span class="c1">#     import pdb</span>
+    <span class="c1">#     pdb.set_trace()</span>
+    <span class="c1">#######################</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">byvars</span><span class="p">:</span>
+        <span class="n">byvars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;__map_window__&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">byvars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;__map_window__&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">byvars</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="c1"># need to determine when to cumulate backwards</span>
+    <span class="c1"># check if method is zero, there only negatives and zero, and there is at least one negative in each window</span>
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;need to implement method zero&quot;</span><span class="p">)</span>
+        <span class="c1"># flip is a list of indices of windows for which the window should be flipped</span>
+        <span class="c1"># to_flip = [j for j, window in enumerate(windows) \</span>
+        <span class="c1">#        if all([i &lt;= 0 for i in window]) and any([i &lt; 0 for i in window])]</span>
+        <span class="c1"># df = flip(df, to_flip)</span>
+
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Creating by groups.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create by groups</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;__key_var__&quot;</span>  <span class="c1"># container for key</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">byvars</span><span class="p">]:</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;__key_var__&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">col</span>
+
+    <span class="n">array_list</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cumvars</span><span class="p">)</span>
+
+    <span class="c1">#     container_array = df[cumvars].values</span>
+    <span class="n">full_array</span> <span class="o">=</span> <span class="n">_cumulate</span><span class="p">(</span><span class="n">array_list</span><span class="p">)</span>
+
+    <span class="n">new_cumvars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cum_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cumvars</span><span class="p">]</span>
+
+    <span class="n">cumdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">full_array</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">new_cumvars</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">outdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">cumdf</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span> <span class="o">==</span> <span class="s2">&quot;zero&quot;</span> <span class="ow">and</span> <span class="n">flip</span> <span class="o">!=</span> <span class="p">[]:</span>  <span class="c1"># if we flipped some of the dataframe</span>
+        <span class="k">pass</span>  <span class="c1"># TEMPORARY</span>
+
+    <span class="k">if</span> <span class="n">grossify</span><span class="p">:</span>
+        <span class="n">all_cumvars</span> <span class="o">=</span> <span class="n">cumvars</span> <span class="o">+</span> <span class="n">new_cumvars</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">all_cumvars</span><span class="p">:</span>
+            <span class="n">outdf</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">outdf</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
+        <span class="n">outdf</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cumvars</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">outdf</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cum_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cumvar</span><span class="p">):</span> <span class="n">cumvar</span> <span class="k">for</span> <span class="n">cumvar</span> <span class="ow">in</span> <span class="n">cumvars</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="n">drop_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">outdf</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">outdf</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drop_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_map_windows</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;between&quot;</span><span class="p">,</span> <span class="n">periodvar</span><span class="o">=</span><span class="s2">&quot;Shift Date&quot;</span><span class="p">,</span> <span class="n">byvars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PERMNO&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the dataframe with an additional column __map_window__ containing the index of the window</span>
+<span class="sd">    in which the observation resides. For example, if the windows are</span>
+<span class="sd">    [[1],[2,3]], and the periods are 1/1/2000, 1/2/2000, 1/3/2000 for PERMNO 10516 with byvar</span>
+<span class="sd">    &#39;a&#39;, the df rows would be as follows:</span>
+<span class="sd">         (10516, &#39;a&#39;, &#39;1/1/2000&#39;, 0),</span>
+<span class="sd">         (10516, &#39;a&#39;, &#39;1/2/2000&#39;, 1),</span>
+<span class="sd">         (10516, &#39;a&#39;, &#39;1/3/2000&#39;, 1),</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># don&#39;t overwrite original dataframe</span>
+
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">window_mapping</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">groupby_merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">wm</span><span class="p">),</span> <span class="n">subset</span><span class="o">=</span><span class="n">periodvar</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">periodvar</span> <span class="o">+</span> <span class="s2">&quot;_transform&quot;</span><span class="p">:</span> <span class="s2">&quot;__map_window__&quot;</span><span class="p">})</span>
+
+
+<div class="viewcode-block" id="create_windows"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.cum.create_windows">[docs]</a><span class="k">def</span> <span class="nf">create_windows</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;between&#39;</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;first&#39;</span><span class="p">:</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">windows</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">periods</span><span class="p">))]]</span>
+        <span class="k">return</span> <span class="n">windows</span>
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;between&#39;</span><span class="p">:</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time</span><span class="p">]</span> <span class="c1">#shifts time so that first period is period 0</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">t_bot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time</span><span class="p">):</span> <span class="c1">#pick each element of time</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span> <span class="c1">#already added zero</span>
+            <span class="n">windows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t_bot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
+            <span class="n">t_bot</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="c1">#The last window is all the leftover periods after finishing time</span>
+        <span class="n">extra_windows</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">per</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">windows</span><span class="p">)]]</span>
+        <span class="k">if</span> <span class="n">extra_windows</span> <span class="o">!=</span> <span class="p">[[]]:</span> <span class="c1">#don&#39;t want to add empty window</span>
+            <span class="n">windows</span> <span class="o">+=</span> <span class="n">extra_windows</span>
+        <span class="k">return</span> <span class="n">windows</span></div>
+
+
+<div class="viewcode-block" id="window_mapping"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.cum.window_mapping">[docs]</a><span class="k">def</span> <span class="nf">window_mapping</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;between&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a pandas series of dates as inputs, calculates windows, and returns a series of which</span>
+<span class="sd">    windows each observation are in. To be used with groupby.transform()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">create_windows</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">index</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">window</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">window</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-156908023-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>
