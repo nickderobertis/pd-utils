@@ -16,7 +16,7 @@ def formatted_corr_df(df: pd.DataFrame, cols: Optional[Sequence[str]] = None) ->
     if not cols:
         use_cols = list(df.columns)
     else:
-        use_cols = cols
+        use_cols = list(cols)
 
     corr_df = df[use_cols].corr()
     corr_df = _lower_triangular_of_df(corr_df)

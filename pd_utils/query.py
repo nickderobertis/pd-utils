@@ -64,7 +64,7 @@ def sql(df_list: List[pd.DataFrame], query: str):
         locals().update({name: df_list[i]})
 
     # Get date variable column names
-    datevars = []
+    datevars: List[str] = []
     for d in df_list:
         datevars += _get_datetime_cols(d)
     datevars = list(set(datevars))  # remove duplicates

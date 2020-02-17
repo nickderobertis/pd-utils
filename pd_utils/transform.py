@@ -101,7 +101,7 @@ def long_to_wide(df: pd.DataFrame, groupvars: Union[str, List[str]], values: Uni
         combined = combined.merge(wide, how="left", on="__key__")
 
     return (
-        combined.drop([colindex, "__key__"] + values, axis=1)
+        combined.drop([colindex, "__key__"] + values, axis=1)  # type: ignore
         .drop_duplicates()
         .reset_index(drop=True)
     )
@@ -134,7 +134,7 @@ def averages(df: pd.DataFrame, avgvars: Union[str, List[str]], byvars: Union[str
 
     df = df.copy()
 
-    if count:
+    if count and isinstance(count, str):
         df = groupby_merge(df, byvars, "count", subset=count)
         avgvars += [count + "_count"]
 
@@ -276,6 +276,10 @@ def var_change_by_groups(df: pd.DataFrame, var: Union[str, List[str]], byvars: U
     var, byvars, datevar = [
         _to_list_if_str(v) for v in [var, byvars, datevar]
     ]  # convert to lists
+    assert isinstance(var, list)
+    assert isinstance(byvars, list)
+    assert isinstance(datevar, list)
+
     short_df = df.loc[
         ~pd.isnull(df[byvars]).any(axis=1), var + byvars + datevar
     ].drop_duplicates()

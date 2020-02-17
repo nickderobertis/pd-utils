@@ -113,7 +113,7 @@ def portfolio(
     tempdf = df.copy()
 
     # If there are no byvars, just complete portfolio sort
-    if byvars == None:
+    if byvars is None:
         return create_cutoffs_if_necessary_and_sort_into_ports(tempdf, cutdf)
 
     # The below rename is incase there is already a variable named index in the data

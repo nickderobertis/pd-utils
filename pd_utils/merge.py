@@ -45,6 +45,7 @@ def groupby_merge(df, byvars: Union[str, List[str]], func_str: str, *func_args, 
         subset = [subset]
 
     # Groupby expects to receive a string if there is a single variable
+    groupby_subset: Union[str, List[str]]
     if len(subset) == 1:
         groupby_subset = subset[0]
     else:
@@ -131,11 +132,13 @@ def groupby_index(df: pd.DataFrame, byvars: Union[str, List[str]], sortvars: Opt
     :return:
     """
 
-    # Convert sortvars to list if necessary
+    # Convert sortvars and byvars to list if necessary
     if isinstance(sortvars, str):
         sortvars = [sortvars]
-    if sortvars == None:
+    if sortvars is None:
         sortvars = []
+    if isinstance(byvars, str):
+        byvars = [byvars]
 
     df = df.copy()  # don't modify the original dataframe
     df.sort_values(byvars + sortvars, inplace=True, ascending=ascending)
