@@ -4,7 +4,7 @@ import pandas as pd
 from sas7bdat import SAS7BDAT
 
 
-def load_sas(filepath, csv=True, **read_csv_kwargs):
+def load_sas(filepath: str, csv: bool = True, **read_csv_kwargs):
     """
     Loads sas sas7bdat file into a pandas DataFrame.
 

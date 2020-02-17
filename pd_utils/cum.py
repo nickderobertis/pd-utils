@@ -5,7 +5,7 @@ import timeit
 import warnings
 from itertools import chain
 from multiprocessing import Pool
-from typing import Optional, List
+from typing import Optional, List, Union, Sequence
 
 import numpy as np
 import pandas as pd
@@ -16,55 +16,66 @@ from pd_utils.merge import groupby_merge
 
 
 def cumulate(
-    df,
-    cumvars,
-    method,
+    df: pd.DataFrame,
+    cumvars: Union[str, List[str]],
+    method: str,
     periodvar="Date",
-    byvars=None,
-    time=None,
-    grossify=False,
-    multiprocess=True,
+    byvars: Optional[Union[str, List[str]]] = None,
+    time: Optional[Sequence[int]] = None,
+    grossify: bool = False,
+    multiprocess: Union[bool, int] = True,
     replace: bool = False,
 ):
     """
     Cumulates a variable over time. Typically used to get cumulative returns.
 
-    NOTE: Method zero not yet working
-
-    method = 'between', 'zero', or 'first'.
+    :param df:
+    :param cumvars: column names to cumulate
+    :param method: 'between', 'zero', or 'first'.
              If 'zero', will give returns since the original date. Note: for periods before the original date,
              this will turn positive returns negative as we are going backwards in time.
              If 'between', will give returns since the prior requested time period. Note that
              the first period is period 0.
              If 'first', will give returns since the first requested time period.
-             For example, if our input data was for date 1/5/2006, but we had shifted dates:
-                 permno  date      RET  shift_date
-                 10516   1/5/2006  110%  1/5/2006
-                 10516   1/5/2006  120%  1/6/2006
-                 10516   1/5/2006  105%  1/7/2006
-                 10516   1/5/2006  130%  1/8/2006
-             Then cumulate(df, 'RET', cumret='between', time=[1,3], get='RET', periodvar='shift_date') would return:
-                 permno  date      RET  shift_date  cumret
-                 10516   1/5/2006  110%  1/5/2006    110%
-                 10516   1/5/2006  120%  1/6/2006    120%
-                 10516   1/5/2006  105%  1/7/2006    126%
-                 10516   1/5/2006  130%  1/8/2006    130%
-             Then cumulate(df, 'RET', cumret='first', periodvar='shift_date') would return:
-                 permno  date      RET  shift_date  cumret
-                 10516   1/5/2006  110%  1/5/2006    110%
-                 10516   1/5/2006  120%  1/6/2006    120%
-                 10516   1/5/2006  105%  1/7/2006    126%
-                 10516   1/5/2006  130%  1/8/2006    163.8%
-    byvars: string or list of column names to use to seperate by groups
-    time: list of ints, for use with method='between'. Defines which periods to calculate between.
-    grossify: bool, set to True to add one to all variables then subtract one at the end
-    multiprocess: bool or int, set to True to use all available processors,
+    :param periodvar:
+    :param byvars: column names to use to separate by groups
+    :param time: for use with method='between'. Defines which periods to calculate between.
+    :param grossify: set to True to add one to all variables then subtract one at the end
+    :param multiprocess: set to True to use all available processors,
                   set to False to use only one, pass an int less or equal to than number of
                   processors to use that amount of processors
-    replace: bool, True to return df with passed columns replaced with cumulated columns.
+    :param replace: True to return df with passed columns replaced with cumulated columns.
              False to return df with both passed columns and cumulated columns
+    :return:
+
+    :Examples:
+
+    For example::
+
+        For example, if our input data was for date 1/5/2006, but we had shifted dates:
+             permno  date      RET  shift_date
+             10516   1/5/2006  110%  1/5/2006
+             10516   1/5/2006  120%  1/6/2006
+             10516   1/5/2006  105%  1/7/2006
+             10516   1/5/2006  130%  1/8/2006
+         Then cumulate(df, 'RET', cumret='between', time=[1,3], get='RET', periodvar='shift_date') would return:
+             permno  date      RET  shift_date  cumret
+             10516   1/5/2006  110%  1/5/2006    110%
+             10516   1/5/2006  120%  1/6/2006    120%
+             10516   1/5/2006  105%  1/7/2006    126%
+             10516   1/5/2006  130%  1/8/2006    130%
+         Then cumulate(df, 'RET', cumret='first', periodvar='shift_date') would return:
+             permno  date      RET  shift_date  cumret
+             10516   1/5/2006  110%  1/5/2006    110%
+             10516   1/5/2006  120%  1/6/2006    120%
+             10516   1/5/2006  105%  1/7/2006    126%
+             10516   1/5/2006  130%  1/8/2006    163.8%
     """
+
     import time as time2  # accidentally used time an an input parameter and don't want to break prior code
+
+    if method == 'zero':
+        raise NotImplementedError('method zero not implemented yet')
 
     # TODO [#1]: get method 'zero' of cumulate working
     #

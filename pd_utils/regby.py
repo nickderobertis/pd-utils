@@ -1,3 +1,5 @@
+from typing import List, Union
+
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
@@ -9,20 +11,24 @@ import time
 from pd_utils.utils import split
 
 
-def reg_by(df, yvar, xvars, groupvar, merge=False, cons=True, mp=False, stderr=False):
+def reg_by(df: pd.DataFrame, yvar: str, xvars: List[str], groupvar: Union[str, List[str]],
+           merge: bool = False, cons: bool = True, mp: Union[bool, int] = False, stderr: bool = False):
     """
     Runs a regression of df[yvar] on df[xvars] by values of groupvar. Outputs a dataframe with values of
     groupvar and corresponding coefficients, unless merge=True, then outputs the original dataframe with the
     appropriate coefficients merged in.
 
-    Required inputs:
-    groupvar: str or list of strs, column names of columns identifying by groups
-
-    Optional Options:
-    cons: True to include a constant, False to not
-    mp: False to use single processor, True to use all processors, int to use # processors
-    stderr: bool, True to include standard errors of coefficients
+    :param df:
+    :param yvar:
+    :param xvars:
+    :param groupvar: column names of columns identifying by groups
+    :param merge:
+    :param cons: True to include a constant, False to not
+    :param mp: False to use single processor, True to use all processors, int to use # processors
+    :param stderr: True to include standard errors of coefficients
+    :return:
     """
+    # TODO: fill out param docs for reg_by
     # Convert xvars to list if str is passed
     xvars = _check_inputs_regby(xvars)
 

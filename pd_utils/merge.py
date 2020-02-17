@@ -1,6 +1,7 @@
 import functools
 import timeit
-from typing import List, Dict
+import datetime
+from typing import List, Dict, Union, Optional, Callable
 
 import numpy as np
 import pandas as pd
@@ -10,23 +11,25 @@ from pd_utils.timer import estimate_time
 from pd_utils.query import sql
 
 
-def groupby_merge(df, byvars, func_str, *func_args, subset="all", replace=False):
+def groupby_merge(df, byvars: Union[str, List[str]], func_str: str, *func_args, subset: Union[str, List[str]] = "all",
+                  replace: bool = False):
     """
     Creates a pandas groupby object, applies the aggregation function in func_str, and merges back the
     aggregated data to the original dataframe.
 
-    Required Inputs:
-    df: Pandas DataFrame
-    byvars: str or list, column names which uniquely identify groups
-    func_str: str, name of groupby aggregation function such as 'min', 'max', 'sum', 'count', etc.
 
-    Optional Input:
-    subset: str or list, column names for which to apply aggregation functions
-    func_args: tuple, arguments to pass to func
-    replace: bool, True to replace original columns in the data with aggregated/transformed columns
+    :param df:
+    :param byvars: column names which uniquely identify groups
+    :param func_str: name of groupby aggregation function such as 'min', 'max', 'sum', 'count', etc.
+    :param func_args: arguments to pass to func
+    :param subset: column names for which to apply aggregation functions or 'all' for all columns
+    :param replace: True to replace original columns in the data with aggregated/transformed columns
+    :return:
 
-    Usage:
-    df = groupby_merge(df, ['PERMNO','byvar'], 'max', subset='RET')
+    :Example:
+
+    >>> import pd_utils
+    >>> df = pd_utils.groupby_merge(df, ['PERMNO','byvar'], 'max', subset='RET')
     """
 
     # Convert byvars to list if neceessary
@@ -115,18 +118,17 @@ def _replace_with_transformed(df, func_str="transform"):
     )
 
 
-def groupby_index(df, byvars, sortvars=None, ascending=True):
+def groupby_index(df: pd.DataFrame, byvars: Union[str, List[str]], sortvars: Optional[Union[str, List[str]]] = None,
+                  ascending: bool = True):
     """
     Returns a dataframe which is a copy of the old one with an additional column containing an index
     by groups. Each time the bygroup changes, the index restarts at 0.
 
-    Required inputs:
-    df: pandas DataFrame
-    byvars: str or list of column names containing group identifiers
-
-    Optional inputs:
-    sortvars: str or list of column names to sort by within by groups
-    ascending: bool, direction of sort
+    :param df:
+    :param byvars: column names containing group identifiers
+    :param sortvars: column names to sort by within by groups
+    :param ascending: direction of sort
+    :return:
     """
 
     # Convert sortvars to list if necessary
@@ -149,21 +151,24 @@ def groupby_index(df, byvars, sortvars=None, ascending=True):
     return df.rename(columns={"__temp_cons___transform": "group_index"})
 
 
-def apply_func_to_unique_and_merge(series, func):
+def apply_func_to_unique_and_merge(series: pd.Series, func: Callable) -> pd.Series:
     """
-    Many Pandas functions can be slow because they're doing repeated work. This function reduces
-    the given series down to unique values, applies the function, then expands back up to the
-    original shape of the data. Returns a series.
+    This function reduces the given series down to unique values, applies the function,
+    then expands back up to the original shape of the data.
 
-    Required inputs:
-    seres: pd.Series
-    func: function to be applied to the series.
+    Many Pandas functions can be slow because they're doing repeated work. This can help
+    optimize some operations.
+
+    :param series:
+    :param func: function to be applied to the series
+    :return:
 
     :Usage:
 
     >>>import functools
     >>>to_datetime = functools.partial(pd.to_datetime, format='%Y%m')
     >>>apply_func_to_unique_and_merge(df['MONTH'], to_datetime)
+
     """
     unique = pd.Series(series.unique())
     new = unique.apply(func)
@@ -184,13 +189,13 @@ def apply_func_to_unique_and_merge(series, func):
 
 
 def left_merge_latest(
-    df,
-    df2,
-    on,
-    left_datevar="Date",
-    right_datevar="Date",
-    max_offset=None,
-    backend="pandas",
+    df: pd.DataFrame,
+    df2: pd.DataFrame,
+    on: Union[str, List[str]],
+    left_datevar: str = "Date",
+    right_datevar: str = "Date",
+    max_offset: Optional[Union[int, datetime.timedelta]] = None,
+    backend: str = "pandas",
     low_memory: bool = False,
 ):
     """
@@ -198,23 +203,21 @@ def left_merge_latest(
     the soonest earlier than left_datevar). Useful for situations where data needs to be merged with
     mismatched dates, and just the most recent data available is needed.
 
-    Required inputs:
-    df: Pandas dataframe containing source data (all rows will be kept), must have on variables
+    :param df: Pandas dataframe containing source data (all rows will be kept), must have on variables
         and left_datevar
-    df2: Pandas dataframe containing data to be merged (only the most recent rows before source
+    :param df2: Pandas dataframe containing data to be merged (only the most recent rows before source
         data will be kept)
-    on: str or list of strs, names of columns on which to match, excluding date
-
-    Optional inputs:
-    left_datevar: str, name of date variable on which to merge in df
-    right_datevar: str, name of date variable on which to merge in df2
-    max_offset: int or datetime.timedelta, maximum amount of time to go back to look for a match.
+    :param on: names of columns on which to match, excluding date
+    :param left_datevar: name of date variable on which to merge in df
+    :param right_datevar: name of date variable on which to merge in df2
+    :param max_offset: maximum amount of time to go back to look for a match.
         When datevar is a datetime column, pass datetime.timedelta. When datevar is an int column
         (e.g. year), pass an int. Currently only applicable for backend 'pandas'
-    backend: str, 'pandas' or 'sql'. Specify the underlying machinery used to perform the merge.
+    :param backend: 'pandas' or 'sql'. Specify the underlying machinery used to perform the merge.
              'pandas' means native pandas, while 'sql' uses pandasql. Try 'sql' if you run
              out of memory.
-
+    :param low_memory: True to reduce memory usage but decrease calculation speed
+    :return:
     """
     if isinstance(on, str):
         on = [on]

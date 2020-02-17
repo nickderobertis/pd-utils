@@ -1,14 +1,15 @@
-def to_copy_paste(df, index=False, column_names=True):
+import pandas as pd
+
+
+def to_copy_paste(df: pd.DataFrame, index: bool = False, column_names: bool = True):
     """
     Takes a dataframe and prints all of its data in such a format that it can be copy-pasted to create
     a new dataframe from the pandas.DataFrame() constructor.
 
-    Required inputs:
-    df: pandas dataframe
-
-    Optional inputs:
-    index: bool, True to include index
-    column_names: bool, False to exclude column names
+    :param df:
+    :param index: True to include index
+    :param column_names: False to exclude column names
+    :return:
     """
     print("pd.DataFrame(data = [")
     for tup in df.iterrows():

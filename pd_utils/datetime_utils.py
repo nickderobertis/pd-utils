@@ -3,7 +3,7 @@ import functools
 import sys
 import time
 from collections import OrderedDict
-from typing import Optional
+from typing import Optional, Union, List
 
 import numpy as np
 import pandas as pd
@@ -15,7 +15,13 @@ from pandas.tseries.offsets import CustomBusinessDay
 from pd_utils.merge import apply_func_to_unique_and_merge
 
 
-def convert_sas_date_to_pandas_date(sasdates):
+def convert_sas_date_to_pandas_date(sasdates: Union[pd.Series, int]) -> Union[pd.Series, pd.Timestamp]:
+    """
+    Converts a date or Series of dates loaded from a SAS SAS7BDAT file to a pandas date type.
+
+    :param sasdates: SAS7BDAT-loaded date(s) to convert
+    :return:
+    """
     epoch = datetime.datetime(1960, 1, 1)
 
     def to_pandas(date):
@@ -29,9 +35,15 @@ def convert_sas_date_to_pandas_date(sasdates):
         return to_pandas(sasdates)
 
 
-def year_month_from_date(df, date="Date", yearname="Year", monthname="Month"):
+def year_month_from_date(df: pd.DataFrame, date: str = "Date", yearname: str = "Year", monthname: str = "Month"):
     """
     Takes a dataframe with a datetime object and creates year and month variables
+
+    :param df:
+    :param date: name of date column
+    :param yearname: name of year column to be created
+    :param monthname: name of month column to be created
+    :return:
     """
     df = df.copy()
     df[yearname] =  [date.year  for date in df[date]]
@@ -41,37 +53,66 @@ def year_month_from_date(df, date="Date", yearname="Year", monthname="Month"):
     return df
 
 
-def expand_time(df, intermediate_periods=False, **kwargs):
-    """
-    Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.
-    See _expand_time for keyword arguments.
-
-    Specify intermediate_periods=True to get periods in between given time periods, e.g.
-    passing time=[12,24,36] will get periods 12, 13, 14, ..., 35, 36.
-    """
-
-    if intermediate_periods:
-        assert "time" in kwargs
-        time = kwargs["time"]
-        time = [t for t in range(min(time), max(time) + 1)]
-        kwargs["time"] = time
-    return _expand_time(df, **kwargs)
-
-
-def _expand_time(
-    df,
-    datevar="Date",
-    freq="m",
-    time=[12, 24, 36, 48, 60],
-    newdate="Shift Date",
-    shiftvar="Shift",
+def expand_time(
+    df: pd.DataFrame,
+    intermediate_periods: bool = False,
+    datevar: str = "Date",
+    freq: str = "m",
+    time: List[int] = [12, 24, 36, 48, 60],
+    newdate: str = "Shift Date",
+    shiftvar: str = "Shift",
     custom_business_day: Optional[CustomBusinessDay] = None,
 ):
     """
     Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.
 
-    custom_business_day: pandas.tseries.offsets.CustomBusinessDay. Only used for daily frequency. Defaults to using
-    trading days based on US market holiday calendar. Can pass custom business days for other calendars
+    :param df:
+    :param intermediate_periods: Specify intermediate_periods=True to get periods in between given time periods, e.g.
+        passing time=[12,24,36] will get periods 12, 13, 14, ..., 35, 36.
+    :param datevar: column name of date variable
+    :param freq: 'd' for daily, 'm' for monthly, 'a' for annual
+    :param time: number of periods to advance by
+    :param newdate: name of new date in the output data
+    :param shiftvar: name of variable which specifies how much the time has been shifted
+    :param custom_business_day: Only used for daily frequency. Defaults to using
+        trading days based on US market holiday calendar. Can pass custom business days for other calendars
+    :return:
+    """
+
+    if intermediate_periods:
+        time = [t for t in range(min(time), max(time) + 1)]
+    return _expand_time(
+        df,
+        datevar=datevar,
+        freq=freq,
+        time=time,
+        newdate=newdate,
+        shiftvar=shiftvar,
+        custom_business_day=custom_business_day
+    )
+
+
+def _expand_time(
+    df: pd.DataFrame,
+    datevar: str = "Date",
+    freq: str = "m",
+    time: List[int] = [12, 24, 36, 48, 60],
+    newdate: str = "Shift Date",
+    shiftvar: str = "Shift",
+    custom_business_day: Optional[CustomBusinessDay] = None,
+):
+    """
+    Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.
+
+    :param df:
+    :param datevar: column name of date variable
+    :param freq: 'd' for daily, 'm' for monthly, 'a' for annual
+    :param time: number of periods to advance by
+    :param newdate: name of new date in the output data
+    :param shiftvar: name of variable which specifies how much the time has been shifted
+    :param custom_business_day: Only used for daily frequency. Defaults to using
+        trading days based on US market holiday calendar. Can pass custom business days for other calendars
+    :return:
     """
 
     def log(message):
@@ -133,22 +174,22 @@ def _expand_time(
     return df  # .drop('Shift', axis=1)
 
 
-def expand_months(df, datevar="Date", newdatevar="Daily Date", trade_days=True):
+def expand_months(df: pd.DataFrame, datevar: str = "Date", newdatevar: str = "Daily Date", trade_days: bool = True):
     """
     Takes a monthly dataframe and returns a daily (trade day or calendar day) dataframe.
     For each row in the input data, duplicates that row over each trading/calendar day in the month of
     the date in that row. Creates a new date column containing the daily date.
 
-    NOTE: If the input dataset has multiple observations per month, all of these will be expanded. Therefore
+    :Notes:
+
+    If the input dataset has multiple observations per month, all of these will be expanded. Therefore
     you will have one row for each trade day for each original observation.
 
-    Required inputs:
-    df: pandas dataframe containing a date variable
-
-    Optional inputs:
-    datevar: str, name of column containing dates in the input df
-    newdatevar: str, name of new column to be created containing daily dates
-    tradedays: bool, True to use trading days and False to use calendar days
+    :param df: DataFrame containing a date variable
+    :param datevar: name of column containing dates in the input df
+    :param newdatevar: name of new column to be created containing daily dates
+    :param trade_days: True to use trading days and False to use calendar days
+    :return:
     """
     if trade_days:
         td = tradedays()
@@ -174,19 +215,19 @@ def tradedays():
 
     :Example:
 
-    >>>import pandas as pd
-    >>>import pd_utils
-    >>>pd.date_range(
-    >>>    start='1/1/2000',
-    >>>    end='1/31/2000',
-    >>>    freq=pd_utils.tradedays()
-    >>>)
-    pd.DatetimeIndex(['2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06',
-               '2000-01-07', '2000-01-10', '2000-01-11', '2000-01-12',
-               '2000-01-13', '2000-01-14', '2000-01-18', '2000-01-19',
-               '2000-01-20', '2000-01-21', '2000-01-24', '2000-01-25',
-               '2000-01-26', '2000-01-27', '2000-01-28', '2000-01-31'],
-              dtype='datetime64[ns]', freq='C')
+        >>> import pandas as pd
+        >>> import pd_utils
+        >>> pd.date_range(
+        >>>     start='1/1/2000',
+        >>>     end='1/31/2000',
+        >>>     freq=pd_utils.tradedays()
+        >>> )
+        pd.DatetimeIndex(['2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06',
+                   '2000-01-07', '2000-01-10', '2000-01-11', '2000-01-12',
+                   '2000-01-13', '2000-01-14', '2000-01-18', '2000-01-19',
+                   '2000-01-20', '2000-01-21', '2000-01-24', '2000-01-25',
+                   '2000-01-26', '2000-01-27', '2000-01-28', '2000-01-31'],
+                  dtype='datetime64[ns]', freq='C')
 
     """
     trading_calendar = USTradingCalendar()
@@ -194,6 +235,9 @@ def tradedays():
 
 
 class USTradingCalendar(AbstractHolidayCalendar):
+    """
+    The US trading day calendar behind the function :py:func:`tradedays`.
+    """
     rules = [
         Holiday("NewYearsDay", month=1, day=1, observance=nearest_workday),
         USMartinLutherKingJr,

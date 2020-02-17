@@ -4,7 +4,7 @@ import timeit
 import warnings
 from functools import partial
 from multiprocessing import Pool
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Tuple
 
 import numpy as np
 import pandas as pd
@@ -14,41 +14,46 @@ from pd_utils.transform import averages
 
 
 def portfolio(
-    df,
-    groupvar,
-    ngroups=10,
+    df: pd.DataFrame,
+    groupvar: str,
+    ngroups: int = 10,
     cutoffs: Optional[List[Union[float, int]]] = None,
     quant_cutoffs: Optional[List[float]] = None,
-    byvars=None,
-    cutdf=None,
-    portvar="portfolio",
-    multiprocess=False,
+    byvars: Optional[Union[str, List[str]]] = None,
+    cutdf: Optional[pd.DataFrame] = None,
+    portvar: str = "portfolio",
+    multiprocess: bool = False,
 ):
     """
-    Constructs portfolios based on percentile values of groupvar. If ngroups=10, then will form 10 portfolios,
+    Constructs portfolios based on percentile values of groupvar.
+
+    If ngroups=10, then will form 10 portfolios,
     with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having the top 10 percentile
     of groupvar.
 
-    df: pandas dataframe, input data
-    groupvar: string, name of variable in df to form portfolios on
-    ngroups: integer, number of portfolios to form. will be ignored if option cutoffs or quant_cutoffs is passed
-    cutoffs: e.g. [100, 10000] to form three portfolios, 1 would be < 100, 2 would be > 100 and < 10000,
-        3 would be > 10000. cannot be used with option ngroups
-    quant_cutoffs: eg. [0.1, 0.9] to form three portfolios. 1 would be lowest 10% of data,
-        2 would be > 10 and < 90 percentiles, 3 would be highest 10%. All will be within byvars if byvars are passed.
-    byvars: string, list, or None, name of variable(s) in df, finds portfolios within byvars. For example if byvars='Month',
-            would take each month and form portfolios based on the percentiles of the groupvar during only that month
-    cutdf: pandas dataframe or None, optionally determine percentiles using another dataset. See second note.
-    portvar: string, name of portfolio variable in the output dataset
-    multiprocess: bool or int, set to True to use all available processors,
-                  set to False to use only one, pass an int less or equal to than number of
-                  processors to use that amount of processors
+    :Notes:
 
-    NOTE: Resets index and drops in output data, so don't use if index is important (input data not affected)
-    NOTE: If using a cutdf, MUST have the same bygroups as df. The number of observations within each bygroup
-          can be different, but there MUST be a one-to-one match of bygroups, or this will NOT work correctly.
-          This may require some cleaning of the cutdf first.
-    NOTE: For some reason, multiprocessing seems to be slower in testing, so it is disabled by default
+    * Resets index and drops in output data, so don't use if index is important (input data not affected)
+    * If using a cutdf, MUST have the same bygroups as df. The number of observations within each bygroup
+      can be different, but there MUST be a one-to-one match of bygroups, or this will NOT work correctly.
+      This may require some cleaning of the cutdf first.
+    * For some reason, multiprocessing seems to be slower in testing, so it is disabled by default
+
+    :param df: input data
+    :param groupvar: name of variable in df to form portfolios on
+    :param ngroups: number of portfolios to form. will be ignored if option cutoffs or quant_cutoffs is passed
+    :param cutoffs: e.g. [100, 10000] to form three portfolios, 1 would be < 100, 2 would be > 100 and < 10000,
+        3 would be > 10000. cannot be used with option ngroups
+    :param quant_cutoffs: eg. [0.1, 0.9] to form three portfolios. 1 would be lowest 10% of data,
+        2 would be > 10 and < 90 percentiles, 3 would be highest 10%. All will be within byvars if byvars are passed
+    :param byvars: name of variable(s) in df, finds portfolios within byvars. For example if byvars='Month',
+        would take each month and form portfolios based on the percentiles of the groupvar during only that month
+    :param cutdf: optionally determine percentiles using another dataset. See second note.
+    :param portvar: name of portfolio variable in the output dataset
+    :param multiprocess: set to True to use all available processors,
+        set to False to use only one, pass an int less or equal to than number of
+        processors to use that amount of processors
+    :return:
     """
     # Check types
     _check_portfolio_inputs(
@@ -150,36 +155,40 @@ def portfolio(
 
 
 def portfolio_averages(
-    df,
-    groupvar,
-    avgvars,
-    ngroups=10,
-    byvars=None,
-    cutdf=None,
-    wtvar=None,
-    count=False,
-    portvar="portfolio",
-    avgonly=False,
-):
+    df: pd.DataFrame,
+    groupvar: str,
+    avgvars: Union[str, List[str]],
+    ngroups: int = 10,
+    byvars: Optional[Union[str, List[str]]] = None,
+    cutdf: pd.DataFrame = None,
+    wtvar: Optional[str] = None,
+    count: Union[str, bool] = False,
+    portvar: str = "portfolio",
+    avgonly: bool = False,
+) -> Union[pd.DataFrame, Tuple[pd.DataFrame, pd.DataFrame]]:
     """
-    Creates portfolios and calculates equal- and value-weighted averages of variables within portfolios. If ngroups=10,
+    Creates portfolios and calculates equal- and value-weighted averages of variables within portfolios.
+
+    If ngroups=10,
     then will form 10 portfolios, with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having
     the top 10 percentile of groupvar.
 
-    df: pandas dataframe, input data
-    groupvar: string, name of variable in df to form portfolios on
-    avgvars: string or list, variables to be averaged
-    ngroups: integer, number of portfolios to form
-    byvars: string, list, or None, name of variable(s) in df, finds portfolios within byvars. For example if byvars='Month',
-            would take each month and form portfolios based on the percentiles of the groupvar during only that month
-    cutdf: pandas dataframe or None, optionally determine percentiles using another dataset
-    wtvar: string, name of variable in df to use for weighting in weighted average
-    count: False or string of variable name, pass variable name to get count of non-missing
-           of that variable within groups.
-    portvar: string, name of portfolio variable in the output dataset
-    avgonly: boolean, True to return only averages, False to return (averages, individual observations with portfolios)
+    :Notes:
 
-    NOTE: Resets index and drops in output data, so don't use if index is important (input data not affected)
+    Resets index and drops in output data, so don't use if index is important (input data not affected)
+
+    :param df: input data
+    :param groupvar: name of variable in df to form portfolios on
+    :param avgvars: variables to be averaged
+    :param ngroups: number of portfolios to form
+    :param byvars: name of variable(s) in df, finds portfolios within byvars. For example if byvars='Month',
+            would take each month and form portfolios based on the percentiles of the groupvar during only that month
+    :param cutdf: optionally determine percentiles using another dataset
+    :param wtvar: name of variable in df to use for weighting in weighted average
+    :param count: pass variable name to get count of non-missing of that variable within groups.
+    :param portvar: name of portfolio variable in the output dataset
+    :param avgonly: True to return only averages, False to return (averages, individual observations with portfolios)
+    :return:
     """
     ports = portfolio(
         df, groupvar, ngroups=ngroups, byvars=byvars, cutdf=cutdf, portvar=portvar
@@ -199,24 +208,22 @@ def portfolio_averages(
         return avgs, ports
 
 
-def long_short_portfolio(df, portvar, byvars=None, retvars=None, top_minus_bot=True):
+def long_short_portfolio(df: pd.DataFrame, portvar: str, byvars: Optional[Union[str, List[str]]] = None,
+                         retvars: Optional[Union[str, List[str]]] = None, top_minus_bot: bool = True):
     """
     Takes a df with a column of numbered portfolios and creates a new
     portfolio which is long the top portfolio and short the bottom portfolio.
-    Returns a df of long-short portfolio
 
-    Required inputs:
-    df: pandas dataframe containing a column with portfolio numbers
-    portvar: str, name of column containing portfolios
-
-    Optional inputs:
-    byvars: str or list of strs of column names containing groups for portfolios.
-            Calculates long-short within these groups. These should be the same groups
-            in which portfolios were formed.
-    retvars: str or list of strs of variables to return in the long-short dataset.
-            By default, will use all numeric variables in the df.
-    top_minus_bot: boolean, True to be long the top portfolio, short the bottom portfolio.
-                   False to be long the bottom portfolio, short the top portfolio.
+    :param df: dataframe containing a column with portfolio numbers
+    :param portvar: name of column containing portfolios
+    :param byvars: column names containing groups for portfolios.
+        Calculates long-short within these groups. These should be the same groups
+        in which portfolios were formed.
+    :param retvars: variables to return in the long-short dataset.
+        By default, will use all numeric variables in the df
+    :param top_minus_bot: True to be long the top portfolio, short the bottom portfolio.
+       False to be long the bottom portfolio, short the top portfolio.
+    :return: a df of long-short portfolio
     """
     long, short = _select_long_short_ports(df, portvar, top_minus_bot=top_minus_bot)
     return _portfolio_difference(

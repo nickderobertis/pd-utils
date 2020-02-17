@@ -1,4 +1,5 @@
 import warnings
+from typing import Union, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -7,36 +8,41 @@ from pd_utils.merge import groupby_merge
 from pd_utils.utils import _to_list_if_str
 
 
-def long_to_wide(df, groupvars, values, colindex=None, colindex_only=False):
+def long_to_wide(df: pd.DataFrame, groupvars: Union[str, List[str]], values: Union[str, List[str]],
+                 colindex: Optional[Union[str, List[str]]] = None, colindex_only: bool = False):
     """
+    Takes a "long" format DataFrame and converts to a "wide" format
 
-    groupvars = string or list of variables which signify unique observations in the output dataset
-    values = string or list of variables which contain the values which need to be transposed
-    colindex = string of column or list of strings of columns containing extension for column name
-               in the output dataset. If not specified, just uses the
-               count of the row within the group. If a list is provided, each column value will be appended
-               in order separated by _
-    colindex_only = boolean. If true, column names in output data will be only the colindex, and will not
-                    include the name of the values variable. Only valid when passing a single value, otherwise
-                    multiple columns would have the same name.
+    :param df:
+    :param groupvars: variables which signify unique observations in the output dataset
+    :param values: variables which contain the values which need to be transposed
+    :param colindex: columns containing extension for column name
+       in the output dataset. If not specified, just uses the
+       count of the row within the group. If a list is provided, each column value will be appended
+       in order separated by _
+    :param colindex_only: If True, column names in output data will be only the colindex, and will not
+        include the name of the values variable. Only valid when passing a single value, otherwise
+        multiple columns would have the same name.
+    :return:
 
+    :Examples:
 
-    NOTE: Don't have any variables named key or idx
+    For example::
 
-    For example, if we had a long dataset of returns, with returns 12, 24, 36, 48, and 60 months after the date:
-            ticker    ret    months
-            AA        .01    12
-            AA        .15    24
-            AA        .21    36
-            AA       -.10    48
-            AA        .22    60
-    and we want to get this to one observation per ticker:
-            ticker    ret12    ret24    ret36    ret48    ret60
-            AA        .01      .15      .21     -.10      .22
-    We would use:
-    long_to_wide(df, groupvars='ticker', values='ret', colindex='months')
+        If we had a long dataset of returns, with returns 12, 24, 36, 48, and 60 months after the date:
+                ticker    ret    months
+                AA        .01    12
+                AA        .15    24
+                AA        .21    36
+                AA       -.10    48
+                AA        .22    60
+        and we want to get this to one observation per ticker:
+                ticker    ret12    ret24    ret36    ret48    ret60
+                AA        .01      .15      .21     -.10      .22
+        We would use:
+        long_to_wide(df, groupvars='ticker', values='ret', colindex='months')
+
     """
-
     df = df.copy()  # don't overwrite original
 
     # Check for duplicates
@@ -101,16 +107,19 @@ def long_to_wide(df, groupvars, values, colindex=None, colindex_only=False):
     )
 
 
-def averages(df, avgvars, byvars, wtvar=None, count=False, flatten=True):
+def averages(df: pd.DataFrame, avgvars: Union[str, List[str]], byvars: Union[str, List[str]],
+             wtvar: Optional[str] = None, count: Union[str, bool] = False, flatten: bool = True):
     """
     Returns equal- and value-weighted averages of variables within groups
 
-    avgvars: List of strings or string of variable names to take averages of
-    byvars: List of strings or string of variable names for by groups
-    wtvar: String of variable to use for calculating weights in weighted average
-    count: False or string of variable name, pass variable name to get count of non-missing
-           of that variable within groups.
-    flatten: Boolean, False to return df with multi-level index
+    :param df:
+    :param avgvars: variable names to take averages of
+    :param byvars: variable names for by groups
+    :param wtvar: variable to use for calculating weights in weighted average
+    :param count: string of variable name, pass variable name to get count of non-missing
+        of that variable within groups.
+    :param flatten: False to return df with multi-level index
+    :return:
     """
     # Check types
     assert isinstance(df, pd.DataFrame)
@@ -155,40 +164,39 @@ def averages(df, avgvars, byvars, wtvar=None, count=False, flatten=True):
         return outdf
 
 
-def winsorize(df, pct, subset=None, byvars=None, bot=True, top=True):
+def winsorize(df: pd.DataFrame, pct: Union[float, Tuple[float, float]],
+              subset: Optional[Union[str, List[str]]] = None, byvars: Optional[Union[str, List[str]]] =None,
+              bot: bool = True, top: bool = True) -> pd.DataFrame:
     """
     Finds observations above the pct percentile and replaces the with the pct percentile value.
-    Does this for all columns, or the subset given by subset
+    Does this for all columns, or the subset given by subset.
 
-    Required inputs:
-    df: Pandas dataframe
-    pct: 0 < float < 1 or list of two values 0 < float < 1. If two values are given, the first
+    :param df:
+    :param pct: 0 < float < 1 or list of two values 0 < float < 1. If two values are given, the first
          will be used for the bottom percentile and the second will be used for the top. If one value
          is given and both bot and top are True, will use the same value for both.
+    :param subset: column name(s) to winsorize
+    :param byvars: Column names of columns identifying groups in the data.
+        Winsorizing will be done within those groups.
+    :param bot: True to winsorize bottom observations
+    :param top: True to winsorize top observations
+    :return:
 
-    Optional inputs:
-    subset: List of strings or string of column name(s) to winsorize
-    byvars: str, list of strs, or None. Column names of columns identifying groups in the data.
-            Winsorizing will be done within those groups.
-    bot: bool, True to winsorize bottom observations
-    top: bool, True to winsorize top observations
+    :Examples:
 
-    Example usage:
-    winsorize(df, .05, subset='RET') #replaces observations of RET below the 5% and above the 95% values
-    winsorize(df, [.05, .1], subset='RET') #replaces observations of RET below the 5% and above the 90% values
-
+        >>> winsorize(df, .05, subset='RET') # replaces observations of RET below the 5% and above the 95% values
+        >>> winsorize(df, (.05, .1), subset='RET') #replaces observations of RET below the 5% and above the 90% values
     """
-
     # Check inputs
     assert any([bot, top])  # must winsorize something
     if isinstance(pct, float):
         bot_pct = pct
         top_pct = 1 - pct
-    elif isinstance(pct, list):
+    elif isinstance(pct, (list, tuple)):
         bot_pct = pct[0]
         top_pct = 1 - pct[1]
     else:
-        raise ValueError("pct must be float or a list of two floats")
+        raise ValueError("pct must be float or a tuple of two floats")
 
     def temp_winsor(col):
         return _winsorize(col, top_pct, bot_pct, top=top, bot=bot)
@@ -248,21 +256,22 @@ def _select_numeric_or_subset(df, subset, extra_include=None):
     return (to_winsor, rest)
 
 
-def var_change_by_groups(df, var, byvars, datevar="Date", numlags=1):
+def var_change_by_groups(df: pd.DataFrame, var: Union[str, List[str]], byvars: Union[str, List[str]],
+                         datevar: str = "Date", numlags: int = 1):
     """
     Used for getting variable changes over time within bygroups.
 
-    NOTE: Dataset is not sorted in this process. Sort the data in the order in which you wish
-          lags to be created before running this command.
+    :Notes:
 
-    Required inputs:
-    df: pandas dataframe containing bygroups, a date variable, and variables of interest
-    var: str or list of strs, column names of variables to get changes
-    byvars: str or list of strs, column names of variables identifying by groups
+    Dataset is not sorted in this process. Sort the data in the order in which you wish
+    lags to be created before running this command.
 
-    Optional inputs:
-    datevar: str ot list of strs, column names of variables identifying periods
-    numlags: int, number of periods to go back to get change
+    :param df: dataframe containing bygroups, a date variable, and variables of interest
+    :param var: column names of variables to get changes
+    :param byvars: column names of variables identifying by groups
+    :param datevar: column names of variables identifying periods
+    :param numlags: number of periods to go back to get change
+    :return:
     """
     var, byvars, datevar = [
         _to_list_if_str(v) for v in [var, byvars, datevar]
@@ -278,7 +287,16 @@ def var_change_by_groups(df, var, byvars, datevar="Date", numlags=1):
     return df.merge(short_df, on=datevar + byvars, how="left")
 
 
-def state_abbrev(df, col, toabbrev=False):
+def state_abbrev(df: pd.DataFrame, col: str, toabbrev: bool = False):
+    """
+    Replaces a DataFrame's column of a state abbreviation or state name to the opposite
+
+    :param df:
+    :param col: name of column containing state names or state abbreviations
+    :param toabbrev: True to convert state names to abbreviations, defaults to converting abbreviations
+        to state names
+    :return:
+    """
     df = df.copy()
     states_to_abbrev = {
         "Alabama": "AL",
@@ -346,17 +364,16 @@ def _join_col_strings(*args):
     return "_".join(strs)
 
 
-def join_col_strings(df, cols):
+def join_col_strings(df: pd.DataFrame, cols: Union[str, List[str]]):
     """
     Takes a dataframe and column name(s) and concatenates string versions of the columns with those names.
     Useful for when a group is identified by several variables and we need one key variable to describe a group.
     Returns a pandas Series.
 
-    Required inputs:
-    df: pandas dataframe
-    cols: str or list, names of columns in df to be concatenated
+    :param df:
+    :param cols: names of columns in df to be concatenated
+    :return:
     """
-
     if isinstance(cols, str):
         cols = [cols]
     assert isinstance(cols, list)

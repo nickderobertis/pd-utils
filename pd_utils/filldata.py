@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from functools import partial
 from itertools import product
-from typing import List
+from typing import List, Optional
 
 from pd_utils.utils import _to_list_if_str, _to_series_if_str, _to_name_if_series
 
@@ -11,6 +11,9 @@ def fillna_by_groups_and_keep_one_per_group(
     df, byvars, exclude_cols=None, str_vars="first", num_vars="mean"
 ):
     """
+    Fills missing values by group, with different handling for string variables versus numeric,
+    then keeps one observation per group.
+
     WARNING: do not use if index is important, it will be dropped
     """
     byvars = _to_list_if_str(byvars)
@@ -27,6 +30,8 @@ def fillna_by_groups_and_keep_one_per_group(
 
 def fillna_by_groups(df, byvars, exclude_cols=None, str_vars="first", num_vars="mean"):
     """
+    Fills missing values by group, with different handling for string variables versus numeric
+
     WARNING: do not use if index is important, it will be dropped
     """
     byvars = _to_list_if_str(byvars)
@@ -61,21 +66,19 @@ def add_missing_group_rows(
     df,
     group_id_cols: List[str],
     non_group_id_cols: List[str],
-    fill_method="ffill",
-    fill_limit: int = None,
+    fill_method: Optional[str] = "ffill",
+    fill_limit: Optional[int] = None,
 ):
     """
+    Adds rows so that each group has all non group IDs, optionally filling values by a pandas fill method
 
-    Args:
-        df:
-        group_id_cols: typically entity ids. these ids represents groups in the data. data will not be
+    :param df:
+    :param group_id_cols: typically entity ids. these ids represents groups in the data. data will not be
             forward/back filled across differences in these ids.
-        non_group_id_cols: typically date or time ids. data will be forward/back filled across differences in these ids
-        fill_method: pandas fill methods
-        fill_limit: pandas fill limit
-
-    Returns:
-
+    :param non_group_id_cols: typically date or time ids. data will be forward/back filled across differences in these ids
+    :param fill_method: pandas fill methods, None to not fill
+    :param fill_limit: pandas fill limit
+    :return:
     """
     fill_id_cols = group_id_cols + non_group_id_cols
     fill_ids = [df[fill_id_col].unique() for fill_id_col in fill_id_cols]
@@ -160,29 +163,31 @@ def _drop_duplicates(df, byvars):
 def fill_excluded_rows(df, byvars, fillvars=None, **fillna_kwargs):
     """
     Takes a dataframe which does not contain all possible combinations of byvars as rows. Creates
-    those rows if fillna_kwargs are passed, calls fillna using fillna_kwargs for fillvars.
+    those rows if fillna_kwargs are passed, calls fillna using fillna_kwargs for fillvars
 
-    For example, df:
-                 date     id  var
-        0  2003-06-09 42223C    1
-        1  2003-06-10 09255G    2
-    with fillna_for_excluded_rows(df, byvars=['date','id'], fillvars='var', value=0) becomes:
-                  date     id  var
-        0  2003-06-09 42223C    1
-        1  2003-06-10 42223C    0
-        2  2003-06-09 09255G    0
-        3  2003-06-10 09255G    2
-
-    Required options:
-    df: pandas dataframe
-    byvars: variables on which dataset should be expanded to product. Can pass a str, list of
+    :param df:
+    :param byvars: variables on which dataset should be expanded to product. Can pass a str, list of
             strs, or a list of pd.Series.
+    :param fillvars: optional variables to apply fillna to
+    :param fillna_kwargs: See pandas.DataFrame.fillna for kwargs, value=0 is common
+    :return:
 
-    Optional options:
-    fillvars: variables to apply fillna to
-    fillna_kwargs: See pandas.DataFrame.fillna for kwargs, value=0 is common
+    :Example:
 
+    An example::
 
+        df:
+                     date     id  var
+            0  2003-06-09 42223C    1
+            1  2003-06-10 09255G    2
+
+        with fillna_for_excluded_rows(df, byvars=['date','id'], fillvars='var', value=0) becomes:
+
+                      date     id  var
+            0  2003-06-09 42223C    1
+            1  2003-06-10 42223C    0
+            2  2003-06-09 09255G    0
+            3  2003-06-10 09255G    2
     """
     byvars, fillvars = [
         _to_list_if_str(v) for v in [byvars, fillvars]
