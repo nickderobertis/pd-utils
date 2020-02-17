@@ -57,38 +57,6 @@ from .regby import reg_by
 from pd_utils.corr import formatted_corr_df
 
 
-def to_csv(dataframe, path, filename, output=True, action="w", index=True):
-    """
-    action='w' for overwrite, 'a' for append
-    set index to False to not include index in output
-    """
-    if action == "a":
-        headers = False
-    else:
-        headers = True
-
-    if dataframe is not None:  # if dataframe exists
-        filepath = os.path.join(path, filename + ".csv")
-        f = open(filepath, action, encoding="utf-8")
-        if output is True:
-            print("Now saving %s" % filepath)
-        try:
-            f.write(
-                dataframe.to_csv(encoding="utf-8", index=index, header=headers)
-            )  # could use easier dataframe.to_csv(filepath) syntax, but won't overwrite
-        except:
-            f.write(
-                dataframe.to_csv(encoding="utf-8", index=index, header=headers).replace(
-                    "\ufffd", ""
-                )
-            )
-        f.close()
-    else:
-        print(
-            "{} does not exist.".format(dataframe)
-        )  # does nothing if dataframe doesn't exist
-
-
 def convert_sas_date_to_pandas_date(sasdates):
     epoch = datetime.datetime(1960, 1, 1)
 
@@ -98,23 +66,7 @@ def convert_sas_date_to_pandas_date(sasdates):
         return epoch + datetime.timedelta(days=date)
 
     if isinstance(sasdates, pd.Series):
-        # Below code is to reduce down to unique dates and create a mapping
-
-        #         unique = pd.Series(sasdates.dropna().unique()).astype(int)
-        #         shift = unique.apply(datetime.timedelta)
-        #         pd_dates = epoch + shift
-
-        #         for_merge = pd.concat([unique, pd_dates], axis=1)
-        #         for_merge.columns = [sasdates.name, 0]
-
-        #         orig_df = pd.DataFrame(sasdates)
-        #         orig_df.reset_index(inplace=True)
-
-        #         return for_merge.merge(orig_df, how='right', on=[sasdates.name]).sort_values('index').reset_index()[0]
-
         return apply_func_to_unique_and_merge(sasdates, to_pandas)
-
-    #         return pd.Series([epoch + datetime.timedelta(days=int(float(date))) if not pd.isnull(date) else nan for date in sasdates])
     else:
         return to_pandas(sasdates)
 
@@ -124,13 +76,9 @@ def year_month_from_date(df, date="Date", yearname="Year", monthname="Month"):
     Takes a dataframe with a datetime object and creates year and month variables
     """
     df = df.copy()
-    #     df[yearname] =  [date.year  for date in df[date]]
-    #     df[monthname] = [date.month for date in df[date]]
-    #     df[[yearname, monthname]] = apply_func_to_unique_and_merge(df[date], year_month_from_single_date)
-    ### TEMP
-    df[yearname] = df[date].apply(lambda x: x.year)
-    df[monthname] = df[date].apply(lambda x: x.month)
-    ### END TEMP
+    df[yearname] =  [date.year  for date in df[date]]
+    df[monthname] = [date.month for date in df[date]]
+    df[[yearname, monthname]] = apply_func_to_unique_and_merge(df[date], year_month_from_single_date)
 
     return df
 
@@ -610,7 +558,8 @@ def load_sas(filepath, csv=True, **read_csv_kwargs):
     df = SAS7BDAT(filepath).to_data_frame()
     # Write to csv file
     if csv:
-        to_csv(df, folder, filename, output=False, index=False)
+        file_path = os.path.join(folder, filename)
+        df.to_csv(file_path, index=False)
     return df
 
 
@@ -854,44 +803,6 @@ def portfolio_averages(
         return avgs, ports
 
 
-def factor_reg_by(df, groupvar, fac=4, retvar="RET", mp=False, stderr=False):
-    """
-    Takes a dataframe with RET, mktrf, smb, hml, and umd, and produces abnormal returns by groups.
-
-    Required inputs:
-    df: pandas datafram containing mktrf, smb, hml, umd, (or what's required for chosen model)
-        and a return variable
-    groupvar: str or list of strs, column names of columns on which to form by groups
-    fac: int (1, 3, 4), factor model to run
-    retvar: str, name of column containing returns. risk free rate will be subtracted from this column
-    stderr: bool, True to include standard errors of coefficients
-
-    Optional Inputs:
-    mp: False to use single processor, True to use all processors, int to use # processors
-
-    """
-    assert fac in (1, 3, 5)
-    factors = ["mktrf"]
-    if fac >= 3:
-        factors += ["smb", "hml"]
-    if fac == 5:
-        factors += ["rmw", "cma"]
-
-    # Create returns in excess of risk free rate
-    excess_var = "_" + retvar + "_minus_rf"
-    df[excess_var] = df[retvar] - df["rf"]
-
-    outdf = reg_by(df, excess_var, factors, groupvar, merge=True, mp=mp, stderr=stderr)
-    outdf["AB" + retvar] = outdf[retvar] - sum(
-        [outdf[fac] * outdf["coef_" + fac].astype(float) for fac in factors]
-    )  # create abnormal returns
-
-    # Cleanup excess returns
-    outdf.drop(excess_var, axis=1, inplace=True)
-
-    return outdf
-
-
 def state_abbrev(df, col, toabbrev=False):
     df = df.copy()
     states_to_abbrev = {
@@ -1026,26 +937,6 @@ def select_rows_by_condition_on_columns(df, cols, condition="== 1", logic="or"):
     )
 
     return outdf
-
-
-def show_df(df):
-    pool = ThreadPool(1)
-    pool.apply_async(_show_df, args=[df])
-
-
-def _show_df(df):
-    from pandastable import Table
-    from tkinter import Tk, Frame, BOTH, YES
-    # TODO [#2]: remove show_df or update imports
-    #
-    # this import was causing an issue importing pandas.tools with pandas 0.24.x, moved here as a temp fix
-    root = Tk()
-    frame = Frame(root)
-    frame.pack(fill=BOTH, expand=YES)
-    pt = Table(parent=frame, dataframe=df)
-    pt.show()
-    pt.queryBar()
-    root.mainloop()
 
 
 def groupby_merge(df, byvars, func_str, *func_args, subset="all", replace=False):
@@ -1759,12 +1650,9 @@ def sql(df_list, query):
 
     # Get date variable column names
     datevars = []
-    #     othervars = []
     for d in df_list:
         datevars += _get_datetime_cols(d)
-    #         othervars += [col for col in d.columns if col not in datevars]
     datevars = list(set(datevars))  # remove duplicates
-    #     othervars = list(set(othervars))
 
     merged = PandaSQL()(query)
 
