@@ -27,6 +27,8 @@ numpy = "*"
 pandasql = "*"
 sas7bdat = "*"
 statsmodels = "*"
+jupyterlab = "*"
+memory-profiler = "*"
 
 [requires]
 python_version = "3.7"
