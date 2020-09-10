@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.transform &mdash; pd_utils 0.2.0 documentation</title>
+  <title>pd_utils.transform &mdash; pd_utils 0.2.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -375,10 +375,10 @@
     <span class="c1"># Now winsorize</span>
     <span class="k">if</span> <span class="n">byvars</span><span class="p">:</span>  <span class="c1"># use groupby to process groups individually</span>
         <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">groupby_merge</span><span class="p">(</span>
-            <span class="n">to_winsor</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">temp_winsor</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">to_winsor</span><span class="p">,</span> <span class="n">byvars</span><span class="p">,</span> <span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="n">temp_winsor</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># do entire df, one column at a time</span>
-        <span class="n">to_winsor</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">temp_winsor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">to_winsor</span> <span class="o">=</span> <span class="n">to_winsor</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">temp_winsor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">to_winsor</span><span class="p">,</span> <span class="n">rest</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span></div>
 
@@ -387,6 +387,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Winsorizes a pandas Series</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">top</span><span class="p">:</span>
         <span class="n">top_val</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">top_pct</span><span class="p">)</span>
         <span class="n">col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span> <span class="o">&gt;</span> <span class="n">top_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_val</span>
