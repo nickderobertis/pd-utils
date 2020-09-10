@@ -210,10 +210,10 @@ def winsorize(df: pd.DataFrame, pct: Union[float, Tuple[float, float]],
     # Now winsorize
     if byvars:  # use groupby to process groups individually
         to_winsor = groupby_merge(
-            to_winsor, byvars, "transform", (temp_winsor), replace=True
+            to_winsor, byvars, "transform", temp_winsor, replace=True
         )
     else:  # do entire df, one column at a time
-        to_winsor.apply(temp_winsor, axis=0)
+        to_winsor = to_winsor.apply(temp_winsor, axis=0)
 
     return pd.concat([to_winsor, rest], axis=1)[cols]
 
@@ -222,6 +222,7 @@ def _winsorize(col, top_pct, bot_pct, top=True, bot=True):
     """
     Winsorizes a pandas Series
     """
+    col = col.astype('float64', copy=False)
     if top:
         top_val = col.quantile(top_pct)
         col.loc[col > top_val] = top_val
