@@ -64,6 +64,14 @@ pd\_utils.merge module
    :undoc-members:
    :show-inheritance:
 
+pd\_utils.plot module
+---------------------
+
+.. automodule:: pd_utils.plot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pd\_utils.port module
 ---------------------
 
