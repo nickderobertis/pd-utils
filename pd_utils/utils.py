@@ -24,6 +24,28 @@ def _to_name_if_series(i):
         return i
 
 
+def split_gen(df, keepvars, keyvar='__key_var__'):
+    """
+    Splits a dataframe into a list of arrays based on a key variable
+    """
+    small_df = df[[keyvar] + keepvars]
+    arr = small_df.values
+    splits = []
+
+    for i in range(arr.shape[0]):
+        if i == 0: continue
+        if arr[i,0] != arr[i-1,0]: #different key
+            splits.append(i)
+
+    bottom = 0
+    top = 0
+    for splt in splits:
+        top = splt
+        yield arr[bottom:top, 1:]
+        bottom = top
+    yield arr[top:, 1:]
+
+
 def split(df, keepvars, keyvar='__key_var__'):
     """
     Splits a dataframe into a list of arrays based on a key variable
@@ -36,3 +58,14 @@ def split(df, keepvars, keyvar='__key_var__'):
         if arr[i,0] != arr[i-1,0]: #different key
             splits.append(i)
     return np.split(arr[:,1:], splits)
+
+
+def _get_splits(df, keepvars, keyvar='__key_var__'):
+    small_df = df[[keyvar] + keepvars]
+    arr = small_df.values
+    splits = []
+    for i in range(arr.shape[0]):
+        if i == 0: continue
+        if arr[i, 0] != arr[i - 1, 0]:  # different key
+            splits.append(i)
+    return splits

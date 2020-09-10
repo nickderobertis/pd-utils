@@ -3,6 +3,7 @@ import functools
 import sys
 import timeit
 import warnings
+from copy import deepcopy
 from itertools import chain
 from multiprocessing import Pool
 from typing import Optional, List, Union, Sequence
@@ -11,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from pd_utils.timer import estimate_time
-from pd_utils.utils import split
+from pd_utils.utils import split, split_gen
 from pd_utils.merge import groupby_merge
 
 
@@ -146,27 +147,33 @@ def cumulate(
             with Pool() as pool:  # use all processors
                 return _cumulate_mp_main(array_list, pool)
 
-    def _cumulate_mp_main(array_list, pool):
+    def _cumulate_mp_main(array_gen, pool):
 
         # For time estimation
         counter = []
-        num_loops = len(array_list)
+        # num_loops = len(array_list)
+        num_loops = 1000  # TEMP
         start_time = timeit.default_timer()
+
 
         # Mp setup
         cum = functools.partial(np.cumprod, axis=0)
+        results = np.concatenate(list(pool.imap(cum, array_gen)), axis=0)
+        # results = np.concatenate(list(pool.imap(cum, array_gen)), axis=0)
+        return results
+
         results = [
-            pool.apply_async(cum, (arr,), callback=counter.append) for arr in array_list
+            pool.apply_async(cum, (arr,), callback=counter.append) for arr in array_gen
         ]
 
         # Time estimation
-        while len(counter) < num_loops:
-            estimate_time(num_loops, len(counter), start_time)
-            time2.sleep(0.5)
+        # while len(counter) < num_loops:
+        #     estimate_time(num_loops, len(counter), start_time)
+        #     time2.sleep(0.5)
 
         # Collect and output results. A timeout of 1 should be fine because
         # it should wait until completion anyway
-        return np.concatenate([r.get(timeout=1) for r in results], axis=0)
+        return np.concatenate([r.get() for r in results], axis=0)
 
     #####TEMPORARY CODE######
     assert method.lower() != "zero"
@@ -174,6 +181,8 @@ def cumulate(
 
     if isinstance(byvars, str):
         byvars = [byvars]
+    elif isinstance(byvars, list):
+        byvars = deepcopy(byvars)  # don't overwrite existing list
 
     assert method.lower() in ("zero", "between", "first")
     assert not (
@@ -218,10 +227,11 @@ def cumulate(
     for col in [df[c].astype(str) for c in byvars]:
         df["__key_var__"] += col
 
-    array_list = split(df, cumvars)
+    array_gen = split_gen(df, cumvars)
 
     #     container_array = df[cumvars].values
-    full_array = _cumulate(array_list)
+    full_array = _cumulate(array_gen)
+
 
     new_cumvars = ["cum_" + str(c) for c in cumvars]
 
@@ -264,7 +274,10 @@ def _map_windows(
 
     wm = functools.partial(window_mapping, time, method=method)
 
-    df = groupby_merge(df, byvars, "transform", (wm), subset=periodvar)
+    if byvars:
+        df = groupby_merge(df, byvars, "transform", (wm), subset=periodvar)
+    else:
+        df[periodvar + '_transform'] = wm(df[periodvar])
 
     return df.rename(columns={periodvar + "_transform": "__map_window__"})
 
