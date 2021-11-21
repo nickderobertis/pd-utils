@@ -1,9 +1,10 @@
 {
     "template": "https://github.com/nickderobertis/cookiecutter-pypi-sphinx",
-    "commit": "3ad9a7295b56f006b8f0978a6e031d821c34cc6b",
+    "commit": "091fcff1b2a425adc13a75fc587fbbb190b7ca3a",
     "context": {
         "cookiecutter": {
             "package_name": "pd_utils",
+            "package_directory": "pd_utils",
             "full_name": "Pandas Utilities",
             "repo_name": "pd-utils",
             "repo_username": "nickderobertis",
@@ -11,6 +12,8 @@
             "package_author": "Nick DeRobertis",
             "author_email": "whoopnip@gmail.com",
             "google_analytics_id": "UA-156908023-1",
+            "logo_url": "",
+            "install_packages": "",
             "_template": "https://github.com/nickderobertis/cookiecutter-pypi-sphinx"
         }
     }

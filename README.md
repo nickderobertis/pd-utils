@@ -29,3 +29,7 @@ See the
 [documentation here.](
 https://nickderobertis.github.io/pd-utils/
 )
+
+## Author
+
+Created by Nick DeRobertis. MIT License.
