@@ -29,4 +29,5 @@ sas7bdat = "*"
 statsmodels = "*"
 jupyterlab = "*"
 memory-profiler = "*"
-
+types-python-dateutil = "*"
+matplotlib = "*"

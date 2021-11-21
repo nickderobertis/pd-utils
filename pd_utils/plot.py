@@ -1,10 +1,11 @@
 from typing import List, Optional, Dict
 
 import pandas as pd
-from pandas.plotting._matplotlib.style import _get_standard_colors
 import matplotlib.pyplot as plt
 
 # One liner to convert 1 to 1st, 2 to 2nd, etc.
+from pandas.plotting._matplotlib.style import get_standard_colors
+
 ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
 
 def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing: float = .1,
@@ -47,7 +48,7 @@ def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing:
         col_labels = cols
 
     # Get default color style from pandas - can be changed to any other color list
-    colors = _get_standard_colors(num_colors=len(cols))
+    colors = get_standard_colors(num_colors=len(cols))
 
     # First axis
     color = colors[0]

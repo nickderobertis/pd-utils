@@ -71,15 +71,29 @@ class DataFrameTest:
     )
 
     df_nan_byvar = pd.DataFrame(
-        data=[("a", 1), (nan, 2), ("b", 3), ("b", 4),], columns=["byvar", "val"]
+        data=[
+            ("a", 1),
+            (nan, 2),
+            ("b", 3),
+            ("b", 4),
+        ],
+        columns=["byvar", "val"],
     )
 
     df_nan_byvar_and_val = pd.DataFrame(
-        data=[("a", 1), (nan, 2), ("b", nan), ("b", 4),], columns=["byvar", "val"]
+        data=[
+            ("a", 1),
+            (nan, 2),
+            ("b", nan),
+            ("b", 4),
+        ],
+        columns=["byvar", "val"],
     )
 
     single_ticker_df = pd.DataFrame(
-        data=[("a", Timestamp("2000-01-01 00:00:00"), "ADM"),],
+        data=[
+            ("a", Timestamp("2000-01-01 00:00:00"), "ADM"),
+        ],
         columns=["byvar", "Date", "TICKER"],
     )
 
@@ -312,7 +326,12 @@ class TestGroupbyMerge(DataFrameTest):
 
     def test_nan_byvar_sum(self):
         expect_df = pd.DataFrame(
-            data=[("a", 1, 1.0), (nan, 2, nan), ("b", 3, 7.0), ("b", 4, 7.0),],
+            data=[
+                ("a", 1, 1.0),
+                (nan, 2, nan),
+                ("b", 3, 7.0),
+                ("b", 4, 7.0),
+            ],
             columns=["byvar", "val", "val_sum"],
         )
 
@@ -461,18 +480,18 @@ class TestWinsorize(DataFrameTest):
 
         expect_df = pd.DataFrame(
             data=[
-                (10516, "a", "1/1/2000", 1.022624),
-                (10516, "a", "1/2/2000", 1.022624),
-                (10516, "a", "1/3/2000", 1.02672),
-                (10516, "a", "1/4/2000", 1.02672),
-                (10516, "b", "1/1/2000", 1.062624),
-                (10516, "b", "1/2/2000", 1.062624),
-                (10516, "b", "1/3/2000", 1.06672),
-                (10516, "b", "1/4/2000", 1.06672),
-                (10517, "a", "1/1/2000", 1.102624),
-                (10517, "a", "1/2/2000", 1.102624),
-                (10517, "a", "1/3/2000", 1.10672),
-                (10517, "a", "1/4/2000", 1.10672),
+                (10516, "a", "1/1/2000", 1.0216),
+                (10516, "a", "1/2/2000", 1.0216),
+                (10516, "a", "1/3/2000", 1.028),
+                (10516, "a", "1/4/2000", 1.028),
+                (10516, "b", "1/1/2000", 1.0616),
+                (10516, "b", "1/2/2000", 1.0616),
+                (10516, "b", "1/3/2000", 1.068),
+                (10516, "b", "1/4/2000", 1.068),
+                (10517, "a", "1/1/2000", 1.1016000000000001),
+                (10517, "a", "1/2/2000", 1.1016000000000001),
+                (10517, "a", "1/3/2000", 1.108),
+                (10517, "a", "1/4/2000", 1.108),
             ],
             columns=["PERMNO", "byvar", "Date", "RET"],
         )
@@ -1272,7 +1291,9 @@ class TestVarChangeByGroups(DataFrameTest):
             columns=["PERMNO", "byvar", "Date", "RET", "RET_change"],
         )
 
-        vc = pd_utils.transform.var_change_by_groups(self.df, "RET", ["PERMNO", "byvar"])
+        vc = pd_utils.transform.var_change_by_groups(
+            self.df, "RET", ["PERMNO", "byvar"]
+        )
 
         assert_frame_equal(expect_df, vc)
 
@@ -1327,7 +1348,9 @@ class TestFillExcludedRows(DataFrameTest):
     )
 
     def test_no_fillvars_str_byvars(self):
-        result = pd_utils.filldata.fill_excluded_rows(self.df_gvkey_str, ["GVKEY", "Date"])
+        result = pd_utils.filldata.fill_excluded_rows(
+            self.df_gvkey_str, ["GVKEY", "Date"]
+        )
         assert_frame_equal(self.expect_df_nofill, result)
 
     def test_no_fillvars_series_byvars(self):
@@ -1354,7 +1377,9 @@ class TestFillExcludedRows(DataFrameTest):
             columns=["GVKEY", "Date", "var"],
         )
 
-        result = pd_utils.filldata.fill_excluded_rows(var_df, ["GVKEY", "Date"], "var", value=0)
+        result = pd_utils.filldata.fill_excluded_rows(
+            var_df, ["GVKEY", "Date"], "var", value=0
+        )
         assert_frame_equal(expect_df, result)
 
 
@@ -1379,7 +1404,10 @@ class TestFillnaByGroups(DataFrameTest):
     def test_fillna_by_group_keep_one(self):
 
         expect_df = pd.DataFrame(
-            data=[("a", 4, "c", 51.5), ("b", 2, "f", 6.0),],
+            data=[
+                ("a", 4, "c", 51.5),
+                ("b", 2, "f", 6.0),
+            ],
             columns=["group", "y", "x1", "x2"],
             index=[0, 3],
         )
@@ -1389,4 +1417,3 @@ class TestFillnaByGroups(DataFrameTest):
         )
 
         assert_frame_equal(expect_df, result)
-

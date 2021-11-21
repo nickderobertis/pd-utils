@@ -65,6 +65,7 @@ PACKAGE_INSTALL_REQUIRES = [
     "pandasql",
     "sas7bdat",
     "statsmodels",
+    "matplotlib",
 ]
 
 # Add any third party packages you use in requirements for optional features of your package here
