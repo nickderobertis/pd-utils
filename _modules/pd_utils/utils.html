@@ -189,6 +189,28 @@
         <span class="k">return</span> <span class="n">i</span>
 
 
+<div class="viewcode-block" id="split_gen"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.utils.split_gen">[docs]</a><span class="k">def</span> <span class="nf">split_gen</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keepvars</span><span class="p">,</span> <span class="n">keyvar</span><span class="o">=</span><span class="s1">&#39;__key_var__&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a dataframe into a list of arrays based on a key variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">small_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">keyvar</span><span class="p">]</span> <span class="o">+</span> <span class="n">keepvars</span><span class="p">]</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">small_df</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#different key</span>
+            <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">bottom</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">splt</span> <span class="ow">in</span> <span class="n">splits</span><span class="p">:</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">splt</span>
+        <span class="k">yield</span> <span class="n">arr</span><span class="p">[</span><span class="n">bottom</span><span class="p">:</span><span class="n">top</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="n">top</span>
+    <span class="k">yield</span> <span class="n">arr</span><span class="p">[</span><span class="n">top</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span></div>
+
+
 <div class="viewcode-block" id="split"><a class="viewcode-back" href="../../api/pd_utils.html#pd_utils.utils.split">[docs]</a><span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keepvars</span><span class="p">,</span> <span class="n">keyvar</span><span class="o">=</span><span class="s1">&#39;__key_var__&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits a dataframe into a list of arrays based on a key variable</span>
@@ -201,6 +223,17 @@
         <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#different key</span>
             <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">splits</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_splits</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keepvars</span><span class="p">,</span> <span class="n">keyvar</span><span class="o">=</span><span class="s1">&#39;__key_var__&#39;</span><span class="p">):</span>
+    <span class="n">small_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">keyvar</span><span class="p">]</span> <span class="o">+</span> <span class="n">keepvars</span><span class="p">]</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">small_df</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>  <span class="c1"># different key</span>
+            <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">splits</span>
 </pre></div>
 
            </div>
@@ -214,7 +247,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Nick DeRobertis
+        &copy; Copyright 2021, Nick DeRobertis
 
     </p>
   </div>
