@@ -30,5 +30,3 @@ statsmodels = "*"
 jupyterlab = "*"
 memory-profiler = "*"
 
-[requires]
-python_version = "3.7"

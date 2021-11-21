@@ -4,6 +4,9 @@
 # Main package name
 PACKAGE_NAME = "pd_utils"
 
+# Directory name of package
+PACKAGE_DIRECTORY = "pd_utils"
+
 # Name of Repo
 REPO_NAME = "pd-utils"
 
@@ -114,9 +117,12 @@ PACKAGE_URLS = {
     "Documentation": f"https://{REPO_USERNAME}.github.io/{REPO_NAME}",
 }
 
+# Url of logo
+PACKAGE_LOGO_URL = ""
+
 # Does not affect anything about the current package. Simply used for tracking when this repo was created off
 # of the quickstart template, so it is easier to bring over new changes to the template.
-_TEMPLATE_VERSION_TUPLE = (0, 5, 5)
+_TEMPLATE_VERSION_TUPLE = (0, 9, 2)
 
 if __name__ == "__main__":
     # Store config as environment variables
