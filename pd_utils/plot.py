@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -10,6 +10,7 @@ ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
 
 def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing: float = .1,
                     colored_axes: bool = True, axis_locations_in_legend: bool = True,
+                    legend_kwargs: Optional[Dict[str, Any]] = None,
                     **kwargs) -> plt.Axes:
     """
     Plot multiple series with different y-axes
@@ -21,6 +22,7 @@ def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing:
     :param spacing: Amount of space between y-axes beyond the two which are on the sides of the box
     :param colored_axes: Whether to make axis labels and ticks colored the same as the line on the graph
     :param axis_locations_in_legend: Whether to add to the legend which axis corresponds to which plot
+    :param legend_kwargs: Keyword arguments to pass to ax.legend
     :param kwargs: df.plot kwargs
     :return:
     """
@@ -28,6 +30,8 @@ def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing:
         cols = df.columns
     if len(cols) == 0:
         raise ValueError('if cols are passed, must not be an empty list')
+    if legend_kwargs is None:
+        legend_kwargs = {}
 
     if axis_locations_in_legend:
         rename_dict: Dict[str, str] = {}
@@ -75,5 +79,5 @@ def plot_multi_axis(df: pd.DataFrame, cols: Optional[List[str]] = None, spacing:
         lines += line
         labels += label
 
-    ax.legend(lines, labels, loc=0)
+    ax.legend(lines, labels, **legend_kwargs)
     return ax
