@@ -203,7 +203,7 @@ def expand_months(df: pd.DataFrame, datevar: str = "Date", newdatevar: str = "Da
     days = pd.DataFrame(
         np.concatenate(expand_all(df[datevar].unique()), axis=0),
         columns=[datevar, newdatevar],
-        dtype="datetime64",
+        dtype="datetime64[ns]",
     )
 
     return df.merge(days, on=datevar, how="left")
