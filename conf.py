@@ -20,7 +20,7 @@ REPO_MAINTAINERS = [
 ]
 
 # Package version in the format (major, minor, release)
-PACKAGE_VERSION_TUPLE = (0, 2, 2)
+PACKAGE_VERSION_TUPLE = (0, 2, 3)
 
 # Short description of the package
 PACKAGE_SHORT_DESCRIPTION = "High-level tools for common Pandas workflows"
