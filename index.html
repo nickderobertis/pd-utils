@@ -4,10 +4,11 @@
 <html lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to Pandas Utilities documentation! &mdash; pd_utils 0.2.2 documentation</title>
+  <title>Welcome to Pandas Utilities documentation! &mdash; pd_utils 0.2.3 documentation</title>
   
 
   
@@ -22,13 +23,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
-        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -37,10 +37,15 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   <link rel="stylesheet" href="_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Getting started with pd_utils" href="tutorial.html" /> 
@@ -67,7 +72,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -92,12 +97,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Getting started with pd_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">This is my gallery</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">pd_utils</a></li>
 </ul>
@@ -165,12 +170,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-pandas-utilities-documentation">
+  <section id="welcome-to-pandas-utilities-documentation">
 <h1>Welcome to Pandas Utilities documentation!<a class="headerlink" href="#welcome-to-pandas-utilities-documentation" title="Permalink to this headline">¶</a></h1>
 <p>High-level tools for common Pandas workflows</p>
 <p>To get started, look here.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Tutorial</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Getting started with pd_utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#install">Install</a></li>
@@ -179,15 +184,15 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">This is my gallery</a></li>
 </ul>
 </div>
-<div class="section" id="an-overview-of-pd-utils">
+<section id="an-overview-of-pd-utils">
 <h2>An overview of <code class="docutils literal notranslate"><span class="pre">pd_utils</span></code><a class="headerlink" href="#an-overview-of-pd-utils" title="Permalink to this headline">¶</a></h2>
 <p>This is a collection of various functions to extend <code class="docutils literal notranslate"><span class="pre">pandas</span></code>. Here is a listing
 of the current functions.</p>
-<div class="section" id="quick-links">
+<section id="quick-links">
 <h3>Quick Links<a class="headerlink" href="#quick-links" title="Permalink to this headline">¶</a></h3>
 <p>Find the source code <a class="reference external" href="https://github.com/nickderobertis/pd-utils">on Github</a>.</p>
-</div>
-<div class="section" id="merge">
+</section>
+<section id="merge">
 <h3>Merge<a class="headerlink" href="#merge" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -198,19 +203,19 @@ of the current functions.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.left_merge_latest" title="pd_utils.merge.left_merge_latest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">left_merge_latest</span></code></a>(df, df2, on)</p></td>
 <td><p>Left merges df2 to df using on, but grabbing the most recent observation (right_datevar will be the soonest earlier than left_datevar).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.groupby_merge" title="pd_utils.merge.groupby_merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby_merge</span></code></a>(df, byvars, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.groupby_merge" title="pd_utils.merge.groupby_merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby_merge</span></code></a>(df, byvars, ...)</p></td>
 <td><p>Creates a pandas groupby object, applies the aggregation function in func_str, and merges back the aggregated data to the original dataframe.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.groupby_index" title="pd_utils.merge.groupby_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby_index</span></code></a>(df, byvars[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.groupby_index" title="pd_utils.merge.groupby_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby_index</span></code></a>(df, byvars[, ...])</p></td>
 <td><p>Returns a dataframe which is a copy of the old one with an additional column containing an index by groups.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.apply_func_to_unique_and_merge" title="pd_utils.merge.apply_func_to_unique_and_merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_func_to_unique_and_merge</span></code></a>(…)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.merge.apply_func_to_unique_and_merge" title="pd_utils.merge.apply_func_to_unique_and_merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_func_to_unique_and_merge</span></code></a>(...)</p></td>
 <td><p>This function reduces the given series down to unique values, applies the function, then expands back up to the original shape of the data.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="date-time-handling">
+</section>
+<section id="date-time-handling">
 <h3>Date-time Handling<a class="headerlink" href="#date-time-handling" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -218,28 +223,28 @@ of the current functions.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.convert_sas_date_to_pandas_date" title="pd_utils.datetime_utils.convert_sas_date_to_pandas_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_sas_date_to_pandas_date</span></code></a>(…)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.convert_sas_date_to_pandas_date" title="pd_utils.datetime_utils.convert_sas_date_to_pandas_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_sas_date_to_pandas_date</span></code></a>(...)</p></td>
 <td><p>Converts a date or Series of dates loaded from a SAS SAS7BDAT file to a pandas date type.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.year_month_from_date" title="pd_utils.datetime_utils.year_month_from_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">year_month_from_date</span></code></a>(df)</p></td>
 <td><p>Takes a dataframe with a datetime object and creates year and month variables</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.expand_time" title="pd_utils.datetime_utils.expand_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_time</span></code></a>(df[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.expand_time" title="pd_utils.datetime_utils.expand_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_time</span></code></a>(df[, ...])</p></td>
 <td><p>Creates new observations in the dataset advancing the time by the int or list given.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.expand_months" title="pd_utils.datetime_utils.expand_months"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_months</span></code></a>(df[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.expand_months" title="pd_utils.datetime_utils.expand_months"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_months</span></code></a>(df[, ...])</p></td>
 <td><p>Takes a monthly dataframe and returns a daily (trade day or calendar day) dataframe.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.tradedays" title="pd_utils.datetime_utils.tradedays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tradedays</span></code></a>()</p></td>
 <td><p>Used for constructing a range of dates with pandas date_range function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.USTradingCalendar" title="pd_utils.datetime_utils.USTradingCalendar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USTradingCalendar</span></code></a>(…)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.datetime_utils.USTradingCalendar" title="pd_utils.datetime_utils.USTradingCalendar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USTradingCalendar</span></code></a>(...)</p></td>
 <td><p>The US trading day calendar behind the function <code class="xref py py-func docutils literal notranslate"><span class="pre">tradedays()</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="fill-data">
+</section>
+<section id="fill-data">
 <h3>Fill Data<a class="headerlink" href="#fill-data" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -250,10 +255,10 @@ of the current functions.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.fillna_by_groups" title="pd_utils.filldata.fillna_by_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fillna_by_groups</span></code></a>(df, byvars)</p></td>
 <td><p>Fills missing values by group, with different handling for string variables versus numeric</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.fillna_by_groups_and_keep_one_per_group" title="pd_utils.filldata.fillna_by_groups_and_keep_one_per_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fillna_by_groups_and_keep_one_per_group</span></code></a>(df, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.fillna_by_groups_and_keep_one_per_group" title="pd_utils.filldata.fillna_by_groups_and_keep_one_per_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fillna_by_groups_and_keep_one_per_group</span></code></a>(df, ...)</p></td>
 <td><p>Fills missing values by group, with different handling for string variables versus numeric, then keeps one observation per group.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.add_missing_group_rows" title="pd_utils.filldata.add_missing_group_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_missing_group_rows</span></code></a>(df, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.add_missing_group_rows" title="pd_utils.filldata.add_missing_group_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_missing_group_rows</span></code></a>(df, ...)</p></td>
 <td><p>Adds rows so that each group has all non group IDs, optionally filling values by a pandas fill method</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.filldata.fill_excluded_rows" title="pd_utils.filldata.fill_excluded_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_excluded_rows</span></code></a>(df, byvars)</p></td>
@@ -261,8 +266,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="transform">
+</section>
+<section id="transform">
 <h3>Transform<a class="headerlink" href="#transform" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -273,16 +278,16 @@ of the current functions.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.averages" title="pd_utils.transform.averages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">averages</span></code></a>(df, avgvars, byvars)</p></td>
 <td><p>Returns equal- and value-weighted averages of variables within groups</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.state_abbrev" title="pd_utils.transform.state_abbrev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_abbrev</span></code></a>(df, col[, …])</p></td>
-<td><p>Replaces a DataFrame’s column of a state abbreviation or state name to the opposite</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.state_abbrev" title="pd_utils.transform.state_abbrev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_abbrev</span></code></a>(df, col[, ...])</p></td>
+<td><p>Replaces a DataFrame's column of a state abbreviation or state name to the opposite</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.long_to_wide" title="pd_utils.transform.long_to_wide"><code class="xref py py-obj docutils literal notranslate"><span class="pre">long_to_wide</span></code></a>(df, …[, …])</p></td>
-<td><p>Takes a “long” format DataFrame and converts to a “wide” format</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.long_to_wide" title="pd_utils.transform.long_to_wide"><code class="xref py py-obj docutils literal notranslate"><span class="pre">long_to_wide</span></code></a>(df, ...[, ...])</p></td>
+<td><p>Takes a &quot;long&quot; format DataFrame and converts to a &quot;wide&quot; format</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.winsorize" title="pd_utils.transform.winsorize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">winsorize</span></code></a>(df, pct[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.winsorize" title="pd_utils.transform.winsorize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">winsorize</span></code></a>(df, pct[, ...])</p></td>
 <td><p>Finds observations above the pct percentile and replaces the with the pct percentile value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.var_change_by_groups" title="pd_utils.transform.var_change_by_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_change_by_groups</span></code></a>(df, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.var_change_by_groups" title="pd_utils.transform.var_change_by_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_change_by_groups</span></code></a>(df, ...)</p></td>
 <td><p>Used for getting variable changes over time within bygroups.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.transform.join_col_strings" title="pd_utils.transform.join_col_strings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">join_col_strings</span></code></a>(df, cols)</p></td>
@@ -290,8 +295,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="portfolios">
+</section>
+<section id="portfolios">
 <h3>Portfolios<a class="headerlink" href="#portfolios" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -299,10 +304,10 @@ of the current functions.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.port.portfolio" title="pd_utils.port.portfolio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">portfolio</span></code></a>(df, groupvar[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.port.portfolio" title="pd_utils.port.portfolio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">portfolio</span></code></a>(df, groupvar[, ...])</p></td>
 <td><p>Constructs portfolios based on percentile values of groupvar.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.port.portfolio_averages" title="pd_utils.port.portfolio_averages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">portfolio_averages</span></code></a>(df, …[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.port.portfolio_averages" title="pd_utils.port.portfolio_averages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">portfolio_averages</span></code></a>(df, ...[, ...])</p></td>
 <td><p>Creates portfolios and calculates equal- and value-weighted averages of variables within portfolios.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.port.long_short_portfolio" title="pd_utils.port.long_short_portfolio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">long_short_portfolio</span></code></a>(df, portvar)</p></td>
@@ -310,8 +315,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="correlations">
+</section>
+<section id="correlations">
 <h3>Correlations<a class="headerlink" href="#correlations" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -324,8 +329,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="cumulate">
+</section>
+<section id="cumulate">
 <h3>Cumulate<a class="headerlink" href="#cumulate" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -333,13 +338,13 @@ of the current functions.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.cum.cumulate" title="pd_utils.cum.cumulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumulate</span></code></a>(df, cumvars, method[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.cum.cumulate" title="pd_utils.cum.cumulate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumulate</span></code></a>(df, cumvars, method[, ...])</p></td>
 <td><p>Cumulates a variable over time.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="regressions">
+</section>
+<section id="regressions">
 <h3>Regressions<a class="headerlink" href="#regressions" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -352,8 +357,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="querying">
+</section>
+<section id="querying">
 <h3>Querying<a class="headerlink" href="#querying" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -361,16 +366,16 @@ of the current functions.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.query.select_rows_by_condition_on_columns" title="pd_utils.query.select_rows_by_condition_on_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_rows_by_condition_on_columns</span></code></a>(df, …)</p></td>
-<td><p>Selects rows of a pandas dataframe by evaluating a condition on a subset of the dataframe’s columns.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.query.select_rows_by_condition_on_columns" title="pd_utils.query.select_rows_by_condition_on_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_rows_by_condition_on_columns</span></code></a>(df, ...)</p></td>
+<td><p>Selects rows of a pandas dataframe by evaluating a condition on a subset of the dataframe's columns.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.query.sql" title="pd_utils.query.sql"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql</span></code></a>(df_list, query)</p></td>
 <td><p>Convenience function for running a pandasql query.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="loading-data">
+</section>
+<section id="loading-data">
 <h3>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -383,8 +388,8 @@ of the current functions.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="testing">
+</section>
+<section id="testing">
 <h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -392,13 +397,13 @@ of the current functions.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.testing.to_copy_paste" title="pd_utils.testing.to_copy_paste"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_copy_paste</span></code></a>(df[, index, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pd_utils.html#pd_utils.testing.to_copy_paste" title="pd_utils.testing.to_copy_paste"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_copy_paste</span></code></a>(df[, index, ...])</p></td>
 <td><p>Takes a dataframe and prints all of its data in such a format that it can be copy-pasted to create a new dataframe from the pandas.DataFrame() constructor.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">pd_utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/pd_utils.html">pd_utils package</a><ul>
@@ -424,17 +429,17 @@ of the current functions.</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
+</section>
+</section>
+<section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

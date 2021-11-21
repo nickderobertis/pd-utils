@@ -1,6 +1,7 @@
-pandasql
-pandas
-sas7bdat
 statsmodels
-numpy
+pandasql
+matplotlib
+pandas
 pd_utils
+numpy
+sas7bdat

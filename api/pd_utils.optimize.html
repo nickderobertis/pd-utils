@@ -4,10 +4,11 @@
 <html lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.optimize package &mdash; pd_utils 0.2.2 documentation</title>
+  <title>pd_utils.optimize package &mdash; pd_utils 0.2.3 documentation</title>
   
 
   
@@ -22,13 +23,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
-        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,10 +37,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pd_utils.optimize.load package" href="pd_utils.optimize.load.html" />
@@ -68,7 +73,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -93,12 +98,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Getting started with pd_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">This is my gallery</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">pd_utils</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="pd_utils.html">pd_utils package</a><ul class="current">
@@ -194,24 +199,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-pd_utils.optimize">
+  <section id="module-pd_utils.optimize">
 <span id="pd-utils-optimize-package"></span><h1>pd_utils.optimize package<a class="headerlink" href="#module-pd_utils.optimize" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
+<section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pd_utils.optimize.load.html">pd_utils.optimize.load package</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
+</section>
+<section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-pd_utils.optimize.dftypes">
+</section>
+<section id="module-pd_utils.optimize.dftypes">
 <span id="pd-utils-optimize-dftypes-module"></span><h2>pd_utils.optimize.dftypes module<a class="headerlink" href="#module-pd_utils.optimize.dftypes" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.optimize.dftypes.df_types_dict">
-<code class="sig-prename descclassname">pd_utils.optimize.dftypes.</code><code class="sig-name descname">df_types_dict</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">remove_dates=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/optimize/dftypes.html#df_types_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.optimize.dftypes.df_types_dict" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.optimize.dftypes.df_types_dict">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.optimize.dftypes.</span></span><span class="sig-name descname"><span class="pre">df_types_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_dates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/optimize/dftypes.html#df_types_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.optimize.dftypes.df_types_dict" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
@@ -219,9 +224,9 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.optimize.dftypes.optimized_df">
-<code class="sig-prename descclassname">pd_utils.optimize.dftypes.</code><code class="sig-name descname">optimized_df</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/optimize/dftypes.html#optimized_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.optimize.dftypes.optimized_df" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.optimize.dftypes.optimized_df">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.optimize.dftypes.</span></span><span class="sig-name descname"><span class="pre">optimized_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/optimize/dftypes.html#optimized_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.optimize.dftypes.optimized_df" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
@@ -229,11 +234,11 @@
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.optimize.typing">
+</section>
+<section id="module-pd_utils.optimize.typing">
 <span id="pd-utils-optimize-typing-module"></span><h2>pd_utils.optimize.typing module<a class="headerlink" href="#module-pd_utils.optimize.typing" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

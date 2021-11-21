@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils.regby &mdash; pd_utils 0.2.2 documentation</title>
+  <title>pd_utils.regby &mdash; pd_utils 0.2.3 documentation</title>
   
 
   
@@ -22,13 +22,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
-        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -37,10 +36,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -91,12 +95,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with pd_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">pd_utils</a></li>
 </ul>
@@ -283,7 +287,7 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">num_completed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">expected_results</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">ready</span><span class="p">()])</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{num_completed}</span><span class="s2"> out of </span><span class="si">{num_expected_results}</span><span class="s2"> calculations&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="n">num_completed</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">num_expected_results</span><span class="si">}</span><span class="s2"> calculations&quot;</span><span class="p">,</span>
                 <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -306,10 +310,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="n">other</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">rf</span><span class="s2">&quot;&lt;ResultCounter(count=</span><span class="si">{self.count}</span><span class="s2">, expected=</span><span class="si">{self.expected_results}</span><span class="s2">)&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">rf</span><span class="s2">&quot;&lt;ResultCounter(count=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2">, expected=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">expected_results</span><span class="si">}</span><span class="s2">)&gt;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{self.count}</span><span class="s2"> out of </span><span class="si">{self.expected_results}</span><span class="s2"> calculations&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">expected_results</span><span class="si">}</span><span class="s2"> calculations&quot;</span></div>
 
 
 <span class="k">def</span> <span class="nf">_reg</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">xvars</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>

@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -8,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; pd_utils 0.2.2 documentation</title>
+  <title>Index &mdash; pd_utils 0.2.3 documentation</title>
   
 
   
@@ -23,13 +22,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
-        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -38,10 +36,15 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   <link rel="stylesheet" href="_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
@@ -67,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -92,12 +95,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Getting started with pd_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">This is my gallery</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">pd_utils</a></li>
 </ul>
@@ -507,12 +510,14 @@
 </li>
       <li><a href="api/pd_utils.html#pd_utils.merge.left_merge_latest">left_merge_latest() (in module pd_utils.merge)</a>
 </li>
-      <li><a href="api/pd_utils.html#pd_utils.timer.estimate_time.params.length">length (pd_utils.timer.estimate_time parameter)</a>
+      <li><a href="api/pd_utils.html#pd_utils.plot.plot_multi_axis.params.legend_kwargs">legend_kwargs (pd_utils.plot.plot_multi_axis parameter)</a>
 </li>
-      <li><a href="api/pd_utils.html#pd_utils.load.load_sas">load_sas() (in module pd_utils.load)</a>
+      <li><a href="api/pd_utils.html#pd_utils.timer.estimate_time.params.length">length (pd_utils.timer.estimate_time parameter)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pd_utils.html#pd_utils.load.load_sas">load_sas() (in module pd_utils.load)</a>
+</li>
       <li><a href="api/pd_utils.html#pd_utils.query.select_rows_by_condition_on_columns.params.logic">logic (pd_utils.query.select_rows_by_condition_on_columns parameter)</a>, <a href="index.html#pd_utils.query.select_rows_by_condition_on_columns.params.logic">[1]</a>
 </li>
       <li><a href="api/pd_utils.html#pd_utils.port.long_short_portfolio">long_short_portfolio() (in module pd_utils.port)</a>
@@ -533,6 +538,49 @@
 </li>
       <li><a href="api/pd_utils.html#pd_utils.cum.cumulate.params.method">method (pd_utils.cum.cumulate parameter)</a>, <a href="index.html#pd_utils.cum.cumulate.params.method">[1]</a>
 </li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils">pd_utils</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.corr">pd_utils.corr</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.cum">pd_utils.cum</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.datetime_utils">pd_utils.datetime_utils</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.filldata">pd_utils.filldata</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.load">pd_utils.load</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.merge">pd_utils.merge</a>
+</li>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize">pd_utils.optimize</a>
+</li>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.dftypes">pd_utils.optimize.dftypes</a>
+</li>
+        <li><a href="api/pd_utils.optimize.load.html#module-pd_utils.optimize.load">pd_utils.optimize.load</a>
+</li>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.typing">pd_utils.optimize.typing</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.plot">pd_utils.plot</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.port">pd_utils.port</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.query">pd_utils.query</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.regby">pd_utils.regby</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.testing">pd_utils.testing</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.timer">pd_utils.timer</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.transform">pd_utils.transform</a>
+</li>
+        <li><a href="api/pd_utils.html#module-pd_utils.utils">pd_utils.utils</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/pd_utils.html#pd_utils.datetime_utils.year_month_from_date.params.monthname">monthname (pd_utils.datetime_utils.year_month_from_date parameter)</a>, <a href="index.html#pd_utils.datetime_utils.year_month_from_date.params.monthname">[1]</a>
@@ -591,46 +639,141 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/pd_utils.html#pd_utils.transform.winsorize.params.pct">pct (pd_utils.transform.winsorize parameter)</a>, <a href="index.html#pd_utils.transform.winsorize.params.pct">[1]</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils">pd_utils (module)</a>
+      <li>
+    pd_utils
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.corr">pd_utils.corr (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.corr
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.corr">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.cum">pd_utils.cum (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.cum
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.cum">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.datetime_utils">pd_utils.datetime_utils (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.datetime_utils
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.datetime_utils">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.filldata">pd_utils.filldata (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.filldata
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.filldata">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.load">pd_utils.load (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.load
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.load">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.merge">pd_utils.merge (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.merge
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.merge">module</a>
 </li>
-      <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize">pd_utils.optimize (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.optimize
+
+      <ul>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize">module</a>
 </li>
-      <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.dftypes">pd_utils.optimize.dftypes (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.optimize.dftypes
+
+      <ul>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.dftypes">module</a>
 </li>
-      <li><a href="api/pd_utils.optimize.load.html#module-pd_utils.optimize.load">pd_utils.optimize.load (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.optimize.load
+
+      <ul>
+        <li><a href="api/pd_utils.optimize.load.html#module-pd_utils.optimize.load">module</a>
 </li>
-      <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.typing">pd_utils.optimize.typing (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.optimize.typing
+
+      <ul>
+        <li><a href="api/pd_utils.optimize.html#module-pd_utils.optimize.typing">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.plot">pd_utils.plot (module)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/pd_utils.html#module-pd_utils.port">pd_utils.port (module)</a>
+      <li>
+    pd_utils.plot
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.plot">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.query">pd_utils.query (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.port
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.port">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.regby">pd_utils.regby (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.query
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.query">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.testing">pd_utils.testing (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.regby
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.regby">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.timer">pd_utils.timer (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.testing
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.testing">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.transform">pd_utils.transform (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.timer
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.timer">module</a>
 </li>
-      <li><a href="api/pd_utils.html#module-pd_utils.utils">pd_utils.utils (module)</a>
+      </ul></li>
+      <li>
+    pd_utils.transform
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.transform">module</a>
 </li>
+      </ul></li>
+      <li>
+    pd_utils.utils
+
+      <ul>
+        <li><a href="api/pd_utils.html#module-pd_utils.utils">module</a>
+</li>
+      </ul></li>
       <li><a href="api/pd_utils.html#pd_utils.cum.cumulate.params.periodvar">periodvar (pd_utils.cum.cumulate parameter)</a>, <a href="index.html#pd_utils.cum.cumulate.params.periodvar">[1]</a>
 </li>
       <li><a href="api/pd_utils.html#pd_utils.plot.plot_multi_axis">plot_multi_axis() (in module pd_utils.plot)</a>

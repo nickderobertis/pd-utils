@@ -4,10 +4,11 @@
 <html lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pd_utils package &mdash; pd_utils 0.2.2 documentation</title>
+  <title>pd_utils package &mdash; pd_utils 0.2.3 documentation</title>
   
 
   
@@ -22,13 +23,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
-        <script >var copybuttonSkipText = '>>> ';</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,10 +37,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pd_utils.optimize package" href="pd_utils.optimize.html" />
@@ -68,7 +73,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -93,12 +98,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Getting started with pd_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">This is my gallery</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">pd_utils</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pd_utils package</a><ul>
@@ -192,10 +197,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-pd_utils">
+  <section id="module-pd_utils">
 <span id="pd-utils-package"></span><h1>pd_utils package<a class="headerlink" href="#module-pd_utils" title="Permalink to this headline">¶</a></h1>
 <p>High-level tools for common Pandas workflows</p>
-<div class="section" id="subpackages">
+<section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
@@ -211,15 +216,15 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
+</section>
+<section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-pd_utils.corr">
+</section>
+<section id="module-pd_utils.corr">
 <span id="pd-utils-corr-module"></span><h2>pd_utils.corr module<a class="headerlink" href="#module-pd_utils.corr" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.corr.formatted_corr_df">
-<code class="sig-prename descclassname">pd_utils.corr.</code><code class="sig-name descname">formatted_corr_df</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">cols=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/corr.html#formatted_corr_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.corr.formatted_corr_df" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.corr.formatted_corr_df">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.corr.</span></span><span class="sig-name descname"><span class="pre">formatted_corr_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/corr.html#formatted_corr_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.corr.formatted_corr_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates correlations on a DataFrame and displays only the lower triangular of the
 resulting correlation DataFrame.</p>
 <dl class="field-list simple">
@@ -238,17 +243,17 @@ resulting correlation DataFrame.</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.cum">
+</section>
+<section id="module-pd_utils.cum">
 <span id="pd-utils-cum-module"></span><h2>pd_utils.cum module<a class="headerlink" href="#module-pd_utils.cum" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.cum.create_windows">
-<code class="sig-prename descclassname">pd_utils.cum.</code><code class="sig-name descname">create_windows</code><span class="sig-paren">(</span><em class="sig-param">periods</em>, <em class="sig-param">time</em>, <em class="sig-param">method='between'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#create_windows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.cum.create_windows" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.cum.create_windows">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.cum.</span></span><span class="sig-name descname"><span class="pre">create_windows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'between'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#create_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.cum.create_windows" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.cum.cumulate">
-<code class="sig-prename descclassname">pd_utils.cum.</code><code class="sig-name descname">cumulate</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">cumvars</em>, <em class="sig-param">method</em>, <em class="sig-param">periodvar='Date'</em>, <em class="sig-param">byvars=None</em>, <em class="sig-param">time=None</em>, <em class="sig-param">grossify=False</em>, <em class="sig-param">multiprocess=True</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#cumulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.cum.cumulate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.cum.cumulate">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.cum.</span></span><span class="sig-name descname"><span class="pre">cumulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grossify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiprocess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#cumulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.cum.cumulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cumulates a variable over time. Typically used to get cumulative returns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -262,7 +267,7 @@ If ‘between’, will give returns since the prior requested time period. Note 
 the first period is period 0.
 If ‘first’, will give returns since the first requested time period.</p></li>
 <li><p><span class="target" id="pd_utils.cum.cumulate.params.periodvar"></span><strong>periodvar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.periodvar">¶</a> – </p></li>
-<li><p><span class="target" id="pd_utils.cum.cumulate.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – column names to use to separate by groups</p></li>
+<li><p><span class="target" id="pd_utils.cum.cumulate.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – column names to use to separate by groups</p></li>
 <li><p><span class="target" id="pd_utils.cum.cumulate.params.time"></span><strong>time</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.time">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]) – for use with method=’between’. Defines which periods to calculate between.</p></li>
 <li><p><span class="target" id="pd_utils.cum.cumulate.params.grossify"></span><strong>grossify</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.grossify">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – set to True to add one to all variables then subtract one at the end</p></li>
 <li><p><span class="target" id="pd_utils.cum.cumulate.params.multiprocess"></span><strong>multiprocess</strong><a class="paramlink headerlink reference internal" href="#pd_utils.cum.cumulate.params.multiprocess">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]) – set to True to use all available processors,
@@ -301,31 +306,31 @@ False to return df with both passed columns and cumulated columns</p></li>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.cum.window_mapping">
-<code class="sig-prename descclassname">pd_utils.cum.</code><code class="sig-name descname">window_mapping</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">col</em>, <em class="sig-param">method='between'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#window_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.cum.window_mapping" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.cum.window_mapping">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.cum.</span></span><span class="sig-name descname"><span class="pre">window_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'between'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/cum.html#window_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.cum.window_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a pandas series of dates as inputs, calculates windows, and returns a series of which
 windows each observation are in. To be used with groupby.transform()</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.datetime_utils">
+</section>
+<section id="module-pd_utils.datetime_utils">
 <span id="pd-utils-datetime-utils-module"></span><h2>pd_utils.datetime_utils module<a class="headerlink" href="#module-pd_utils.datetime_utils" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pd_utils.datetime_utils.USTradingCalendar">
-<em class="property">class </em><code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">USTradingCalendar</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#USTradingCalendar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.USTradingCalendar" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.USTradingCalendar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">USTradingCalendar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#USTradingCalendar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.USTradingCalendar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.tseries.holiday.AbstractHolidayCalendar</span></code></p>
 <p>The US trading day calendar behind the function <a class="reference internal" href="#pd_utils.datetime_utils.tradedays" title="pd_utils.datetime_utils.tradedays"><code class="xref py py-func docutils literal notranslate"><span class="pre">tradedays()</span></code></a>.</p>
-<dl class="attribute">
-<dt id="pd_utils.datetime_utils.USTradingCalendar.rules">
-<code class="sig-name descname">rules</code><em class="property"> = [pandas.tseries.holiday.Holiday, pandas.tseries.holiday.USMartinLutherKingJr, pandas.tseries.holiday.USPresidentsDay, pandas.tseries.holiday.GoodFriday, pandas.tseries.holiday.USMemorialDay, pandas.tseries.holiday.Holiday, pandas.tseries.holiday.USLaborDay, pandas.tseries.holiday.USThanksgivingDay, pandas.tseries.holiday.Holiday]</em><a class="headerlink" href="#pd_utils.datetime_utils.USTradingCalendar.rules" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.USTradingCalendar.rules">
+<span class="sig-name descname"><span class="pre">rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Holiday</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[pandas.tseries.holiday.Holiday,</span> <span class="pre">pandas.tseries.holiday.USMartinLutherKingJr,</span> <span class="pre">pandas.tseries.holiday.USPresidentsDay,</span> <span class="pre">pandas.tseries.holiday.GoodFriday,</span> <span class="pre">pandas.tseries.holiday.USMemorialDay,</span> <span class="pre">pandas.tseries.holiday.Holiday,</span> <span class="pre">pandas.tseries.holiday.USLaborDay,</span> <span class="pre">pandas.tseries.holiday.USThanksgivingDay,</span> <span class="pre">pandas.tseries.holiday.Holiday]</span></em><a class="headerlink" href="#pd_utils.datetime_utils.USTradingCalendar.rules" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.convert_sas_date_to_pandas_date">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">convert_sas_date_to_pandas_date</code><span class="sig-paren">(</span><em class="sig-param">sasdates</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#convert_sas_date_to_pandas_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.convert_sas_date_to_pandas_date" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.convert_sas_date_to_pandas_date">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">convert_sas_date_to_pandas_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sasdates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#convert_sas_date_to_pandas_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.convert_sas_date_to_pandas_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a date or Series of dates loaded from a SAS SAS7BDAT file to a pandas date type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -340,9 +345,9 @@ windows each observation are in. To be used with groupby.transform()</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.expand_months">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">expand_months</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">datevar='Date'</em>, <em class="sig-param">newdatevar='Daily Date'</em>, <em class="sig-param">trade_days=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#expand_months"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.expand_months" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.expand_months">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">expand_months</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newdatevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Daily</span> <span class="pre">Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trade_days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#expand_months"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.expand_months" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a monthly dataframe and returns a daily (trade day or calendar day) dataframe.
 For each row in the input data, duplicates that row over each trading/calendar day in the month of
 the date in that row. Creates a new date column containing the daily date.</p>
@@ -367,9 +372,9 @@ you will have one row for each trade day for each original observation.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.expand_time">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">expand_time</code><span class="sig-paren">(</span><em class="sig-param">df, intermediate_periods=False, datevar='Date', freq='m', time=[12, 24, 36, 48, 60], newdate='Shift Date', shiftvar='Shift', custom_business_day=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#expand_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.expand_time" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.expand_time">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">expand_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intermediate_periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[12,</span> <span class="pre">24,</span> <span class="pre">36,</span> <span class="pre">48,</span> <span class="pre">60]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newdate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Shift</span> <span class="pre">Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shiftvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Shift'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_business_day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#expand_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.expand_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates new observations in the dataset advancing the time by the int or list given. Creates a new date variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -392,9 +397,9 @@ trading days based on US market holiday calendar. Can pass custom business days 
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.tradedays">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">tradedays</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#tradedays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.tradedays" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.tradedays">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">tradedays</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#tradedays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.tradedays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used for constructing a range of dates with pandas date_range function.</p>
 <dl class="field-list">
 <dt class="field-odd">Example</dt>
@@ -417,9 +422,9 @@ trading days based on US market holiday calendar. Can pass custom business days 
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.year_month_from_date">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">year_month_from_date</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">date='Date'</em>, <em class="sig-param">yearname='Year'</em>, <em class="sig-param">monthname='Month'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#year_month_from_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.year_month_from_date" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.year_month_from_date">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">year_month_from_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yearname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Year'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monthname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Month'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#year_month_from_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.year_month_from_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a dataframe with a datetime object and creates year and month variables</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -436,17 +441,17 @@ trading days based on US market holiday calendar. Can pass custom business days 
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.datetime_utils.year_month_from_single_date">
-<code class="sig-prename descclassname">pd_utils.datetime_utils.</code><code class="sig-name descname">year_month_from_single_date</code><span class="sig-paren">(</span><em class="sig-param">date</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#year_month_from_single_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.datetime_utils.year_month_from_single_date" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.datetime_utils.year_month_from_single_date">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.datetime_utils.</span></span><span class="sig-name descname"><span class="pre">year_month_from_single_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/datetime_utils.html#year_month_from_single_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.datetime_utils.year_month_from_single_date" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.filldata">
+</section>
+<section id="module-pd_utils.filldata">
 <span id="pd-utils-filldata-module"></span><h2>pd_utils.filldata module<a class="headerlink" href="#module-pd_utils.filldata" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.filldata.add_missing_group_rows">
-<code class="sig-prename descclassname">pd_utils.filldata.</code><code class="sig-name descname">add_missing_group_rows</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">group_id_cols</em>, <em class="sig-param">non_group_id_cols</em>, <em class="sig-param">fill_method='ffill'</em>, <em class="sig-param">fill_limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#add_missing_group_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.filldata.add_missing_group_rows" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.filldata.add_missing_group_rows">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.filldata.</span></span><span class="sig-name descname"><span class="pre">add_missing_group_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_group_id_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ffill'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#add_missing_group_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.filldata.add_missing_group_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds rows so that each group has all non group IDs, optionally filling values by a pandas fill method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -465,14 +470,14 @@ forward/back filled across differences in these ids.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.filldata.drop_missing_group_rows">
-<code class="sig-prename descclassname">pd_utils.filldata.</code><code class="sig-name descname">drop_missing_group_rows</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">fill_id_cols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#drop_missing_group_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.filldata.drop_missing_group_rows" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.filldata.drop_missing_group_rows">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.filldata.</span></span><span class="sig-name descname"><span class="pre">drop_missing_group_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_id_cols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#drop_missing_group_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.filldata.drop_missing_group_rows" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.filldata.fill_excluded_rows">
-<code class="sig-prename descclassname">pd_utils.filldata.</code><code class="sig-name descname">fill_excluded_rows</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">byvars</em>, <em class="sig-param">fillvars=None</em>, <em class="sig-param">**fillna_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fill_excluded_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.filldata.fill_excluded_rows" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.filldata.fill_excluded_rows">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.filldata.</span></span><span class="sig-name descname"><span class="pre">fill_excluded_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fillna_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fill_excluded_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.filldata.fill_excluded_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a dataframe which does not contain all possible combinations of byvars as rows. Creates
 those rows if fillna_kwargs are passed, calls fillna using fillna_kwargs for fillvars</p>
 <dl class="field-list simple">
@@ -508,27 +513,27 @@ strs, or a list of pd.Series.</p></li>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.filldata.fillna_by_groups">
-<code class="sig-prename descclassname">pd_utils.filldata.</code><code class="sig-name descname">fillna_by_groups</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">byvars</em>, <em class="sig-param">exclude_cols=None</em>, <em class="sig-param">str_vars='first'</em>, <em class="sig-param">num_vars='mean'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fillna_by_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.filldata.fillna_by_groups" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.filldata.fillna_by_groups">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.filldata.</span></span><span class="sig-name descname"><span class="pre">fillna_by_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fillna_by_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.filldata.fillna_by_groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fills missing values by group, with different handling for string variables versus numeric</p>
 <p>WARNING: do not use if index is important, it will be dropped</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.filldata.fillna_by_groups_and_keep_one_per_group">
-<code class="sig-prename descclassname">pd_utils.filldata.</code><code class="sig-name descname">fillna_by_groups_and_keep_one_per_group</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">byvars</em>, <em class="sig-param">exclude_cols=None</em>, <em class="sig-param">str_vars='first'</em>, <em class="sig-param">num_vars='mean'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fillna_by_groups_and_keep_one_per_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.filldata.fillna_by_groups_and_keep_one_per_group" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.filldata.fillna_by_groups_and_keep_one_per_group">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.filldata.</span></span><span class="sig-name descname"><span class="pre">fillna_by_groups_and_keep_one_per_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/filldata.html#fillna_by_groups_and_keep_one_per_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.filldata.fillna_by_groups_and_keep_one_per_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fills missing values by group, with different handling for string variables versus numeric,
 then keeps one observation per group.</p>
 <p>WARNING: do not use if index is important, it will be dropped</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.load">
+</section>
+<section id="module-pd_utils.load">
 <span id="pd-utils-load-module"></span><h2>pd_utils.load module<a class="headerlink" href="#module-pd_utils.load" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.load.load_sas">
-<code class="sig-prename descclassname">pd_utils.load.</code><code class="sig-name descname">load_sas</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">csv=True</em>, <em class="sig-param">**read_csv_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/load.html#load_sas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.load.load_sas" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.load.load_sas">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.load.</span></span><span class="sig-name descname"><span class="pre">load_sas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">read_csv_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/load.html#load_sas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.load.load_sas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads sas sas7bdat file into a pandas DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -547,12 +552,12 @@ the sas7bdat will automatically be loaded and saved to the csv again.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.merge">
+</section>
+<section id="module-pd_utils.merge">
 <span id="pd-utils-merge-module"></span><h2>pd_utils.merge module<a class="headerlink" href="#module-pd_utils.merge" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.merge.apply_func_to_unique_and_merge">
-<code class="sig-prename descclassname">pd_utils.merge.</code><code class="sig-name descname">apply_func_to_unique_and_merge</code><span class="sig-paren">(</span><em class="sig-param">series</em>, <em class="sig-param">func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#apply_func_to_unique_and_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.merge.apply_func_to_unique_and_merge" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.merge.apply_func_to_unique_and_merge">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.merge.</span></span><span class="sig-name descname"><span class="pre">apply_func_to_unique_and_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#apply_func_to_unique_and_merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.merge.apply_func_to_unique_and_merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reduces the given series down to unique values, applies the function,
 then expands back up to the original shape of the data.</p>
 <p>Many Pandas functions can be slow because they’re doing repeated work. This can help
@@ -578,9 +583,9 @@ optimize some operations.</p>
 &gt;&gt;&gt;apply_func_to_unique_and_merge(df[‘MONTH’], to_datetime)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.merge.groupby_index">
-<code class="sig-prename descclassname">pd_utils.merge.</code><code class="sig-name descname">groupby_index</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">byvars</em>, <em class="sig-param">sortvars=None</em>, <em class="sig-param">ascending=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#groupby_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.merge.groupby_index" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.merge.groupby_index">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.merge.</span></span><span class="sig-name descname"><span class="pre">groupby_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sortvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ascending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#groupby_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.merge.groupby_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dataframe which is a copy of the old one with an additional column containing an index
 by groups. Each time the bygroup changes, the index restarts at 0.</p>
 <dl class="field-list simple">
@@ -588,7 +593,7 @@ by groups. Each time the bygroup changes, the index restarts at 0.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><span class="target" id="pd_utils.merge.groupby_index.params.df"></span><strong>df</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.groupby_index.params.df">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p></li>
 <li><p><span class="target" id="pd_utils.merge.groupby_index.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.groupby_index.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – column names containing group identifiers</p></li>
-<li><p><span class="target" id="pd_utils.merge.groupby_index.params.sortvars"></span><strong>sortvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.groupby_index.params.sortvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – column names to sort by within by groups</p></li>
+<li><p><span class="target" id="pd_utils.merge.groupby_index.params.sortvars"></span><strong>sortvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.groupby_index.params.sortvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – column names to sort by within by groups</p></li>
 <li><p><span class="target" id="pd_utils.merge.groupby_index.params.ascending"></span><strong>ascending</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.groupby_index.params.ascending">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – direction of sort</p></li>
 </ul>
 </dd>
@@ -598,9 +603,9 @@ by groups. Each time the bygroup changes, the index restarts at 0.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.merge.groupby_merge">
-<code class="sig-prename descclassname">pd_utils.merge.</code><code class="sig-name descname">groupby_merge</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">byvars</em>, <em class="sig-param">func_str</em>, <em class="sig-param">*func_args</em>, <em class="sig-param">subset='all'</em>, <em class="sig-param">replace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#groupby_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.merge.groupby_merge" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.merge.groupby_merge">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.merge.</span></span><span class="sig-name descname"><span class="pre">groupby_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">func_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#groupby_merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.merge.groupby_merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a pandas groupby object, applies the aggregation function in func_str, and merges back the
 aggregated data to the original dataframe.</p>
 <dl class="field-list simple">
@@ -626,9 +631,9 @@ aggregated data to the original dataframe.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.merge.left_merge_latest">
-<code class="sig-prename descclassname">pd_utils.merge.</code><code class="sig-name descname">left_merge_latest</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">df2</em>, <em class="sig-param">on</em>, <em class="sig-param">left_datevar='Date'</em>, <em class="sig-param">right_datevar='Date'</em>, <em class="sig-param">max_offset=None</em>, <em class="sig-param">backend='pandas'</em>, <em class="sig-param">low_memory=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#left_merge_latest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.merge.left_merge_latest" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.merge.left_merge_latest">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.merge.</span></span><span class="sig-name descname"><span class="pre">left_merge_latest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_datevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_datevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pandas'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/merge.html#left_merge_latest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.merge.left_merge_latest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Left merges df2 to df using on, but grabbing the most recent observation (right_datevar will be
 the soonest earlier than left_datevar). Useful for situations where data needs to be merged with
 mismatched dates, and just the most recent data available is needed.</p>
@@ -642,7 +647,7 @@ data will be kept)</p></li>
 <li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.on"></span><strong>on</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.on">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – names of columns on which to match, excluding date</p></li>
 <li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.left_datevar"></span><strong>left_datevar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.left_datevar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – name of date variable on which to merge in df</p></li>
 <li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.right_datevar"></span><strong>right_datevar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.right_datevar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – name of date variable on which to merge in df2</p></li>
-<li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.max_offset"></span><strong>max_offset</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.max_offset">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta</span></code></a>, <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – maximum amount of time to go back to look for a match.
+<li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.max_offset"></span><strong>max_offset</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.max_offset">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">timedelta</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – maximum amount of time to go back to look for a match.
 When datevar is a datetime column, pass datetime.timedelta. When datevar is an int column
 (e.g. year), pass an int. Currently only applicable for backend ‘pandas’</p></li>
 <li><p><span class="target" id="pd_utils.merge.left_merge_latest.params.backend"></span><strong>backend</strong><a class="paramlink headerlink reference internal" href="#pd_utils.merge.left_merge_latest.params.backend">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – ‘pandas’ or ‘sql’. Specify the underlying machinery used to perform the merge.
@@ -657,17 +662,17 @@ out of memory.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.plot">
+</section>
+<section id="module-pd_utils.plot">
 <span id="pd-utils-plot-module"></span><h2>pd_utils.plot module<a class="headerlink" href="#module-pd_utils.plot" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.plot.ordinal">
-<code class="sig-prename descclassname">pd_utils.plot.</code><code class="sig-name descname">ordinal</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#pd_utils.plot.ordinal" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.plot.ordinal">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.plot.</span></span><span class="sig-name descname"><span class="pre">ordinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pd_utils.plot.ordinal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.plot.plot_multi_axis">
-<code class="sig-prename descclassname">pd_utils.plot.</code><code class="sig-name descname">plot_multi_axis</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">cols=None</em>, <em class="sig-param">spacing=0.1</em>, <em class="sig-param">colored_axes=True</em>, <em class="sig-param">axis_locations_in_legend=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/plot.html#plot_multi_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.plot.plot_multi_axis" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.plot.plot_multi_axis">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.plot.</span></span><span class="sig-name descname"><span class="pre">plot_multi_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colored_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_locations_in_legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/plot.html#plot_multi_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.plot.plot_multi_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot multiple series with different y-axes</p>
 <p>Adapted from <a class="reference external" href="https://stackoverflow.com/a/50655786">https://stackoverflow.com/a/50655786</a></p>
 <dl class="field-list simple">
@@ -678,6 +683,7 @@ out of memory.</p></li>
 <li><p><span class="target" id="pd_utils.plot.plot_multi_axis.params.spacing"></span><strong>spacing</strong><a class="paramlink headerlink reference internal" href="#pd_utils.plot.plot_multi_axis.params.spacing">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – Amount of space between y-axes beyond the two which are on the sides of the box</p></li>
 <li><p><span class="target" id="pd_utils.plot.plot_multi_axis.params.colored_axes"></span><strong>colored_axes</strong><a class="paramlink headerlink reference internal" href="#pd_utils.plot.plot_multi_axis.params.colored_axes">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to make axis labels and ticks colored the same as the line on the graph</p></li>
 <li><p><span class="target" id="pd_utils.plot.plot_multi_axis.params.axis_locations_in_legend"></span><strong>axis_locations_in_legend</strong><a class="paramlink headerlink reference internal" href="#pd_utils.plot.plot_multi_axis.params.axis_locations_in_legend">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to add to the legend which axis corresponds to which plot</p></li>
+<li><p><span class="target" id="pd_utils.plot.plot_multi_axis.params.legend_kwargs"></span><strong>legend_kwargs</strong><a class="paramlink headerlink reference internal" href="#pd_utils.plot.plot_multi_axis.params.legend_kwargs">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]) – Keyword arguments to pass to ax.legend</p></li>
 <li><p><span class="target" id="pd_utils.plot.plot_multi_axis.params.kwargs"></span><strong>kwargs</strong><a class="paramlink headerlink reference internal" href="#pd_utils.plot.plot_multi_axis.params.kwargs">¶</a> – df.plot kwargs</p></li>
 </ul>
 </dd>
@@ -690,12 +696,12 @@ out of memory.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.port">
+</section>
+<section id="module-pd_utils.port">
 <span id="pd-utils-port-module"></span><h2>pd_utils.port module<a class="headerlink" href="#module-pd_utils.port" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.port.long_short_portfolio">
-<code class="sig-prename descclassname">pd_utils.port.</code><code class="sig-name descname">long_short_portfolio</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">portvar</em>, <em class="sig-param">byvars=None</em>, <em class="sig-param">retvars=None</em>, <em class="sig-param">top_minus_bot=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#long_short_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.port.long_short_portfolio" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.port.long_short_portfolio">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.port.</span></span><span class="sig-name descname"><span class="pre">long_short_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_minus_bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#long_short_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.port.long_short_portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a df with a column of numbered portfolios and creates a new
 portfolio which is long the top portfolio and short the bottom portfolio.</p>
 <dl class="field-list simple">
@@ -703,10 +709,10 @@ portfolio which is long the top portfolio and short the bottom portfolio.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.df"></span><strong>df</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.df">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – dataframe containing a column with portfolio numbers</p></li>
 <li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.portvar"></span><strong>portvar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.portvar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – name of column containing portfolios</p></li>
-<li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – column names containing groups for portfolios.
+<li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – column names containing groups for portfolios.
 Calculates long-short within these groups. These should be the same groups
 in which portfolios were formed.</p></li>
-<li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.retvars"></span><strong>retvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.retvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – variables to return in the long-short dataset.
+<li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.retvars"></span><strong>retvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.retvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – variables to return in the long-short dataset.
 By default, will use all numeric variables in the df</p></li>
 <li><p><span class="target" id="pd_utils.port.long_short_portfolio.params.top_minus_bot"></span><strong>top_minus_bot</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.long_short_portfolio.params.top_minus_bot">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – True to be long the top portfolio, short the bottom portfolio.
 False to be long the bottom portfolio, short the top portfolio.</p></li>
@@ -718,9 +724,9 @@ False to be long the bottom portfolio, short the top portfolio.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.port.portfolio">
-<code class="sig-prename descclassname">pd_utils.port.</code><code class="sig-name descname">portfolio</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">groupvar</em>, <em class="sig-param">ngroups=10</em>, <em class="sig-param">cutoffs=None</em>, <em class="sig-param">quant_cutoffs=None</em>, <em class="sig-param">byvars=None</em>, <em class="sig-param">cutdf=None</em>, <em class="sig-param">portvar='portfolio'</em>, <em class="sig-param">multiprocess=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.port.portfolio" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.port.portfolio">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.port.</span></span><span class="sig-name descname"><span class="pre">portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_cutoffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutdf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'portfolio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiprocess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.port.portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs portfolios based on percentile values of groupvar.</p>
 <p>If ngroups=10, then will form 10 portfolios,
 with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having the top 10 percentile
@@ -746,7 +752,7 @@ This may require some cleaning of the cutdf first.</p></li>
 3 would be &gt; 10000. cannot be used with option ngroups</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio.params.quant_cutoffs"></span><strong>quant_cutoffs</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio.params.quant_cutoffs">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]) – eg. [0.1, 0.9] to form three portfolios. 1 would be lowest 10% of data,
 2 would be &gt; 10 and &lt; 90 percentiles, 3 would be highest 10%. All will be within byvars if byvars are passed</p></li>
-<li><p><span class="target" id="pd_utils.port.portfolio.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – name of variable(s) in df, finds portfolios within byvars. For example if byvars=’Month’,
+<li><p><span class="target" id="pd_utils.port.portfolio.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – name of variable(s) in df, finds portfolios within byvars. For example if byvars=’Month’,
 would take each month and form portfolios based on the percentiles of the groupvar during only that month</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio.params.cutdf"></span><strong>cutdf</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio.params.cutdf">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – optionally determine percentiles using another dataset. See second note.</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio.params.portvar"></span><strong>portvar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio.params.portvar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – name of portfolio variable in the output dataset</p></li>
@@ -761,9 +767,9 @@ processors to use that amount of processors</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.port.portfolio_averages">
-<code class="sig-prename descclassname">pd_utils.port.</code><code class="sig-name descname">portfolio_averages</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">groupvar</em>, <em class="sig-param">avgvars</em>, <em class="sig-param">ngroups=10</em>, <em class="sig-param">byvars=None</em>, <em class="sig-param">cutdf=None</em>, <em class="sig-param">wtvar=None</em>, <em class="sig-param">count=False</em>, <em class="sig-param">portvar='portfolio'</em>, <em class="sig-param">avgonly=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#portfolio_averages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.port.portfolio_averages" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.port.portfolio_averages">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.port.</span></span><span class="sig-name descname"><span class="pre">portfolio_averages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avgvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngroups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutdf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wtvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'portfolio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avgonly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/port.html#portfolio_averages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.port.portfolio_averages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates portfolios and calculates equal- and value-weighted averages of variables within portfolios.</p>
 <p>If ngroups=10,
 then will form 10 portfolios, with portfolio 1 having the bottom 10 percentile of groupvar, and portfolio 10 having
@@ -780,7 +786,7 @@ the top 10 percentile of groupvar.</p>
 <li><p><span class="target" id="pd_utils.port.portfolio_averages.params.groupvar"></span><strong>groupvar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.groupvar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – name of variable in df to form portfolios on</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio_averages.params.avgvars"></span><strong>avgvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.avgvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – variables to be averaged</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio_averages.params.ngroups"></span><strong>ngroups</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.ngroups">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – number of portfolios to form</p></li>
-<li><p><span class="target" id="pd_utils.port.portfolio_averages.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – name of variable(s) in df, finds portfolios within byvars. For example if byvars=’Month’,
+<li><p><span class="target" id="pd_utils.port.portfolio_averages.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – name of variable(s) in df, finds portfolios within byvars. For example if byvars=’Month’,
 would take each month and form portfolios based on the percentiles of the groupvar during only that month</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio_averages.params.cutdf"></span><strong>cutdf</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.cutdf">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – optionally determine percentiles using another dataset</p></li>
 <li><p><span class="target" id="pd_utils.port.portfolio_averages.params.wtvar"></span><strong>wtvar</strong><a class="paramlink headerlink reference internal" href="#pd_utils.port.portfolio_averages.params.wtvar">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]) – name of variable in df to use for weighting in weighted average</p></li>
@@ -798,12 +804,12 @@ would take each month and form portfolios based on the percentiles of the groupv
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.query">
+</section>
+<section id="module-pd_utils.query">
 <span id="pd-utils-query-module"></span><h2>pd_utils.query module<a class="headerlink" href="#module-pd_utils.query" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.query.select_rows_by_condition_on_columns">
-<code class="sig-prename descclassname">pd_utils.query.</code><code class="sig-name descname">select_rows_by_condition_on_columns</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">cols</em>, <em class="sig-param">condition='== 1'</em>, <em class="sig-param">logic='or'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/query.html#select_rows_by_condition_on_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.query.select_rows_by_condition_on_columns" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.query.select_rows_by_condition_on_columns">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.query.</span></span><span class="sig-name descname"><span class="pre">select_rows_by_condition_on_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'==</span> <span class="pre">1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'or'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/query.html#select_rows_by_condition_on_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.query.select_rows_by_condition_on_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selects rows of a pandas dataframe by evaluating a condition on a subset of the dataframe’s columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -822,9 +828,9 @@ for the row to be kept. With ‘and’, all of the columns in cols need to match
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.query.sql">
-<code class="sig-prename descclassname">pd_utils.query.</code><code class="sig-name descname">sql</code><span class="sig-paren">(</span><em class="sig-param">df_list</em>, <em class="sig-param">query</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/query.html#sql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.query.sql" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.query.sql">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.query.</span></span><span class="sig-name descname"><span class="pre">sql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/query.html#sql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.query.sql" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience function for running a pandasql query. Keeps track of which variables are of
 datetime type, and converts them back after running the sql query.</p>
 <dl class="field-list simple">
@@ -845,29 +851,28 @@ datetime type, and converts them back after running the sql query.</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.regby">
+</section>
+<section id="module-pd_utils.regby">
 <span id="pd-utils-regby-module"></span><h2>pd_utils.regby module<a class="headerlink" href="#module-pd_utils.regby" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="pd_utils.regby.ResultCounter">
-<em class="property">class </em><code class="sig-prename descclassname">pd_utils.regby.</code><code class="sig-name descname">ResultCounter</code><span class="sig-paren">(</span><em class="sig-param">num_expected_results</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#ResultCounter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.regby.ResultCounter" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pd_utils.regby.ResultCounter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pd_utils.regby.</span></span><span class="sig-name descname"><span class="pre">ResultCounter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_expected_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#ResultCounter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.regby.ResultCounter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<dl class="method">
-<dt id="pd_utils.regby.ResultCounter.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">num_expected_results</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#ResultCounter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.regby.ResultCounter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="pd_utils.regby.df_for_reg">
-<code class="sig-prename descclassname">pd_utils.regby.</code><code class="sig-name descname">df_for_reg</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">yvar</em>, <em class="sig-param">xvars</em>, <em class="sig-param">groupvar</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#df_for_reg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.regby.df_for_reg" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pd_utils.regby.ResultCounter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_expected_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#ResultCounter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.regby.ResultCounter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.regby.reg_by">
-<code class="sig-prename descclassname">pd_utils.regby.</code><code class="sig-name descname">reg_by</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">yvar</em>, <em class="sig-param">xvars</em>, <em class="sig-param">groupvar</em>, <em class="sig-param">merge=False</em>, <em class="sig-param">cons=True</em>, <em class="sig-param">mp=False</em>, <em class="sig-param">stderr=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#reg_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.regby.reg_by" title="Permalink to this definition">¶</a></dt>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.regby.df_for_reg">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.regby.</span></span><span class="sig-name descname"><span class="pre">df_for_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupvar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#df_for_reg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.regby.df_for_reg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.regby.reg_by">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.regby.</span></span><span class="sig-name descname"><span class="pre">reg_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stderr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/regby.html#reg_by"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.regby.reg_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a regression of df[yvar] on df[xvars] by values of groupvar. Outputs a dataframe with values of
 groupvar and corresponding coefficients, unless merge=True, then outputs the original dataframe with the
 appropriate coefficients merged in.</p>
@@ -890,12 +895,12 @@ appropriate coefficients merged in.</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.testing">
+</section>
+<section id="module-pd_utils.testing">
 <span id="pd-utils-testing-module"></span><h2>pd_utils.testing module<a class="headerlink" href="#module-pd_utils.testing" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.testing.to_copy_paste">
-<code class="sig-prename descclassname">pd_utils.testing.</code><code class="sig-name descname">to_copy_paste</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">index=False</em>, <em class="sig-param">column_names=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/testing.html#to_copy_paste"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.testing.to_copy_paste" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.testing.to_copy_paste">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.testing.</span></span><span class="sig-name descname"><span class="pre">to_copy_paste</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/testing.html#to_copy_paste"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.testing.to_copy_paste" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a dataframe and prints all of its data in such a format that it can be copy-pasted to create
 a new dataframe from the pandas.DataFrame() constructor.</p>
 <dl class="field-list simple">
@@ -912,12 +917,12 @@ a new dataframe from the pandas.DataFrame() constructor.</p>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.timer">
+</section>
+<section id="module-pd_utils.timer">
 <span id="pd-utils-timer-module"></span><h2>pd_utils.timer module<a class="headerlink" href="#module-pd_utils.timer" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.timer.estimate_time">
-<code class="sig-prename descclassname">pd_utils.timer.</code><code class="sig-name descname">estimate_time</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">i</em>, <em class="sig-param">start_time</em>, <em class="sig-param">output=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/timer.html#estimate_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.timer.estimate_time" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.timer.estimate_time">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.timer.</span></span><span class="sig-name descname"><span class="pre">estimate_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/timer.html#estimate_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.timer.estimate_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the estimate of when a looping operation will be finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -951,12 +956,12 @@ loop, you must start a timer object as follows:</p>
 </div>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.transform">
+</section>
+<section id="module-pd_utils.transform">
 <span id="pd-utils-transform-module"></span><h2>pd_utils.transform module<a class="headerlink" href="#module-pd_utils.transform" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.transform.averages">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">averages</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">avgvars</em>, <em class="sig-param">byvars</em>, <em class="sig-param">wtvar=None</em>, <em class="sig-param">count=False</em>, <em class="sig-param">flatten=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#averages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.averages" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.averages">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">averages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avgvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wtvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#averages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.averages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns equal- and value-weighted averages of variables within groups</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -976,9 +981,9 @@ of that variable within groups.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.transform.join_col_strings">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">join_col_strings</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">cols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#join_col_strings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.join_col_strings" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.join_col_strings">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">join_col_strings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#join_col_strings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.join_col_strings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a dataframe and column name(s) and concatenates string versions of the columns with those names.
 Useful for when a group is identified by several variables and we need one key variable to describe a group.
 Returns a pandas Series.</p>
@@ -995,9 +1000,9 @@ Returns a pandas Series.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.transform.long_to_wide">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">long_to_wide</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">groupvars</em>, <em class="sig-param">values</em>, <em class="sig-param">colindex=None</em>, <em class="sig-param">colindex_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#long_to_wide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.long_to_wide" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.long_to_wide">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">long_to_wide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colindex_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#long_to_wide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.long_to_wide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a “long” format DataFrame and converts to a “wide” format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1005,7 +1010,7 @@ Returns a pandas Series.</p>
 <li><p><span class="target" id="pd_utils.transform.long_to_wide.params.df"></span><strong>df</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.long_to_wide.params.df">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p></li>
 <li><p><span class="target" id="pd_utils.transform.long_to_wide.params.groupvars"></span><strong>groupvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.long_to_wide.params.groupvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – variables which signify unique observations in the output dataset</p></li>
 <li><p><span class="target" id="pd_utils.transform.long_to_wide.params.values"></span><strong>values</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.long_to_wide.params.values">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – variables which contain the values which need to be transposed</p></li>
-<li><p><span class="target" id="pd_utils.transform.long_to_wide.params.colindex"></span><strong>colindex</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.long_to_wide.params.colindex">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – columns containing extension for column name
+<li><p><span class="target" id="pd_utils.transform.long_to_wide.params.colindex"></span><strong>colindex</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.long_to_wide.params.colindex">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – columns containing extension for column name
 in the output dataset. If not specified, just uses the
 count of the row within the group. If a list is provided, each column value will be appended
 in order separated by _</p></li>
@@ -1023,23 +1028,23 @@ multiple columns would have the same name.</p></li>
 <p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">If</span> <span class="n">we</span> <span class="n">had</span> <span class="n">a</span> <span class="n">long</span> <span class="n">dataset</span> <span class="n">of</span> <span class="n">returns</span><span class="p">,</span> <span class="k">with</span> <span class="n">returns</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="ow">and</span> <span class="mi">60</span> <span class="n">months</span> <span class="n">after</span> <span class="n">the</span> <span class="n">date</span><span class="p">:</span>
         <span class="n">ticker</span>    <span class="n">ret</span>    <span class="n">months</span>
-        <span class="n">AA</span>        <span class="o">.</span><span class="mi">01</span>    <span class="mi">12</span>
-        <span class="n">AA</span>        <span class="o">.</span><span class="mi">15</span>    <span class="mi">24</span>
-        <span class="n">AA</span>        <span class="o">.</span><span class="mi">21</span>    <span class="mi">36</span>
-        <span class="n">AA</span>       <span class="o">-.</span><span class="mi">10</span>    <span class="mi">48</span>
-        <span class="n">AA</span>        <span class="o">.</span><span class="mi">22</span>    <span class="mi">60</span>
+        <span class="n">AA</span>        <span class="mf">.01</span>    <span class="mi">12</span>
+        <span class="n">AA</span>        <span class="mf">.15</span>    <span class="mi">24</span>
+        <span class="n">AA</span>        <span class="mf">.21</span>    <span class="mi">36</span>
+        <span class="n">AA</span>       <span class="o">-</span><span class="mf">.10</span>    <span class="mi">48</span>
+        <span class="n">AA</span>        <span class="mf">.22</span>    <span class="mi">60</span>
 <span class="ow">and</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">get</span> <span class="n">this</span> <span class="n">to</span> <span class="n">one</span> <span class="n">observation</span> <span class="n">per</span> <span class="n">ticker</span><span class="p">:</span>
         <span class="n">ticker</span>    <span class="n">ret12</span>    <span class="n">ret24</span>    <span class="n">ret36</span>    <span class="n">ret48</span>    <span class="n">ret60</span>
-        <span class="n">AA</span>        <span class="o">.</span><span class="mi">01</span>      <span class="o">.</span><span class="mi">15</span>      <span class="o">.</span><span class="mi">21</span>     <span class="o">-.</span><span class="mi">10</span>      <span class="o">.</span><span class="mi">22</span>
+        <span class="n">AA</span>        <span class="mf">.01</span>      <span class="mf">.15</span>      <span class="mf">.21</span>     <span class="o">-</span><span class="mf">.10</span>      <span class="mf">.22</span>
 <span class="n">We</span> <span class="n">would</span> <span class="n">use</span><span class="p">:</span>
 <span class="n">long_to_wide</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">groupvars</span><span class="o">=</span><span class="s1">&#39;ticker&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;ret&#39;</span><span class="p">,</span> <span class="n">colindex</span><span class="o">=</span><span class="s1">&#39;months&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.transform.state_abbrev">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">state_abbrev</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">col</em>, <em class="sig-param">toabbrev=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#state_abbrev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.state_abbrev" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.state_abbrev">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">state_abbrev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toabbrev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#state_abbrev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.state_abbrev" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replaces a DataFrame’s column of a state abbreviation or state name to the opposite</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1056,9 +1061,9 @@ to state names</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.transform.var_change_by_groups">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">var_change_by_groups</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">var</em>, <em class="sig-param">byvars</em>, <em class="sig-param">datevar='Date'</em>, <em class="sig-param">numlags=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#var_change_by_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.var_change_by_groups" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.var_change_by_groups">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">var_change_by_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Date'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numlags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#var_change_by_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.var_change_by_groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used for getting variable changes over time within bygroups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Notes</dt>
@@ -1082,9 +1087,9 @@ lags to be created before running this command.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.transform.winsorize">
-<code class="sig-prename descclassname">pd_utils.transform.</code><code class="sig-name descname">winsorize</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">pct</em>, <em class="sig-param">subset=None</em>, <em class="sig-param">byvars=None</em>, <em class="sig-param">bot=True</em>, <em class="sig-param">top=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#winsorize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.transform.winsorize" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.transform.winsorize">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.transform.</span></span><span class="sig-name descname"><span class="pre">winsorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byvars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/transform.html#winsorize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.transform.winsorize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds observations above the pct percentile and replaces the with the pct percentile value.
 Does this for all columns, or the subset given by subset.</p>
 <dl class="field-list">
@@ -1094,8 +1099,8 @@ Does this for all columns, or the subset given by subset.</p>
 <li><p><span class="target" id="pd_utils.transform.winsorize.params.pct"></span><strong>pct</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.pct">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]) – 0 &lt; float &lt; 1 or list of two values 0 &lt; float &lt; 1. If two values are given, the first
 will be used for the bottom percentile and the second will be used for the top. If one value
 is given and both bot and top are True, will use the same value for both.</p></li>
-<li><p><span class="target" id="pd_utils.transform.winsorize.params.subset"></span><strong>subset</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.subset">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – column name(s) to winsorize</p></li>
-<li><p><span class="target" id="pd_utils.transform.winsorize.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – Column names of columns identifying groups in the data.
+<li><p><span class="target" id="pd_utils.transform.winsorize.params.subset"></span><strong>subset</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.subset">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – column name(s) to winsorize</p></li>
+<li><p><span class="target" id="pd_utils.transform.winsorize.params.byvars"></span><strong>byvars</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.byvars">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – Column names of columns identifying groups in the data.
 Winsorizing will be done within those groups.</p></li>
 <li><p><span class="target" id="pd_utils.transform.winsorize.params.bot"></span><strong>bot</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.bot">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – True to winsorize bottom observations</p></li>
 <li><p><span class="target" id="pd_utils.transform.winsorize.params.top"></span><strong>top</strong><a class="paramlink headerlink reference internal" href="#pd_utils.transform.winsorize.params.top">¶</a> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – True to winsorize top observations</p></li>
@@ -1108,31 +1113,31 @@ Winsorizing will be done within those groups.</p></li>
 <dd class="field-odd"><p></p>
 </dd>
 <dt class="field-even">Examples</dt>
-<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">winsorize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;RET&#39;</span><span class="p">)</span> <span class="c1"># replaces observations of RET below the 5% and above the 95% values</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">winsorize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">),</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;RET&#39;</span><span class="p">)</span> <span class="c1">#replaces observations of RET below the 5% and above the 90% values</span>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">winsorize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;RET&#39;</span><span class="p">)</span> <span class="c1"># replaces observations of RET below the 5% and above the 95% values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">winsorize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">(</span><span class="mf">.05</span><span class="p">,</span> <span class="mf">.1</span><span class="p">),</span> <span class="n">subset</span><span class="o">=</span><span class="s1">&#39;RET&#39;</span><span class="p">)</span> <span class="c1">#replaces observations of RET below the 5% and above the 90% values</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-pd_utils.utils">
+</section>
+<section id="module-pd_utils.utils">
 <span id="pd-utils-utils-module"></span><h2>pd_utils.utils module<a class="headerlink" href="#module-pd_utils.utils" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="pd_utils.utils.split">
-<code class="sig-prename descclassname">pd_utils.utils.</code><code class="sig-name descname">split</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">keepvars</em>, <em class="sig-param">keyvar='__key_var__'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/utils.html#split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.utils.split" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.utils.split">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.utils.</span></span><span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'__key_var__'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/utils.html#split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.utils.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits a dataframe into a list of arrays based on a key variable</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pd_utils.utils.split_gen">
-<code class="sig-prename descclassname">pd_utils.utils.</code><code class="sig-name descname">split_gen</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">keepvars</em>, <em class="sig-param">keyvar='__key_var__'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/utils.html#split_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pd_utils.utils.split_gen" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pd_utils.utils.split_gen">
+<span class="sig-prename descclassname"><span class="pre">pd_utils.utils.</span></span><span class="sig-name descname"><span class="pre">split_gen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'__key_var__'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pd_utils/utils.html#split_gen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pd_utils.utils.split_gen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits a dataframe into a list of arrays based on a key variable</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
